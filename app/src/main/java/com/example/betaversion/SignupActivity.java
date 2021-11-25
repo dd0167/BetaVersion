@@ -51,13 +51,13 @@ public class SignupActivity extends AppCompatActivity {
         if (email.isEmpty())
         {
             progressBar_signup.setVisibility(View.INVISIBLE);
-            et_email_signup.setError("The email field can't be empty!");
+            et_email_signup.setError("Email is required!");
             et_email_signup.requestFocus();
         }
         else if (password.isEmpty())
         {
             progressBar_signup.setVisibility(View.INVISIBLE);
-            et_password_signup.setError("The password field can't be empty!");
+            et_password_signup.setError("Password is required!");
             et_password_signup.requestFocus();
         }
         else

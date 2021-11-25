@@ -60,13 +60,13 @@ public class LoginActivity extends AppCompatActivity {
         if (email.isEmpty())
         {
             progressBar_login.setVisibility(View.INVISIBLE);
-            et_email_login.setError("The email field can't be empty!");
+            et_email_login.setError("Email is required!");
             et_email_login.requestFocus();
         }
         else if (password.isEmpty())
         {
             progressBar_login.setVisibility(View.INVISIBLE);
-            et_password_login.setError("The password field can't be empty!");
+            et_password_login.setError("Password is required!");
             et_password_login.requestFocus();
         }
         else
