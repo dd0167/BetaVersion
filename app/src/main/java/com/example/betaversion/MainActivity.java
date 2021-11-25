@@ -5,6 +5,7 @@ import static com.example.betaversion.FB_Ref.mAuth;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -18,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void log_out(View view) {
         mAuth.signOut();
+        SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("stayConnect",false);
+        editor.commit();
         move_login();
     }
 

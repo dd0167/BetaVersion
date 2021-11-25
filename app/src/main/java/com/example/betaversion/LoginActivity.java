@@ -1,11 +1,13 @@
 package com.example.betaversion;
 
+import static com.example.betaversion.FB_Ref.currentUser;
 import static com.example.betaversion.FB_Ref.mAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -43,9 +45,10 @@ public class LoginActivity extends AppCompatActivity {
 
         progressBar_login.setVisibility(View.INVISIBLE);
 
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+        boolean isChecked = settings.getBoolean("stayConnect",false);
+        currentUser = mAuth.getCurrentUser();
+        if (isChecked && (currentUser != null)){
             move_main();
         }
     }
@@ -54,10 +57,17 @@ public class LoginActivity extends AppCompatActivity {
         progressBar_login.setVisibility(View.VISIBLE);
         String email=et_email_login.getText().toString();
         String password=et_password_login.getText().toString();
-        if (email.isEmpty() || password.isEmpty())
+        if (email.isEmpty())
         {
             progressBar_login.setVisibility(View.INVISIBLE);
-            Toast.makeText(this, "Enter all the required information!", Toast.LENGTH_SHORT).show();
+            et_email_login.setError("The email field can't be empty!");
+            et_email_login.requestFocus();
+        }
+        else if (password.isEmpty())
+        {
+            progressBar_login.setVisibility(View.INVISIBLE);
+            et_password_login.setError("The password field can't be empty!");
+            et_password_login.requestFocus();
         }
         else
         {
@@ -67,22 +77,17 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Toast.makeText(LoginActivity.this, "User logged in successfully!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                        SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putBoolean("stayConnect",checkBox_login.isChecked());
+                        editor.commit();
                     }else{
                         Toast.makeText(LoginActivity.this, "Log in Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                     progressBar_login.setVisibility(View.INVISIBLE);
                 }
             });
-
-            try {
-                FileOutputStream fos = openFileOutput("test.txt",MODE_PRIVATE);
-                OutputStreamWriter osw = new OutputStreamWriter(fos);
-                BufferedWriter bw = new BufferedWriter(osw);
-                bw.write(checkBox_login.isChecked()+"");
-                bw.close();
-            } catch (IOException e) {
-            }
-
             et_email_login.setText("");
             et_password_login.setText("");
         }
