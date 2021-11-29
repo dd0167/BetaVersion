@@ -32,4 +32,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(la);
         finish();
     }
+
+    public void create_user(View view) {
+    }
+
+    public void create_list(View view) {
+    }
+
+    public void create_task(View view) {
+    }
+
+    public void create_tasks_day(View view) {
+    }
 }
