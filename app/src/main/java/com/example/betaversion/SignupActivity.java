@@ -3,11 +3,15 @@ package com.example.betaversion;
 import static com.example.betaversion.FB_Ref.mAuth;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Notification;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -24,6 +28,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText et_password_signup;
     ProgressBar progressBar_signup;
     CheckBox checkBox_signup;
+    AlertDialog.Builder adb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,25 +67,57 @@ public class SignupActivity extends AppCompatActivity {
         }
         else
         {
-            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            adb=new AlertDialog.Builder(this);
+            adb.setCancelable(false);
+            adb.setTitle("Enter User Data");
+            adb.setIcon(R.drawable.data_icon);
+            EditText et_first_name=new EditText(this);
+            et_first_name.setGravity(Gravity.CENTER);
+            et_first_name.setHint("Enter First Name");
+            adb.setView(et_first_name);
+            adb.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                 @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
-                        Toast.makeText(SignupActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
-                        move_main();
-
-                        SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putBoolean("stayConnect",checkBox_signup.isChecked());
-                        editor.commit();
-                    }else{
-                        Toast.makeText(SignupActivity.this, "Registration Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                public void onClick(DialogInterface dialog, int which) {
+                    String first_name=et_first_name.getText().toString();
+                    if (first_name.isEmpty())
+                    {
+                        progressBar_signup.setVisibility(View.INVISIBLE);
+                        et_first_name.setError("First name is required!");
+                        et_first_name.requestFocus();
+                        ///////////////////////////////////////
                     }
-                    progressBar_signup.setVisibility(View.INVISIBLE);
+                    else
+                    {
+//                        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<AuthResult> task) {
+//                                if (task.isSuccessful()){
+//                                    Toast.makeText(SignupActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
+//                                    move_main();
+//
+//                                    SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+//                                    SharedPreferences.Editor editor = settings.edit();
+//                                    editor.putBoolean("stayConnect",checkBox_signup.isChecked());
+//                                    editor.commit();
+//                                }else{
+//                                    Toast.makeText(SignupActivity.this, "Registration Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                }
+//                                progressBar_signup.setVisibility(View.INVISIBLE);
+//                            }
+//                        });
+//                        et_email_signup.setText("");
+//                        et_password_signup.setText("");
+                    }
                 }
             });
-            et_email_signup.setText("");
-            et_password_signup.setText("");
+            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog ad=adb.create();
+            ad.show();
         }
     }
 

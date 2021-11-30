@@ -47,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
         boolean isChecked = settings.getBoolean("stayConnect",false);
-        currentUser = mAuth.getCurrentUser();
         if (isChecked && (currentUser != null)){
             move_main();
         }
