@@ -1,6 +1,5 @@
 package com.example.betaversion;
 
-import static com.example.betaversion.FB_Ref.currentUser;
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refLists;
 import static com.example.betaversion.FB_Ref.refTasksDays;
@@ -13,6 +12,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
 
     User user;
@@ -24,8 +25,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999","Uidpicture");
+        if(currentUser != null){
+            user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999","Uidpicture");
+        }
+
         namechild=user.getUserFirstName()+" "+user.getUserLastName();
 
         list=new List("Example List","30.11.2021");

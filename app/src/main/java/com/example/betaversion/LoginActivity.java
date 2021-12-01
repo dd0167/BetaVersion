@@ -1,6 +1,5 @@
 package com.example.betaversion;
 
-import static com.example.betaversion.FB_Ref.currentUser;
 import static com.example.betaversion.FB_Ref.mAuth;
 
 import androidx.annotation.NonNull;
@@ -47,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
         boolean isChecked = settings.getBoolean("stayConnect",false);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         if (isChecked && (currentUser != null)){
             move_main();
         }
