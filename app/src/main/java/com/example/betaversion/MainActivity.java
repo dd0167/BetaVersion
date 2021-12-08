@@ -5,11 +5,16 @@ import static com.example.betaversion.FB_Ref.refLists;
 import static com.example.betaversion.FB_Ref.refTasksDays;
 import static com.example.betaversion.FB_Ref.refUsers;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -19,11 +24,15 @@ public class MainActivity extends AppCompatActivity {
     User user;
     String namechild;
     List list;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        actionBar=getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0C000000")));
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -71,5 +80,29 @@ public class MainActivity extends AppCompatActivity {
         refTasksDays.child(namechild).child(tasksDay.getTasksDayName()).child("Tasks Day Data").setValue(tasksDay);
         Task task=new Task("Example Task","address","30.11.2021","15:00","30.11.2021","encienciencwoincoenc","white","exampleuid");
         refTasksDays.child(namechild).child(tasksDay.getTasksDayName()).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+        String title=item.getTitle().toString();
+        if (title.equals("My Lists"))
+        {
+            Intent in=new Intent(this,MainActivity.class);
+            startActivity(in);
+            finish();
+        }
+        else if (title.equals("About"))
+        {
+            Intent in=new Intent(this,CreditsActivity.class);
+            startActivity(in);
+            finish();
+        }
+        return true;
     }
 }

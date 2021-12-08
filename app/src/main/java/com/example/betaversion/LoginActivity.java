@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         Toast.makeText(LoginActivity.this, "User logged in successfully!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        move_main();
 
                         SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
