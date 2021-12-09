@@ -17,4 +17,18 @@
             </menu>
     </item>
 
+    <item
+        android:icon="@drawable/user_icon"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:icon="@drawable/setting_icon"
+                android:title="Settings"></item>
+
+            <item
+                android:icon="@drawable/log_out_icon"
+                android:title="Log Out"></item>
+        </menu>
+    </item>
 </menu>
