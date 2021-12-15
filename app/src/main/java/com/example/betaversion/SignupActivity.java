@@ -3,31 +3,25 @@ package com.example.betaversion;
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refUsers;
 import static com.example.betaversion.FB_Ref.reference;
-
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.app.Notification;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.ColorSpace;
-import android.graphics.PixelFormat;
 import android.graphics.Typeface;
-import android.graphics.fonts.FontFamily;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -36,9 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,11 +42,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageActivity;
-
-import java.io.File;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -67,11 +54,6 @@ public class SignupActivity extends AppCompatActivity {
     ImageView user_image;
     Model model;
 
-    public static final int CAMERA_REQUEST=100;
-    public static final int STORAGE__REQUEST=101;
-    String cameraPermission[];
-    String storagePermission[];
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,45 +65,19 @@ public class SignupActivity extends AppCompatActivity {
         checkBox_signup=(CheckBox) findViewById(R.id.checkBox_signup);
 
         progressBar_signup.setVisibility(View.INVISIBLE);
-
-        cameraPermission=new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        storagePermission=new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
     }
 
-    public boolean checkCameraPermission()
-    {
-        boolean result= ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA)==(PackageManager.PERMISSION_GRANTED);
-        boolean result1= ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)==(PackageManager.PERMISSION_GRANTED);
-        return result&&result1;
-    }
-
-    public boolean checkStoragePermission()
-    {
-        boolean result= ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)==(PackageManager.PERMISSION_GRANTED);
-        return result;
-    }
-
-    public void pickFromGallery()
-    {
-        CropImage.activity().start(this);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void requestStoragePermission()
-    {
-        requestPermissions(storagePermission,STORAGE__REQUEST);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void requestCameraPermission()
-    {
-        requestPermissions(cameraPermission,CAMERA_REQUEST);
-    }
-
-    public void sign_in(View view) {
-        Intent la = new Intent(this, LoginActivity.class);
-        startActivity(la);
-        finish();
+    public boolean is_Internet_Connected() {
+        boolean connected = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+            return connected;
+        } catch (Exception e) {
+            Log.e("Connectivity Exception", e.getMessage());
+        }
+        return connected;
     }
 
     public void sign_up(View view) {
@@ -184,30 +140,10 @@ public class SignupActivity extends AppCompatActivity {
             select_image.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 public void onClick(View v) {
-//                    Intent galleryIntent=new Intent();
-//                    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                    galleryIntent.setType("image/*");
-//                    startActivityForResult(galleryIntent,2);
-                    int picd=0;
-                    if (picd==0)
-                    {
-                        if (!checkCameraPermission())
-                        {
-                            requestCameraPermission();
-                        }
-                        else
-                        {
-                            pickFromGallery();
-                        }
-                    }
-                    else if (picd==1)
-                    {
-                        if (!checkStoragePermission())
-                        {
-                            requestStoragePermission();
-                        }
-                        else pickFromGallery();
-                    }
+                    Intent galleryIntent=new Intent();
+                    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    galleryIntent.setType("image/*");
+                    startActivityForResult(galleryIntent,2);
                 }
             });
 
@@ -238,7 +174,11 @@ public class SignupActivity extends AppCompatActivity {
                     String age=et_age.getText().toString();
                     String home_address=et_home_address.getText().toString();
                     String phone=et_phone.getText().toString();
-                    if (first_name.isEmpty() || last_name.isEmpty() || age.isEmpty() || home_address.isEmpty() || phone.isEmpty())
+                    if (!is_Internet_Connected()) {
+                        Toast.makeText(SignupActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                        progressBar_signup.setVisibility(View.INVISIBLE);
+                    }
+                    else if (first_name.isEmpty() || last_name.isEmpty() || age.isEmpty() || home_address.isEmpty() || phone.isEmpty())
                     {
                         Toast.makeText(SignupActivity.this, "Enter all the required information!", Toast.LENGTH_SHORT).show();
                         progressBar_signup.setVisibility(View.INVISIBLE);
@@ -318,61 +258,16 @@ public class SignupActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if (requestCode==2 && resultCode==RESULT_OK && data!=null)
-//        {
-//            imageUri=data.getData();
-//            user_image.setImageURI(imageUri);
-//        }
-
-        if (requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
+        if (requestCode==2 && resultCode==RESULT_OK && data!=null)
         {
-            CropImage.ActivityResult result=CropImage.getActivityResult(data);
-            if (resultCode==RESULT_OK)
-            {
-                Uri resultUri=result.getUri();
-                Picasso.with(this).load(resultUri).into(user_image);
-            }
+            imageUri=data.getData();
+            user_image.setImageURI(imageUri);
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode)
-        {
-            case CAMERA_REQUEST:
-            {
-                if (grantResults.length>0)
-                {
-                    boolean camera_accepted=grantResults[0]==(PackageManager.PERMISSION_GRANTED);
-                    boolean storage_accepted=grantResults[1]==(PackageManager.PERMISSION_GRANTED);
-                    if (camera_accepted&&storage_accepted)
-                    {
-                        pickFromGallery();
-                    }
-                    else
-                    {
-                        Toast.makeText(this,"Please enable camera and storage permission",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-            break;
-            case STORAGE__REQUEST:
-            {
-                if (grantResults.length>0)
-                {
-                    boolean storage_accepted=grantResults[0]==(PackageManager.PERMISSION_GRANTED);
-                    if (storage_accepted)
-                    {
-                        pickFromGallery();
-                    }
-                    else
-                    {
-                        Toast.makeText(this,"Please enable storage permission",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-            break;
-        }
+    public void sign_in(View view) {
+        Intent sin = new Intent(this, LoginActivity.class);
+        startActivity(sin);
+        finish();
     }
 }
