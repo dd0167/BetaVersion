@@ -53,7 +53,6 @@ public class SignupActivity extends AppCompatActivity {
     Uri imageUri;
     ImageView user_image;
     Model model;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +107,6 @@ public class SignupActivity extends AppCompatActivity {
             adb.setTitle("Enter User Data");
             adb.setMessage("Enter all the required information");
             adb.setIcon(R.drawable.data_icon);
-
             LinearLayout myView = new LinearLayout(this);
             myView.setOrientation(LinearLayout.VERTICAL);
             EditText et_first_name=new EditText(this);
@@ -131,6 +129,7 @@ public class SignupActivity extends AppCompatActivity {
             et_phone.setGravity(Gravity.CENTER);
             et_phone.setHint("Enter Phone number");
             et_phone.setInputType(InputType.TYPE_CLASS_PHONE);
+
             user_image=new ImageView(this);
             user_image.setImageResource(R.drawable.user_icon);
             imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.user_icon);
