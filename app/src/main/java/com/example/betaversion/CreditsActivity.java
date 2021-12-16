@@ -21,6 +21,8 @@ public class CreditsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credits);
+
+        getSupportActionBar().setTitle("Credits");
     }
 
     public void click_exit(View view) {
