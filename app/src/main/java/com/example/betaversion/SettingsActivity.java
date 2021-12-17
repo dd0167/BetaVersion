@@ -2,6 +2,8 @@ package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,8 +11,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -21,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "Settings" + "</font>"));
     }
 
     @Override
@@ -85,5 +89,11 @@ public class SettingsActivity extends AppCompatActivity {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
         finish();
+    }
+
+    public void sign_up(View view) {
+    }
+
+    public void change_image(View view) {
     }
 }

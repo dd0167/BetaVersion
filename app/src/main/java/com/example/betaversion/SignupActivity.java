@@ -127,7 +127,7 @@ public class SignupActivity extends AppCompatActivity {
             et_home_address.setInputType(InputType.TYPE_CLASS_TEXT);
             EditText et_phone=new EditText(this);
             et_phone.setGravity(Gravity.CENTER);
-            et_phone.setHint("Enter Phone number");
+            et_phone.setHint("Enter Phone Number");
             et_phone.setInputType(InputType.TYPE_CLASS_PHONE);
 
             user_image=new ImageView(this);
@@ -210,6 +210,8 @@ public class SignupActivity extends AppCompatActivity {
                                                     refUsers.child(first_name+" "+last_name).child("User Data").setValue(user);
 
                                                     move_main();
+                                                    et_email_signup.setText("");
+                                                    et_password_signup.setText("");
                                                 }
                                             });
                                         }
@@ -231,8 +233,6 @@ public class SignupActivity extends AppCompatActivity {
                                 progressBar_signup.setVisibility(View.INVISIBLE);
                             }
                         });
-                        et_email_signup.setText("");
-                        et_password_signup.setText("");
                     }
                 }
             });

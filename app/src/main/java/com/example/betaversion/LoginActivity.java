@@ -104,14 +104,15 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putBoolean("stayConnect",checkBox_login.isChecked());
                         editor.commit();
+
+                        et_email_login.setText("");
+                        et_password_login.setText("");
                     }else{
                         Toast.makeText(LoginActivity.this, "Log in Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                     progressBar_login.setVisibility(View.INVISIBLE);
                 }
             });
-            et_email_login.setText("");
-            et_password_login.setText("");
         }
     }
 
