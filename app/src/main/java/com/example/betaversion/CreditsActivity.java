@@ -16,8 +16,6 @@ import android.view.View;
 
 public class CreditsActivity extends AppCompatActivity {
 
-    AlertDialog.Builder adb;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +57,7 @@ public class CreditsActivity extends AppCompatActivity {
         }
         else if (title.equals("Log Out"))
         {
+            AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
             adb.setTitle("Log Out");
             adb.setMessage("Are you sure you want log out?");

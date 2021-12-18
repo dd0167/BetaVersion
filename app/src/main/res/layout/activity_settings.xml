@@ -13,7 +13,7 @@
         android:layout_weight="25" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/user_image_settings"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
@@ -51,7 +51,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="250dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,13 +67,8 @@
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="10" />
-
             <EditText
-                android:id="@+id/et_email_signup2"
+                android:id="@+id/et_first_name_settings"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:ems="10"
@@ -84,8 +79,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="30" />
+                android:layout_height="30dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -96,13 +90,8 @@
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="10" />
-
             <EditText
-                android:id="@+id/et_email_signup3"
+                android:id="@+id/et_last_name_settings"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:ems="10"
@@ -113,8 +102,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="30" />
+                android:layout_height="30dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -125,13 +113,8 @@
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="10" />
-
             <EditText
-                android:id="@+id/et_email_signup4"
+                android:id="@+id/et_age_settings"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:ems="10"
@@ -142,11 +125,9 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="30" />
+                android:layout_height="30dp" />
 
             <TextView
-                android:id="@+id/textView10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="casual"
@@ -155,13 +136,8 @@
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="10" />
-
             <EditText
-                android:id="@+id/et_email_signup5"
+                android:id="@+id/et_home_address_settings"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:ems="10"
@@ -172,11 +148,9 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="30" />
+                android:layout_height="30dp" />
 
             <TextView
-                android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="casual"
@@ -185,20 +159,16 @@
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="10" />
-
             <EditText
-                android:id="@+id/et_email_signup6"
+                android:id="@+id/et_phone_number_settings"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:ems="10"
                 android:fontFamily="casual"
                 android:gravity="center"
                 android:hint="Type Text Here"
-                android:inputType="numberPassword" />
+                android:inputType="phone" />
+
         </LinearLayout>
     </ScrollView>
 
@@ -218,7 +188,7 @@
             android:layout_weight="50" />
 
         <CheckBox
-            android:id="@+id/checkBox_signup2"
+            android:id="@+id/checkBox_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="50"
@@ -238,14 +208,26 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="50" />
+        android:layout_weight="10" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_settings"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#FFFFFF"
         android:fontFamily="casual"
-        android:onClick="sign_up"
+        android:onClick="update"
         android:text="Update"
         android:textColor="#000000" />
 

@@ -79,6 +79,16 @@
         android:hint="Type Text Here"
         android:inputType="textPassword" />
 
+    <Switch
+        android:id="@+id/switch_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:checked="false"
+        android:fontFamily="casual"
+        android:gravity="center"
+        android:text="Show Password" />
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

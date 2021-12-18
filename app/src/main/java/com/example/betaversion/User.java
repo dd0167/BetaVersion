@@ -9,11 +9,11 @@ public class User {
     private String UserHomeAddress; // כתובת בית
     private String UserEmail; // אימייל
     private String UserPhoneNumber; // מספר טלפון
-    private String UserPictureUrl; // תמונת המשתמש
+    private String UserPictureUri; // תמונת המשתמש
 
     public User() {}
 
-    public User(String userUid, String userFirstName, String userLastName, String userAge, String userHomeAddress, String userEmail, String userPhoneNumber, String userPictureUrl) {
+    public User(String userUid, String userFirstName, String userLastName, String userAge, String userHomeAddress, String userEmail, String userPhoneNumber, String userPictureUri) {
         UserUid = userUid;
         UserFirstName = userFirstName;
         UserLastName = userLastName;
@@ -21,7 +21,7 @@ public class User {
         UserHomeAddress = userHomeAddress;
         UserEmail = userEmail;
         UserPhoneNumber = userPhoneNumber;
-        UserPictureUrl = userPictureUrl;
+        UserPictureUri = userPictureUri;
     }
 
     public String getUserUid() {
@@ -81,10 +81,10 @@ public class User {
     }
 
     public String getUserPictureUid() {
-        return UserPictureUrl;
+        return UserPictureUri;
     }
 
-    public void setUserPictureUid(String userPictureUrl) {
-        UserPictureUrl = userPictureUrl;
+    public void setUserPictureUid(String userPictureUri) {
+        UserPictureUri = userPictureUri;
     }
 }

@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     User user;
     String namechild;
     List list;
-    AlertDialog.Builder adb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if(currentUser != null){
-            user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999","Uidpicture");
+            user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999", "Uidpicture");
         }
 
         namechild=user.getUserFirstName()+" "+user.getUserLastName();
@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (title.equals("Log Out"))
         {
+            AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
             adb.setTitle("Log Out");
             adb.setMessage("Are you sure you want log out?");
