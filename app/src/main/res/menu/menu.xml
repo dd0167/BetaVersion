@@ -31,4 +31,9 @@
                 android:title="Log Out"></item>
         </menu>
     </item>
+    <item
+        android:icon="@drawable/ic_back"
+        android:title="Back"
+        app:showAsAction="always" />
+
 </menu>

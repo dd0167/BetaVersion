@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Lists" + "</font>"));
 
@@ -61,7 +64,12 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
-        finish();
+    }
+
+    public void move_main()
+    {
+        Intent ma = new Intent(this, MainActivity.class);
+        startActivity(ma);
     }
 
     public void create_user(View view) {
@@ -96,21 +104,17 @@ public class MainActivity extends AppCompatActivity {
         String title=item.getTitle().toString();
         if (title.equals("My Lists"))
         {
-            Intent in=new Intent(this,MainActivity.class);
-            startActivity(in);
-            finish();
+            move_main();
         }
         else if (title.equals("About"))
         {
-            Intent in=new Intent(this,CreditsActivity.class);
+            Intent in = new Intent(this, CreditsActivity.class);
             startActivity(in);
-            finish();
         }
         else if (title.equals("Settings"))
         {
             Intent in=new Intent(this,SettingsActivity.class);
             startActivity(in);
-            finish();
         }
         else if (title.equals("Log Out"))
         {
@@ -138,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
             });
             AlertDialog ad= adb.create();
             ad.show();
+        }
+        else if (title.equals("Back"))
+        {
+            super.onBackPressed();
         }
         return true;
     }

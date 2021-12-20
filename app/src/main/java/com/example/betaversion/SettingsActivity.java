@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -62,6 +63,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "Settings" + "</font>"));
 
@@ -122,9 +125,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
             else
             {
-                Intent in=new Intent(this,MainActivity.class);
-                startActivity(in);
-                finish();
+                move_main();
             }
         }
         else if (title.equals("About"))
@@ -136,7 +137,6 @@ public class SettingsActivity extends AppCompatActivity {
             else {
                 Intent in = new Intent(this, CreditsActivity.class);
                 startActivity(in);
-                finish();
             }
         }
         else if (title.equals("Settings"))
@@ -148,7 +148,6 @@ public class SettingsActivity extends AppCompatActivity {
             else {
                 Intent in=new Intent(this,SettingsActivity.class);
                 startActivity(in);
-                finish();
             }
         }
         else if (title.equals("Log Out"))
@@ -178,6 +177,10 @@ public class SettingsActivity extends AppCompatActivity {
             AlertDialog ad= adb.create();
             ad.show();
         }
+        else if (title.equals("Back"))
+        {
+            super.onBackPressed();
+        }
         return true;
     }
 
@@ -185,7 +188,6 @@ public class SettingsActivity extends AppCompatActivity {
     {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
-        finish();
     }
 
     public void update(View view) {
@@ -265,6 +267,7 @@ public class SettingsActivity extends AppCompatActivity {
                                     refUsers.child(currentUser.getUid()).child("User Data").setValue(user);
                                     progressBar_settings.setVisibility(View.INVISIBLE);
                                     is_changed=false;
+                                    move_main();
                                 }
                             });
                         }
@@ -289,6 +292,7 @@ public class SettingsActivity extends AppCompatActivity {
                     User user=new User(currentUser.getUid(),first_name,last_name,age,home_address,currentUser.getEmail(),phone,imageUri.toString());
                     refUsers.child(currentUser.getUid()).child("User Data").setValue(user);
                     Toast.makeText(SettingsActivity.this, "User data changed successfully!", Toast.LENGTH_SHORT).show();
+                    move_main();
                 }
             }
         }
@@ -359,5 +363,11 @@ public class SettingsActivity extends AppCompatActivity {
             Log.e("Connectivity Exception", e.getMessage());
         }
         return connected;
+    }
+
+    public void move_main()
+    {
+        Intent ma = new Intent(this, MainActivity.class);
+        startActivity(ma);
     }
 }
