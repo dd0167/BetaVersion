@@ -1,6 +1,5 @@
 package com.example.betaversion;
 
-import static com.example.betaversion.FB_Ref.FBCS;
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refUsers;
 import static com.example.betaversion.FB_Ref.reference;
@@ -38,12 +37,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -58,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
     Uri imageUri;
     ProgressBar progressBar_settings;
     boolean is_changed;
+    int PICK_IMAGE=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,7 +320,7 @@ public class SettingsActivity extends AppCompatActivity {
                     Intent galleryIntent=new Intent();
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                     galleryIntent.setType("image/*");
-                    startActivityForResult(galleryIntent,2);
+                    startActivityForResult(galleryIntent,PICK_IMAGE);
                     is_changed=true;
                 }
                 else if (which==1)
@@ -345,10 +345,40 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode==2 && resultCode==RESULT_OK && data!=null)
+//        if (requestCode==PICK_IMAGE && resultCode==RESULT_OK && data!=null)
+//        {
+//            imageUri=data.getData();
+//            user_image_settings.setImageURI(imageUri);
+//        }
+
+        if (requestCode==PICK_IMAGE && resultCode==RESULT_OK && data!=null)
         {
             imageUri=data.getData();
-            user_image_settings.setImageURI(imageUri);
+
+            CropImage.activity(imageUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setCropShape(CropImageView.CropShape.OVAL)
+                    .setBorderCornerLength(1)
+                    .setBorderLineColor(Color.WHITE)
+                    .setAutoZoomEnabled(true)
+                    .setActivityTitle("Crop Image")
+                    .setFixAspectRatio(true)
+                    .setCropMenuCropButtonTitle("Done")
+                    .start(this);
+        }
+        if (requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
+        {
+            CropImage.ActivityResult result=CropImage.getActivityResult(data);
+            if (resultCode==RESULT_OK)
+            {
+                imageUri=result.getUri();
+                user_image_settings.setImageURI(imageUri);
+            }
+            else if (resultCode==CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE)
+            {
+                Exception error=result.getError();
+                Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

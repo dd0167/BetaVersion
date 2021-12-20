@@ -92,12 +92,53 @@
         android:id="@+id/fab_add_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:backgroundTint="@color/white"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="click"
         android:src="@drawable/ic_add"
         android:tint="@color/black"
-        tools:ignore="SpeakableTextPresentCheck"
-        android:onClick="click"/>
+        app:backgroundTint="@color/black"
+        app:borderWidth="1dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+<!--        app:layout_constraintBottom_toTopOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"-->
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/fab_add_list_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:fab_addButtonColorNormal="@color/white"
+        app:fab_addButtonColorPressed="@color/white"
+        app:fab_addButtonPlusIconColor="@color/black"
+        app:fab_expandDirection="up"
+        app:fab_labelStyle="@style/FloatStyle"
+        app:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="click"
+            app:fab_colorDisabled="@color/black"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="#1A000000"
+            app:fab_icon="@drawable/list"
+            app:fab_size="mini"
+            app:fab_title="Add List" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="click"
+            app:fab_colorDisabled="@color/black"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="#1A000000"
+            app:fab_icon="@drawable/list_by_location_icon"
+            app:fab_size="mini"
+            app:fab_title="Add List By Location" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </LinearLayout>
