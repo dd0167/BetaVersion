@@ -88,6 +88,7 @@ public class CreditsActivity extends AppCompatActivity {
     {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
+        finish();
     }
 
     public void move_main()

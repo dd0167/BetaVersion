@@ -188,6 +188,7 @@ public class SettingsActivity extends AppCompatActivity {
     {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
+        finish();
     }
 
     public void update(View view) {
