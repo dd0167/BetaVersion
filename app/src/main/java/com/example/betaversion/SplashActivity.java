@@ -14,7 +14,7 @@ import java.util.TimerTask;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DISPLAY_LENGTH = 3000;
+    private static final long SPLASH_DISPLAY_LENGTH = 1000;
 
     ProgressBar progressBar_splash;
     int counter=0;
@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         };
-        timer.schedule(timerTask,0,30);
+        timer.schedule(timerTask,0,10);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 

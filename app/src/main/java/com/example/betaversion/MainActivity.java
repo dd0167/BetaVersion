@@ -5,9 +5,11 @@ import static com.example.betaversion.FB_Ref.refLists;
 import static com.example.betaversion.FB_Ref.refTasksDays;
 import static com.example.betaversion.FB_Ref.refUsers;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +25,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,11 +35,39 @@ public class MainActivity extends AppCompatActivity {
     User user;
     String namechild;
     List list;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
+
+        bottomNavigationView.setBackground(null);
+        bottomNavigationView.getMenu().getItem(2).setEnabled(true);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id==R.id.home)
+                {
+                    Toast.makeText(MainActivity.this, "hi", Toast.LENGTH_SHORT).show();
+                }
+                else if (id==R.id.about)
+                {
+                    Intent ca = new Intent(MainActivity.this, CreditsActivity.class);
+                    startActivity(ca);
+                    //overridePendingTransition(0,0);
+                }
+                return true;
+            }
+        });
+        //bottomNavigationView.setSelectedItemId(R.id.settings);
+
+
+
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
