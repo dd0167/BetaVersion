@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/home"
         android:title="Home"
-        android:icon="@drawable/list_icon" />
+        android:icon="@drawable/list_icon"
+        app:showAsAction="always"/>
 
     <item android:id="@+id/Search"
         android:title="Search"
-        android:icon="@drawable/list" />
+        android:icon="@drawable/list"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/empty"
+        android:title=""
+        app:showAsAction="always" />
 
     <item android:id="@+id/about"
         android:title="About"
-        android:icon="@drawable/about_icon" />
+        android:icon="@drawable/about_icon"
+        app:showAsAction="always"/>
 
     <item android:id="@+id/settings"
         android:title="Settings"
-        android:icon="@drawable/settings_icon" />
+        android:icon="@drawable/settings_icon"
+        app:showAsAction="always"/>
 </menu>

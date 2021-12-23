@@ -11,7 +11,7 @@
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/action_bar_layout.xml" value="0.21331521739130435" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_credits.xml" value="0.21331521739130435" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_login.xml" value="0.20425724637681159" />
-        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_main.xml" value="0.23731884057971014" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_main.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_menu.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_registration.xml" value="0.2421875" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_settings.xml" value="0.2421875" />
@@ -30,5 +30,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.4" />
+      </ProjectState>
+    </option>
   </component>
 </project>

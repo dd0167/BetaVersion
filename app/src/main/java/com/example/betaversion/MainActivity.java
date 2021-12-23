@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setBackground(null);
-        bottomNavigationView.getMenu().getItem(2).setEnabled(true);
+        bottomNavigationView.getMenu().getItem(2).setEnabled(false);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -53,12 +53,12 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id==R.id.home)
                 {
-                    Toast.makeText(MainActivity.this, "hi", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "hi", Toast.LENGTH_SHORT).show();
                 }
-                else if (id==R.id.about)
+                else if (id==R.id.Search)
                 {
-                    Intent ca = new Intent(MainActivity.this, CreditsActivity.class);
-                    startActivity(ca);
+//                    Intent ca = new Intent(MainActivity.this, CreditsActivity.class);
+//                    startActivity(ca);
                     //overridePendingTransition(0,0);
                 }
                 return true;
