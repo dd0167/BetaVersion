@@ -2,15 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/home"
-        android:title="Home"
+    <item
+        android:id="@+id/my_lists"
         android:icon="@drawable/list_icon"
-        app:showAsAction="always"/>
+        android:title="My Lists"
+        app:showAsAction="always" />
 
-    <item android:id="@+id/Search"
-        android:title="Search"
-        android:icon="@drawable/list"
-        app:showAsAction="always"/>
+    <item
+        android:id="@+id/tasks_day"
+        android:icon="@drawable/tasks_day"
+        android:title="Tasks Day"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/empty"

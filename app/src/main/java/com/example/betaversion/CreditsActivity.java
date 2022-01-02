@@ -2,6 +2,7 @@ package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,17 +15,61 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class CreditsActivity extends AppCompatActivity {
+
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credits);
 
+        bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
+
+        bottomNavigationView.setBackground(null);
+        bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false);
+
+        bottomNavigationView.getMenu().findItem(R.id.about).setEnabled(false);
+        bottomNavigationView.setSelectedItemId(R.id.about);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id==R.id.my_lists)
+                {
+                    Intent ma = new Intent(CreditsActivity.this,MainActivity.class);
+                    startActivity(ma);
+                    finish();
+                }
+                else if (id==R.id.about)
+                {
+                    Intent ca = new Intent(CreditsActivity.this, CreditsActivity.class);
+                    startActivity(ca);
+                    finish();
+                }
+                else if (id==R.id.settings)
+                {
+                    Intent sa = new Intent(CreditsActivity.this, SettingsActivity.class);
+                    startActivity(sa);
+                    finish();
+                }
+                return true;
+            }
+        });
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "Credits" + "</font>"));
+    }
+
+    public void click(View view) {
+        Toast.makeText(this, "try" , Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -36,21 +81,7 @@ public class CreditsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
         String title=item.getTitle().toString();
-        if (title.equals("My Lists"))
-        {
-            move_main();
-        }
-        else if (title.equals("About"))
-        {
-            Intent in = new Intent(this, CreditsActivity.class);
-            startActivity(in);
-        }
-        else if (title.equals("Settings"))
-        {
-            Intent in=new Intent(this,SettingsActivity.class);
-            startActivity(in);
-        }
-        else if (title.equals("Log Out"))
+        if (title.equals("Log Out"))
         {
             AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
@@ -77,10 +108,6 @@ public class CreditsActivity extends AppCompatActivity {
             AlertDialog ad= adb.create();
             ad.show();
         }
-        else if (title.equals("Back"))
-        {
-            super.onBackPressed();
-        }
         return true;
     }
 
@@ -95,5 +122,6 @@ public class CreditsActivity extends AppCompatActivity {
     {
         Intent ma = new Intent(this, MainActivity.class);
         startActivity(ma);
+        finish();
     }
 }

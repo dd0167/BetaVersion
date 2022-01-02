@@ -6,18 +6,13 @@ import static com.example.betaversion.FB_Ref.refTasksDays;
 import static com.example.betaversion.FB_Ref.refUsers;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -25,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,26 +39,37 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setBackground(null);
-        bottomNavigationView.getMenu().getItem(2).setEnabled(false);
+        bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false);
+
+        bottomNavigationView.getMenu().findItem(R.id.my_lists).setEnabled(false);
+        bottomNavigationView.setSelectedItemId(R.id.my_lists);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if (id==R.id.home)
+                if (id==R.id.my_lists)
                 {
-                    //Toast.makeText(MainActivity.this, "hi", Toast.LENGTH_SHORT).show();
+                    Intent ma = new Intent(MainActivity.this,MainActivity.class);
+                    startActivity(ma);
+                    finish();
                 }
-                else if (id==R.id.Search)
+                else if (id==R.id.about)
                 {
-//                    Intent ca = new Intent(MainActivity.this, CreditsActivity.class);
-//                    startActivity(ca);
-                    //overridePendingTransition(0,0);
+                    Intent ca = new Intent(MainActivity.this, CreditsActivity.class);
+                    startActivity(ca);
+                    finish();
+                }
+                else if (id==R.id.settings)
+                {
+                    Intent sa = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(sa);
+                    finish();
                 }
                 return true;
             }
         });
-        //bottomNavigationView.setSelectedItemId(R.id.settings);
+        // overridePendingTransition(0,0);
 
 
 
@@ -104,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent ma = new Intent(this, MainActivity.class);
         startActivity(ma);
+        finish();
     }
 
     public void create_user(View view) {
@@ -136,21 +142,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
         String title=item.getTitle().toString();
-        if (title.equals("My Lists"))
-        {
-            move_main();
-        }
-        else if (title.equals("About"))
-        {
-            Intent in = new Intent(this, CreditsActivity.class);
-            startActivity(in);
-        }
-        else if (title.equals("Settings"))
-        {
-            Intent in=new Intent(this,SettingsActivity.class);
-            startActivity(in);
-        }
-        else if (title.equals("Log Out"))
+        if (title.equals("Log Out"))
         {
             AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
@@ -176,10 +168,6 @@ public class MainActivity extends AppCompatActivity {
             });
             AlertDialog ad= adb.create();
             ad.show();
-        }
-        else if (title.equals("Back"))
-        {
-            super.onBackPressed();
         }
         return true;
     }

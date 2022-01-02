@@ -119,10 +119,6 @@ public class SignupActivity extends AppCompatActivity {
             et_password_signup.setError("Password is required!");
             et_password_signup.requestFocus();
         }
-        else if (!is_Internet_Connected()) {
-            Toast.makeText(SignupActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-            progressBar_signup.setVisibility(View.INVISIBLE);
-        }
         else
         {
             mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

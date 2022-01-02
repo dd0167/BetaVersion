@@ -34,6 +34,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,7 +46,11 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.Set;
+
 public class SettingsActivity extends AppCompatActivity {
+
+    BottomNavigationView bottomNavigationView;
 
     ImageView user_image_settings;
     EditText et_first_name_settings;
@@ -63,6 +69,40 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
+
+        bottomNavigationView.setBackground(null);
+        bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false);
+
+        bottomNavigationView.getMenu().findItem(R.id.settings).setEnabled(false);
+        bottomNavigationView.setSelectedItemId(R.id.settings);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id==R.id.my_lists)
+                {
+                    Intent ma = new Intent(SettingsActivity.this,MainActivity.class);
+                    startActivity(ma);
+                    finish();
+                }
+                else if (id==R.id.about)
+                {
+                    Intent ca = new Intent(SettingsActivity.this, CreditsActivity.class);
+                    startActivity(ca);
+                    finish();
+                }
+                else if (id==R.id.settings)
+                {
+                    Intent sa = new Intent(SettingsActivity.this, SettingsActivity.class);
+                    startActivity(sa);
+                    finish();
+                }
+                return true;
+            }
+        });
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
@@ -108,6 +148,10 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    public void click(View view) {
+        Toast.makeText(this, "try" , Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
@@ -117,40 +161,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
         String title=item.getTitle().toString();
-        if (title.equals("My Lists"))
-        {
-            if (et_first_name_settings.getText().toString().isEmpty() || et_last_name_settings.getText().toString().isEmpty() || et_age_settings.getText().toString().isEmpty() || et_home_address_settings.getText().toString().isEmpty() || et_phone_number_settings.getText().toString().isEmpty())
-            {
-                Toast.makeText(SettingsActivity.this, "Enter User Data", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                move_main();
-            }
-        }
-        else if (title.equals("About"))
-        {
-            if (et_first_name_settings.getText().toString().isEmpty() || et_last_name_settings.getText().toString().isEmpty() || et_age_settings.getText().toString().isEmpty() || et_home_address_settings.getText().toString().isEmpty() || et_phone_number_settings.getText().toString().isEmpty())
-            {
-                Toast.makeText(SettingsActivity.this, "Enter User Data", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Intent in = new Intent(this, CreditsActivity.class);
-                startActivity(in);
-            }
-        }
-        else if (title.equals("Settings"))
-        {
-            if (et_first_name_settings.getText().toString().isEmpty() || et_last_name_settings.getText().toString().isEmpty() || et_age_settings.getText().toString().isEmpty() || et_home_address_settings.getText().toString().isEmpty() || et_phone_number_settings.getText().toString().isEmpty())
-            {
-                Toast.makeText(SettingsActivity.this, "Enter User Data", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Intent in=new Intent(this,SettingsActivity.class);
-                startActivity(in);
-            }
-        }
-        else if (title.equals("Log Out"))
+        if (title.equals("Log Out"))
         {
             AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
@@ -176,10 +187,6 @@ public class SettingsActivity extends AppCompatActivity {
             });
             AlertDialog ad= adb.create();
             ad.show();
-        }
-        else if (title.equals("Back"))
-        {
-            super.onBackPressed();
         }
         return true;
     }
@@ -400,5 +407,6 @@ public class SettingsActivity extends AppCompatActivity {
     {
         Intent ma = new Intent(this, MainActivity.class);
         startActivity(ma);
+        finish();
     }
 }

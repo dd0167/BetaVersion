@@ -104,19 +104,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public boolean is_Internet_Connected() {
-        boolean connected = false;
-        try {
-            ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo nInfo = cm.getActiveNetworkInfo();
-            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
-            return connected;
-        } catch (Exception e) {
-            Log.e("Connectivity Exception", e.getMessage());
-        }
-        return connected;
-    }
-
     public void sign_in(View view) {
         progressBar_login.setVisibility(View.VISIBLE);
         String email=et_email_login.getText().toString();
@@ -132,10 +119,6 @@ public class LoginActivity extends AppCompatActivity {
             progressBar_login.setVisibility(View.INVISIBLE);
             et_password_login.setError("Password is required!");
             et_password_login.requestFocus();
-        }
-        else if (!is_Internet_Connected()) {
-            Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-            progressBar_login.setVisibility(View.INVISIBLE);
         }
         else
         {
