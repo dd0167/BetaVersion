@@ -52,7 +52,6 @@ public class CustomListAdapter extends BaseAdapter {
                 Toast.makeText(context.getApplicationContext(), "trykrejfle", Toast.LENGTH_SHORT).show();
             }
         });
-
         return view;
     }
 }
