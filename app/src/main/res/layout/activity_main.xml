@@ -15,11 +15,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
+        android:fontFamily="@font/annie_use_your_telescope"
         android:gravity="center"
-        android:text="My Lists"
+        android:text="Lists"
         android:textColor="@color/black"
-        android:textSize="30sp"
+        android:textSize="50sp"
         android:textStyle="bold" />
 
     <Space
@@ -27,67 +27,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="30" />
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/studentlist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#FFFFFF"
-            android:fontFamily="casual"
-            android:onClick="create_user"
-            android:text="Create User"
-            android:textColor="#000000" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#FFFFFF"
-            android:fontFamily="casual"
-            android:onClick="create_list"
-            android:text="Create List"
-            android:textColor="#000000" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#FFFFFF"
-            android:fontFamily="casual"
-            android:onClick="create_task"
-            android:text="Create Task"
-            android:textColor="#000000" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#FFFFFF"
-            android:fontFamily="casual"
-            android:onClick="create_tasks_day"
-            android:text="Create Tasks Day"
-            android:textColor="#000000" />
-
-    </LinearLayout>
+        android:layout_height="200dp" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="30" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:fontFamily="casual"
-        android:onClick="log_out"
-        android:text="Log Out"
-        android:textColor="#000000" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="50" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_list"
@@ -103,7 +51,7 @@
         app:backgroundTint="@color/black"
         app:borderWidth="1dp"
         tools:ignore="SpeakableTextPresentCheck" />
-<!--        app:layout_constraintBottom_toTopOf="parent"
+    <!--        app:layout_constraintBottom_toTopOf="parent"
        app:layout_constraintEnd_toEndOf="parent"-->
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
@@ -177,11 +125,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
+                android:onClick="click"
                 android:src="@drawable/ic_add"
                 app:backgroundTint="@color/black"
                 app:layout_anchor="@id/bottomAppBar"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:onClick="click"/>
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>

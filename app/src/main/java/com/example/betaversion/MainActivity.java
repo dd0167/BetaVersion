@@ -8,6 +8,7 @@ import static com.example.betaversion.FB_Ref.refUsers;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,23 +19,94 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     User user;
     String namechild;
     List list;
     BottomNavigationView bottomNavigationView;
 
+    ArrayList<String> stuList = new ArrayList<String>();
+    ArrayList<List> stuValues = new ArrayList<List>();
+    ArrayAdapter<String> adp;
+    String str1,str2,str3;
+    ListView studentlist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
+
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Lists" + "</font>"));
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser != null){
+            user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999", "Uidpicture");
+        }
+
+        namechild=user.getUserFirstName()+" "+user.getUserLastName();
+
+        list=new List("Example List","30.11.2021");
+
+
+
+
+
+
+        //refLists.child(currentUser.getUid()).child(list.getListName()).child("List Data").setValue(list);
+
+        studentlist=(ListView) findViewById(R.id.studentlist);
+
+        studentlist.setOnItemClickListener(this);
+        studentlist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        ValueEventListener stuListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dS) {
+                stuValues.clear();
+                stuList.clear();
+                for(DataSnapshot data : dS.getChildren()) {
+                    List stuTmp=data.getValue(List.class);
+                    stuValues.add(stuTmp);
+                    str1 = stuTmp.getListName();
+                    str2 = stuTmp.getListCreationDate();
+                    stuList.add(str1+" "+str2);
+                }
+                CustomListAdapter customadp = new CustomListAdapter(getApplicationContext(),
+                        stuList);
+                studentlist.setAdapter(customadp);
+
+//                adp = new ArrayAdapter<String>(MainActivity.this,R.layout.support_simple_spinner_dropdown_item, stuList);
+//                studentlist.setAdapter(adp);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        };
+        refLists.child(namechild).child(list.getListName()).addValueEventListener(stuListener);
+
+
+
+
+
+
+
 
         bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
@@ -70,23 +142,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // overridePendingTransition(0,0);
+    }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
-
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Lists" + "</font>"));
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if(currentUser != null){
-            user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999", "Uidpicture");
-        }
-
-        namechild=user.getUserFirstName()+" "+user.getUserLastName();
-
-        list=new List("Example List","30.11.2021");
     }
 
     public void log_out(View view) {
