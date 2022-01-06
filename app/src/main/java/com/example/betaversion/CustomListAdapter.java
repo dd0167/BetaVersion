@@ -14,12 +14,12 @@ import java.util.ArrayList;
 
 public class CustomListAdapter extends BaseAdapter {
     Context context;
-    ArrayList<String> cityList;
+    ArrayList<String> lists;
     LayoutInflater inflter;
 
-    public CustomListAdapter(Context applicationContext, ArrayList<String> cityList) {
+    public CustomListAdapter(Context applicationContext, ArrayList<String> lists) {
         this.context = applicationContext;
-        this.cityList = cityList;
+        this.lists = lists;
         inflter = (LayoutInflater.from(applicationContext));
     }
 
@@ -27,7 +27,7 @@ public class CustomListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return cityList.size();
+        return lists.size();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CustomListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = inflter.inflate(R.layout.custom_listview_layout, null);
         TextView title = (TextView) view.findViewById(R.id.item_title);
-        title.setText(cityList.get(i));
+        title.setText(lists.get(i));
         ImageView more = (ImageView) view.findViewById(R.id.options);
         more.setOnClickListener(new View.OnClickListener() {
             @Override

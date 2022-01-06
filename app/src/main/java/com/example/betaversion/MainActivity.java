@@ -8,20 +8,23 @@ import static com.example.betaversion.FB_Ref.refUsers;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,7 +34,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
@@ -40,16 +51,42 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     List list;
     BottomNavigationView bottomNavigationView;
 
-    ArrayList<String> stuList = new ArrayList<String>();
-    ArrayList<List> stuValues = new ArrayList<List>();
+    TextView taskDate;
+
+    ArrayList<String> user_list = new ArrayList<String>();
+    ArrayList<List> user_values = new ArrayList<List>();
     ArrayAdapter<String> adp;
-    String str1,str2,str3;
-    ListView studentlist;
+    String list_name;
+    ListView user_listview;
+
+    DatePickerDialog.OnDateSetListener mDateSetListener;
+    Calendar calendar=Calendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    int month = calendar.get(Calendar.MONTH);
+    int day = calendar.get(Calendar.DAY_OF_MONTH);
+    String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+
+        taskDate=(TextView) findViewById(R.id.taskDate);
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                String date = day + "/" + month + "/" + year;
+                taskDate.setText(date);
+            }
+        };
+
+
+
+
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
@@ -72,34 +109,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //refLists.child(currentUser.getUid()).child(list.getListName()).child("List Data").setValue(list);
 
-        studentlist=(ListView) findViewById(R.id.studentlist);
+        user_listview=(ListView) findViewById(R.id.user_listview);
 
-        studentlist.setOnItemClickListener(this);
-        studentlist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        user_listview.setOnItemClickListener(this);
+        user_listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        ValueEventListener stuListener = new ValueEventListener() {
+        ValueEventListener user_list_listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dS) {
-                stuValues.clear();
-                stuList.clear();
+                user_values.clear();
+                user_list.clear();
                 for(DataSnapshot data : dS.getChildren()) {
                     List stuTmp=data.getValue(List.class);
-                    stuValues.add(stuTmp);
-                    str1 = stuTmp.getListName();
-                    str2 = stuTmp.getListCreationDate();
-                    stuList.add(str1+" "+str2);
+                    user_values.add(stuTmp);
+                    list_name = stuTmp.getListName();
+                    user_list.add(list_name);
                 }
                 CustomListAdapter customadp = new CustomListAdapter(getApplicationContext(),
-                        stuList);
-                studentlist.setAdapter(customadp);
-
-//                adp = new ArrayAdapter<String>(MainActivity.this,R.layout.support_simple_spinner_dropdown_item, stuList);
-//                studentlist.setAdapter(adp);
+                        user_list);
+                user_listview.setAdapter(customadp);
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         };
-        refLists.child(namechild).child(list.getListName()).addValueEventListener(stuListener);
+        refLists.child(currentUser.getUid()).child(list.getListName()).addValueEventListener(user_list_listener);
 
 
 
@@ -234,5 +269,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void click(View view) {
         Toast.makeText(this, "try" , Toast.LENGTH_SHORT).show();
+    }
+
+    public void get_date(View view) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month=month+1;
+                date=dayOfMonth+"-"+month+"-"+year;
+
+
+
+                SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+
+                try {
+                    Date result_date=inputDateFormat.parse(date);
+                    String outputDateString = dateFormat.format(result_date);
+                    String[] items1 = outputDateString.split(" ");
+                    String day = items1[0];
+                    String dd = items1[1];
+                    String mon = items1[2];
+                    taskDate.setText(day+" "+dd+" "+mon);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        },year,month,day);
+        datePickerDialog.show();
+
+
+
     }
 }
