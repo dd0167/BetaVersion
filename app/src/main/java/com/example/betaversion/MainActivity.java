@@ -10,10 +10,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -23,11 +26,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,20 +52,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener,PopupMenu.OnMenuItemClickListener {
+
+    FirebaseUser currentUser;
 
     User user;
-    String namechild;
     List list;
+    List list_clicked;
     BottomNavigationView bottomNavigationView;
-
-    TextView taskDate;
 
     ArrayList<String> user_list = new ArrayList<String>();
     ArrayList<List> user_values = new ArrayList<List>();
-    ArrayAdapter<String> adp;
     String list_name;
     ListView user_listview;
+    TextView tv_lists_amount;
 
     DatePickerDialog.OnDateSetListener mDateSetListener;
     Calendar calendar=Calendar.getInstance();
@@ -65,82 +73,46 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int month = calendar.get(Calendar.MONTH);
     int day = calendar.get(Calendar.DAY_OF_MONTH);
     String date;
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
+    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+
+    BottomSheetDialog bottomSheetDialog_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        bottomSheetDialog_list=(BottomSheetDialog) new BottomSheetDialog(MainActivity.this);
 
+//        taskDate=(TextView) findViewById(R.id.taskDate);
+//        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+//                month = month + 1;
+//                String date = day + "/" + month + "/" + year;
+//                taskDate.setText(date);
+//            }
+//        };
 
-
-        taskDate=(TextView) findViewById(R.id.taskDate);
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String date = day + "/" + month + "/" + year;
-                taskDate.setText(date);
-            }
-        };
-
-
-
-
+        tv_lists_amount=(TextView) findViewById(R.id.tv_lists_amount);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Lists" + "</font>"));
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
+        currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999", "Uidpicture");
         }
 
-        namechild=user.getUserFirstName()+" "+user.getUserLastName();
-
-        list=new List("Example List","30.11.2021");
-
-
-
-
-
-
-        //refLists.child(currentUser.getUid()).child(list.getListName()).child("List Data").setValue(list);
-
         user_listview=(ListView) findViewById(R.id.user_listview);
-
         user_listview.setOnItemClickListener(this);
+        user_listview.setOnItemLongClickListener(this);
         user_listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        ValueEventListener user_list_listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dS) {
-                user_values.clear();
-                user_list.clear();
-                for(DataSnapshot data : dS.getChildren()) {
-                    List stuTmp=data.getValue(List.class);
-                    user_values.add(stuTmp);
-                    list_name = stuTmp.getListName();
-                    user_list.add(list_name);
-                }
-                CustomListAdapter customadp = new CustomListAdapter(getApplicationContext(),
-                        user_list);
-                user_listview.setAdapter(customadp);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
-        refLists.child(currentUser.getUid()).child(list.getListName()).addValueEventListener(user_list_listener);
 
-
-
-
-
-
+        read_lists();
 
 
         bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
@@ -179,20 +151,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // overridePendingTransition(0,0);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    public void log_out(View view) {
-        mAuth.signOut();
-        SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("stayConnect",false);
-        editor.commit();
-        move_login();
-    }
-
     public void move_login()
     {
         Intent la = new Intent(this, LoginActivity.class);
@@ -207,26 +165,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         finish();
     }
 
-    public void create_user(View view) {
-        refUsers.child(namechild).child("User Data").setValue(user);
-    }
-
-    public void create_list(View view) {
-
-        refLists.child(namechild).child(list.getListName()).child("List Data").setValue(list);
-    }
-
-    public void create_task(View view) {
-        Task task=new Task("Example Task","address","30.11.2021","15:00","30.11.2021","encienciencwoincoenc","white","exampleuid");
-        refLists.child(namechild).child(list.getListName()).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-    }
-
-    public void create_tasks_day(View view) {
-        TasksDay tasksDay=new TasksDay("Example tasksday name","30.11.2021");
-        refTasksDays.child(namechild).child(tasksDay.getTasksDayName()).child("Tasks Day Data").setValue(tasksDay);
-        Task task=new Task("Example Task","address","30.11.2021","15:00","30.11.2021","encienciencwoincoenc","white","exampleuid");
-        refTasksDays.child(namechild).child(tasksDay.getTasksDayName()).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-    }
+//    public void create_user(View view) {
+//        refUsers.child(namechild).child("User Data").setValue(user);
+//    }
+//
+//    public void createlist(View view) {
+//
+//        refLists.child(namechild).child(list.getListName()).child("List Data").setValue(list);
+//    }
+//
+//    public void create_task(View view) {
+//        Task task=new Task("Example Task","address","30.11.2021","15:00","30.11.2021","encienciencwoincoenc","white","exampleuid");
+//        refLists.child(namechild).child(list.getListName()).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+//    }
+//
+//    public void create_tasks_day(View view) {
+//        TasksDay tasksDay=new TasksDay("Example tasksday name","30.11.2021");
+//        refTasksDays.child(namechild).child(tasksDay.getTasksDayName()).child("Tasks Day Data").setValue(tasksDay);
+//        Task task=new Task("Example Task","address","30.11.2021","15:00","30.11.2021","encienciencwoincoenc","white","exampleuid");
+//        refTasksDays.child(namechild).child(tasksDay.getTasksDayName()).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
@@ -278,28 +236,207 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 month=month+1;
                 date=dayOfMonth+"-"+month+"-"+year;
 
-
-
-                SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
-
-                try {
-                    Date result_date=inputDateFormat.parse(date);
-                    String outputDateString = dateFormat.format(result_date);
-                    String[] items1 = outputDateString.split(" ");
-                    String day = items1[0];
-                    String dd = items1[1];
-                    String mon = items1[2];
-                    taskDate.setText(day+" "+dd+" "+mon);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+                convert_date(date);
             }
         },year,month,day);
         datePickerDialog.show();
+    }
+
+    // convert date from dd-MM-yyyy to english
+    public String[] convert_date(String date)
+    {
+        String[] result=new String[3];
+
+        try {
+            Date result_date=inputDateFormat.parse(date);
+            String outputDateString = dateFormat.format(result_date);
+            String[] items1 = outputDateString.split(" ");
+            String day = items1[0];
+            String dd = items1[1];
+            String mon = items1[2];
+
+            result[0]=day;
+            result[1]=dd;
+            result[2]=mon;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        return result;
+    }
+
+    public void create_list(View view) {
+        show_bottomSheetDialog();
+    }
+
+    public void show_bottomSheetDialog()
+    {
+        bottomSheetDialog_list.setContentView(R.layout.bottom_sheet_layout_list);
+        bottomSheetDialog_list.setCanceledOnTouchOutside(true);
+        bottomSheetDialog_list.show();
+    }
+
+    public void add_list (View view){
+        EditText et_list_name=(EditText) bottomSheetDialog_list.findViewById(R.id.et_list_name);
+        String listName=et_list_name.getText().toString();
+        if (listName.isEmpty())
+        {
+            //progressBar_settings.setVisibility(View.INVISIBLE);
+            et_list_name.setError("List name is required!");
+            et_list_name.requestFocus();
+        }
+        else
+        {
+            String date=get_current_date();
+            //taskDate.setText(d[0]+" "+d[1]+" "+d[2]);
+
+            list=new List(listName,date);
+            if (list_clicked!=null) {
+                refLists.child(user.getUserUid()).child(list_clicked.getListName()).removeValue();
+            }
+            refLists.child(user.getUserUid()).child(listName).child("List Data").setValue(list);
+            Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
+            bottomSheetDialog_list.cancel();
+        }
+    }
+
+    public String get_current_date()
+    {
+        return new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault()).format(new Date());
+    }
+
+    public void read_lists()
+    {
+        if (!is_Internet_Connected())
+        {
+            AlertDialog.Builder adb;
+            adb=new AlertDialog.Builder(this);
+            adb.setTitle("No Internet");
+            adb.setMessage("Unable to read data");
+            adb.setIcon(R.drawable.no_wifi);
+            adb.setCancelable(false);
+            adb.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    read_lists();
+                }
+            });
+            adb.setNeutralButton("Exit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    finish();
+                }
+            });
+            AlertDialog ad= adb.create();
+            ad.show();
+        }
+        else
+        {
+            ValueEventListener user_list_listener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dS) {
+                    user_values.clear();
+                    user_list.clear();
+                    for(DataSnapshot data : dS.getChildren()) {
+                        List stuTmp=data.child("List Data").getValue(List.class);
+                        user_values.add(stuTmp);
+                        list_name = stuTmp.getListName();
+                        user_list.add(list_name);
+                    }
+                    CustomListAdapter customadp = new CustomListAdapter(MainActivity.this,
+                            user_list,user_values);
+                    user_listview.setAdapter(customadp);
+                    tv_lists_amount.setText("You have "+ user_list.size()+ " lists");
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            };
+            refLists.child(currentUser.getUid()).addValueEventListener(user_list_listener);
+        }
+    }
+
+    public boolean is_Internet_Connected() {
+        boolean connected = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+            return connected;
+        } catch (Exception e) {
+            Log.e("Connectivity Exception", e.getMessage());
+        }
+        return connected;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        List l=user_values.get(position);
+        Toast.makeText(this, l.getListName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        list_clicked=user_values.get(position);
+        showPopup(view);
+        return true;
+    }
+
+    public void showPopup(View v)
+    {
+        PopupMenu popupMenu=new PopupMenu(this, v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.list_options);
+        popupMenu.show();
+    }
 
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        int item_id=item.getItemId();
+        if (item_id == R.id.update_list)
+        {
 
+//            try {
+//                BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(context.getApplicationContext());
+//                EditText et_list_name=(EditText) bottomSheetDialog.findViewById(R.id.et_list_name);
+//                String list_name=et_list_name.getText().toString();
+//            }
+//            catch (Exception e)
+//            {
+//                Toast.makeText(context.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+
+            show_bottomSheetDialog();
+            EditText et_list_name=(EditText) bottomSheetDialog_list.findViewById(R.id.et_list_name);
+            et_list_name.setText(list_clicked.getListName());
+        }
+        else if (item_id == R.id.delete_list)
+        {
+            AlertDialog.Builder adb;
+            adb=new AlertDialog.Builder(this);
+            adb.setTitle("Delete List");
+            adb.setMessage("Are you sure you want delete "+list_clicked.getListName()+"?");
+            adb.setIcon(R.drawable.delete_list);
+            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    refLists.child(user.getUserUid()).child(list_clicked.getListName()).removeValue();
+                    Toast.makeText(MainActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
+                }
+            });
+            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog ad= adb.create();
+            ad.show();
+        }
+        return false;
     }
 }

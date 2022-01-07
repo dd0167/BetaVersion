@@ -5,6 +5,6 @@
     <item
         android:icon="@drawable/log_out_icon"
         android:title="Log Out"
-        app:showAsAction="always"></item>
+        app:showAsAction="always"/>
 
 </menu>

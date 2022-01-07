@@ -10,7 +10,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="50" />
+        android:layout_weight="10" />
 
     <TextView
         android:layout_width="match_parent"
@@ -25,77 +25,28 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="30" />
+        android:layout_weight="10" />
+
+    <TextView
+        android:id="@+id/tv_lists_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/annie_use_your_telescope"
+        android:gravity="center"
+        android:text="Lists Amount"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/user_listview"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="550dp" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="30" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:backgroundTint="@color/white"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="click"
-        android:src="@drawable/ic_add"
-        android:tint="@color/black"
-        app:backgroundTint="@color/black"
-        app:borderWidth="1dp"
-        tools:ignore="SpeakableTextPresentCheck" />
-    <!--        app:layout_constraintBottom_toTopOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"-->
-
-    <TextView
-        android:id="@+id/taskDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="50"
-        android:text="TextView" />
-
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/fab_add_list_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:fab_addButtonColorNormal="@color/white"
-        app:fab_addButtonColorPressed="@color/white"
-        app:fab_addButtonPlusIconColor="@color/black"
-        app:fab_expandDirection="up"
-        app:fab_labelStyle="@style/FloatStyle"
-        app:fab_labelsPosition="left">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="click"
-            app:fab_colorDisabled="@color/black"
-            app:fab_colorNormal="@color/white"
-            app:fab_colorPressed="#1A000000"
-            app:fab_icon="@drawable/list"
-            app:fab_size="mini"
-            app:fab_title="Add List" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="click"
-            app:fab_colorDisabled="@color/black"
-            app:fab_colorNormal="@color/white"
-            app:fab_colorPressed="#1A000000"
-            app:fab_icon="@drawable/list_by_location_icon"
-            app:fab_size="mini"
-            app:fab_title="Add List By Location" />
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        android:layout_weight="10" />
 
 
     <LinearLayout
@@ -132,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
-                android:onClick="get_date"
+                android:onClick="create_list"
                 android:src="@drawable/ic_add"
                 app:backgroundTint="@color/black"
                 app:layout_anchor="@id/bottomAppBar"
