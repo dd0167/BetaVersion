@@ -2,8 +2,6 @@ package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refLists;
-import static com.example.betaversion.FB_Ref.refTasksDays;
-import static com.example.betaversion.FB_Ref.refUsers;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -24,13 +22,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,11 +39,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -412,7 +406,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             show_bottomSheetDialog();
             EditText et_list_name=(EditText) bottomSheetDialog_list.findViewById(R.id.et_list_name);
+            Button add_list=(Button) bottomSheetDialog_list.findViewById(R.id.add_list);
+            ImageView iv_list_layout=(ImageView) bottomSheetDialog_list.findViewById(R.id.iv_list_layout);
             et_list_name.setText(list_clicked.getListName());
+            add_list.setText("Update List");
+            iv_list_layout.setImageResource(R.drawable.update_list);
         }
         else if (item_id == R.id.delete_list)
         {
