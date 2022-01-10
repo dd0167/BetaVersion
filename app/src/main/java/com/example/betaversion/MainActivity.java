@@ -37,6 +37,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
@@ -276,22 +277,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String listName=et_list_name.getText().toString();
         if (listName.isEmpty())
         {
-            //progressBar_settings.setVisibility(View.INVISIBLE);
             et_list_name.setError("List name is required!");
             et_list_name.requestFocus();
         }
         else
         {
             String date=get_current_date();
-            //taskDate.setText(d[0]+" "+d[1]+" "+d[2]);
 
             list=new List(listName,date);
             if (list_clicked!=null) {
-                refLists.child(user.getUserUid()).child(list_clicked.getListName()).removeValue();
+                list.setListCreationDate(list_clicked.getListCreationDate());
+                refLists.child(user.getUserUid()).child(list_clicked.getListName()).child("List Data").setValue(list);
+                Toast.makeText(this, "Update List Successfully", Toast.LENGTH_SHORT).show();
             }
-            refLists.child(user.getUserUid()).child(listName).child("List Data").setValue(list);
-            Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
+            else
+            {
+                refLists.child(user.getUserUid()).child(listName).child("List Data").setValue(list);
+                Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
+            }
             bottomSheetDialog_list.cancel();
+
+            /////////////////////////////////////////////////
+            list_clicked=null;
+            /////////////////////////////////////////////////
         }
     }
 

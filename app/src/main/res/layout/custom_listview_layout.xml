@@ -15,14 +15,13 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/ca_tv_date"
-                android:layout_width="match_parent"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="20"
@@ -36,7 +35,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -93,7 +92,7 @@
 
                 <TextView
                     android:id="@+id/item_title"
-                    android:layout_width="280dp"
+                    android:layout_width="270dp"
                     android:layout_height="match_parent"
                     android:fontFamily="casual"
                     android:gravity="center"
