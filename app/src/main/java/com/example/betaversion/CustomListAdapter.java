@@ -1,21 +1,13 @@
 package com.example.betaversion;
 
-import static com.example.betaversion.FB_Ref.mAuth;
-import static com.example.betaversion.FB_Ref.refLists;
-
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class CustomListAdapter extends BaseAdapter implements PopupMenu.OnMenuItemClickListener {
+public class CustomListAdapter extends BaseAdapter{
     Context context;
     ArrayList<String> lists;
     LayoutInflater inflter;
@@ -72,16 +64,10 @@ public class CustomListAdapter extends BaseAdapter implements PopupMenu.OnMenuIt
         tv_month.setText(date[2]);
 
         title.setText(lists.get(i));
-        ImageView more = (ImageView) view.findViewById(R.id.options);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(v);
-            }
-        });
         return view;
     }
 
+    // convert date from dd-MM-yyyy to english
     public String[] convert_date(String date)
     {
         String[] result=new String[3];
@@ -103,43 +89,5 @@ public class CustomListAdapter extends BaseAdapter implements PopupMenu.OnMenuIt
         }
 
         return result;
-    }
-
-
-
-
-
-    public void showPopup(View v)
-    {
-        PopupMenu popupMenu=new PopupMenu(context.getApplicationContext(), v);
-        popupMenu.setOnMenuItemClickListener(this);
-        popupMenu.inflate(R.menu.list_options);
-        popupMenu.show();
-    }
-
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        int item_id=item.getItemId();
-        if (item_id == R.id.update_list)
-        {
-//            try {
-//                BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(context.getApplicationContext());
-//                EditText et_list_name=(EditText) bottomSheetDialog.findViewById(R.id.et_list_name);
-//                String list_name=et_list_name.getText().toString();
-//            }
-//            catch (Exception e)
-//            {
-//                Toast.makeText(context.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-
-
-            Toast.makeText(context.getApplicationContext(), "hi1", Toast.LENGTH_SHORT).show();
-        }
-        else if (item_id == R.id.delete_list)
-        {
-            Toast.makeText(context.getApplicationContext(), "hi2", Toast.LENGTH_SHORT).show();
-        }
-        return false;
     }
 }

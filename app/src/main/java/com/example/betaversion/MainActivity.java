@@ -153,13 +153,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         finish();
     }
 
-    public void move_main()
-    {
-        Intent ma = new Intent(this, MainActivity.class);
-        startActivity(ma);
-        finish();
-    }
-
 //    public void create_user(View view) {
 //        refUsers.child(namechild).child("User Data").setValue(user);
 //    }
@@ -224,42 +217,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Toast.makeText(this, "try" , Toast.LENGTH_SHORT).show();
     }
 
-    public void get_date(View view) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month=month+1;
-                date=dayOfMonth+"-"+month+"-"+year;
-
-                convert_date(date);
-            }
-        },year,month,day);
-        datePickerDialog.show();
-    }
-
-    // convert date from dd-MM-yyyy to english
-    public String[] convert_date(String date)
-    {
-        String[] result=new String[3];
-
-        try {
-            Date result_date=inputDateFormat.parse(date);
-            String outputDateString = dateFormat.format(result_date);
-            String[] items1 = outputDateString.split(" ");
-            String day = items1[0];
-            String dd = items1[1];
-            String mon = items1[2];
-
-            result[0]=day;
-            result[1]=dd;
-            result[2]=mon;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        return result;
-    }
+//    public void get_date(View view) {
+//        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                month=month+1;
+//                date=dayOfMonth+"-"+month+"-"+year;
+//
+//                convert_date(date);
+//            }
+//        },year,month,day);
+//        datePickerDialog.show();
+//    }
 
     public void create_list(View view) {
         show_bottomSheetDialog();
@@ -287,7 +256,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             list=new List(listName,date);
             if (list_clicked!=null) {
                 list.setListCreationDate(list_clicked.getListCreationDate());
-                refLists.child(user.getUserUid()).child(list_clicked.getListName()).child("List Data").setValue(list);
+                refLists.child(user.getUserUid()).child(list_clicked.getListName()).child("List Data").removeValue();
+                refLists.child(user.getUserUid()).child(listName).child("List Data").setValue(list);
                 Toast.makeText(this, "Update List Successfully", Toast.LENGTH_SHORT).show();
             }
             else
@@ -297,9 +267,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             bottomSheetDialog_list.cancel();
 
-            /////////////////////////////////////////////////
             list_clicked=null;
-            /////////////////////////////////////////////////
         }
     }
 
@@ -377,7 +345,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         List l=user_values.get(position);
+        Intent ta = new Intent(this,TasksActivity.class);
+        //ta.putExtra("n",a);
         Toast.makeText(this, l.getListName(), Toast.LENGTH_SHORT).show();
+        startActivity(ta);
+        finish();
     }
 
     @Override
