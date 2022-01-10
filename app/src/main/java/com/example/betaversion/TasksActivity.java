@@ -27,8 +27,8 @@ public class TasksActivity extends AppCompatActivity {
         bottomNavigationView.setBackground(null);
         bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false);
 
-//        bottomNavigationView.getMenu().findItem(R.id.my_lists).setEnabled(false);
-//        bottomNavigationView.setSelectedItemId(R.id.my_lists);
+        bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false);
+        bottomNavigationView.setSelectedItemId(R.id.empty);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
