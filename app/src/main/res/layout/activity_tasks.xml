@@ -10,7 +10,45 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="10" />
+        android:layout_weight="5" />
+
+    <TextView
+        android:id="@+id/tv_list_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/annie_use_your_telescope"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="List Name"
+        android:textColor="@color/black"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_list_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/annie_use_your_telescope"
+        android:gravity="center"
+        android:text="List Date"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.5"
+        android:background="@color/black" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" />
 
     <TextView
         android:layout_width="match_parent"
@@ -19,29 +57,23 @@
         android:gravity="center"
         android:text="Tasks"
         android:textColor="@color/black"
-        android:textSize="50sp"
+        android:textSize="30sp"
         android:textStyle="bold" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="10" />
-
     <TextView
-        android:id="@+id/tv_lists_amount"
+        android:id="@+id/tv_tasks_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/annie_use_your_telescope"
         android:gravity="center"
         android:text="Tasks Amount"
         android:textColor="@color/black"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textSize="15sp" />
 
     <ListView
-        android:id="@+id/user_listview"
+        android:id="@+id/tasks_listview"
         android:layout_width="match_parent"
-        android:layout_height="550dp" />
+        android:layout_height="450dp" />
 
     <Space
         android:layout_width="match_parent"

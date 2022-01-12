@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -37,10 +36,8 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,17 +56,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     ArrayList<String> user_list = new ArrayList<String>();
     ArrayList<List> user_values = new ArrayList<List>();
     String list_name;
-    ListView user_listview;
+    ListView lists_listview;
     TextView tv_lists_amount;
 
-    DatePickerDialog.OnDateSetListener mDateSetListener;
-    Calendar calendar=Calendar.getInstance();
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
-    String date;
-    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+//    DatePickerDialog.OnDateSetListener mDateSetListener;
+//    Calendar calendar=Calendar.getInstance();
+//    int year = calendar.get(Calendar.YEAR);
+//    int month = calendar.get(Calendar.MONTH);
+//    int day = calendar.get(Calendar.DAY_OF_MONTH);
+//    String date;
+//    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
+//    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
 
     BottomSheetDialog bottomSheetDialog_list;
 
@@ -101,10 +98,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999", "Uidpicture");
         }
 
-        user_listview=(ListView) findViewById(R.id.user_listview);
-        user_listview.setOnItemClickListener(this);
-        user_listview.setOnItemLongClickListener(this);
-        user_listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        lists_listview=(ListView) findViewById(R.id.lists_listview);
+        lists_listview.setOnItemClickListener(this);
+        lists_listview.setOnItemLongClickListener(this);
+        lists_listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 
         read_lists();
@@ -317,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                     CustomListAdapter customadp = new CustomListAdapter(MainActivity.this,
                             user_list,user_values);
-                    user_listview.setAdapter(customadp);
+                    lists_listview.setAdapter(customadp);
                     tv_lists_amount.setText("You have "+ user_list.size()+ " lists");
                 }
                 @Override
@@ -346,7 +343,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         List l=user_values.get(position);
         Intent ta = new Intent(this,TasksActivity.class);
-        //ta.putExtra("n",a);
+
+        ta.putExtra("list_clicked_name",l.getListName());
+        ta.putExtra("list_clicked_date",l.getListCreationDate());
+
         Toast.makeText(this, l.getListName(), Toast.LENGTH_SHORT).show();
         startActivity(ta);
         finish();

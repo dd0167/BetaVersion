@@ -35,11 +35,10 @@
         android:gravity="center"
         android:text="Lists Amount"
         android:textColor="@color/black"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textSize="15sp" />
 
     <ListView
-        android:id="@+id/user_listview"
+        android:id="@+id/lists_listview"
         android:layout_width="match_parent"
         android:layout_height="550dp" />
 
