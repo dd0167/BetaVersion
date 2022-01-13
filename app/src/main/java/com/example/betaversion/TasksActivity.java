@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +33,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class TasksActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, PopupMenu.OnMenuItemClickListener{
 
@@ -51,10 +55,14 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     ArrayList<String> tasks_array = new ArrayList<String>();
     ArrayList<Task> tasks_values = new ArrayList<Task>();
 
+    BottomSheetDialog bottomSheetDialog_task;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+
+        bottomSheetDialog_task=(BottomSheetDialog) new BottomSheetDialog(TasksActivity.this);
 
         currentUser = mAuth.getCurrentUser();
 
@@ -123,21 +131,21 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
                 tasks_values.clear();
                 tasks_array.clear();
                 for(DataSnapshot data : dS.getChildren()) {
-                    Task stuTmp=data.child("Tasks").child("exampleTask").child("Task Data").getValue(Task.class);
+                    Task stuTmp=data.child("Task Data").getValue(Task.class);
                     tasks_values.add(stuTmp);
                     String taskName = stuTmp.getTaskName();
                     tasks_array.add(taskName);
                 }
                 ArrayAdapter<String> adp = new ArrayAdapter<String>(TasksActivity.this, R.layout.support_simple_spinner_dropdown_item, tasks_array);
                 tasks_listview.setAdapter(adp);
-                tv_tasks_amount.setText("You have "+ tasks_array.size()+ " lists");
+                tv_tasks_amount.setText("You have "+ tasks_array.size()+ " tasks");
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(TasksActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
-        refLists.child(currentUser.getUid()).addValueEventListener(tasks_array_listener);
+        refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").addValueEventListener(tasks_array_listener);
     }
 
     @Override
@@ -187,6 +195,40 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void create_task(View view) {
+        show_bottomSheetDialog();
+    }
+
+    public void show_bottomSheetDialog()
+    {
+        bottomSheetDialog_task.setContentView(R.layout.bottom_sheet_layout_task);
+        bottomSheetDialog_task.setCanceledOnTouchOutside(true);
+        bottomSheetDialog_task.show();
+    }
+
+    public void add_task(View view) {
+    }
+
+    public void add_image(View view) {
+    }
+
+    public void task_color(View view) {
+        ColorPicker colorPicker=new ColorPicker(this);
+        ArrayList<String> colors=new ArrayList<>();
+        colors.add("#000000"); //Black
+        colors.add("#ff0000"); //Red
+        colors.add("#00ff00"); //Green
+        colors.add("#0000ff"); //Blue
+        colors.add("#ffffff"); //White
+        colorPicker.setColors(colors).setColumns(5).setColorButtonTickColor(Color.GRAY).setDefaultColorButton(Color.WHITE).setRoundColorButton(true).setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
+            @Override
+            public void onChooseColor(int position, int color) {
+                Toast.makeText(TasksActivity.this, colors.get(position), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+            }
+        }).show();
     }
 
     @Override

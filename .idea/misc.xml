@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.25833333333333336" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/color_selected_shape.xml" value="0.25833333333333336" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic__add_task_.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_add.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_add_list.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_back.xml" value="0.25833333333333336" />
@@ -21,8 +23,10 @@
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_signup.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_splash.xml" value="0.19882246376811594" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_tasks.xml" value="0.2421875" />
-        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/bottom_sheet_layout_list.xml" value="0.18206521739130435" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/bottom_sheet_layout_list.xml" value="0.23324275362318841" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/bottom_sheet_layout_task.xml" value="0.23324275362318841" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout.xml" value="0.6" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout_tasks.xml" value="0.6" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/sign_up_data.xml" value="0.1933876811594203" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/menu/bottom_menu.xml" value="0.2421875" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2421875" />

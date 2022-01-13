@@ -146,19 +146,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         finish();
     }
 
-//    public void create_user(View view) {
-//        refUsers.child(namechild).child("User Data").setValue(user);
-//    }
-//
-//    public void createlist(View view) {
-//
-//        refLists.child(namechild).child(list.getListName()).child("List Data").setValue(list);
-//    }
-//
-//    public void create_task(View view) {
-//        Task task=new Task("Example Task","address","30.11.2021","15:00","30.11.2021","encienciencwoincoenc","white","exampleuid");
-//        refLists.child(namechild).child(list.getListName()).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-//    }
+
 //
 //    public void create_tasks_day(View view) {
 //        TasksDay tasksDay=new TasksDay("Example tasksday name","30.11.2021");
@@ -265,9 +253,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
                 Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
 
+                //add task
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 Task example_task=new Task("exampleTask","home","13-01-2022","15:00","13-01-2022","notes","black","exampleUid");
-                refLists.child(currentUser.getUid()).child(listName).child("Tasks").child("exampleTask").child("Task Data").setValue(example_task);
+                refLists.child(currentUser.getUid()).child(listName).child("Tasks").child(example_task.getTaskName()).child("Task Data").setValue(example_task);
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
             bottomSheetDialog_list.cancel();
@@ -357,7 +346,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Toast.makeText(this, l.getListName(), Toast.LENGTH_SHORT).show();
         startActivity(ta);
-        finish();
     }
 
     @Override

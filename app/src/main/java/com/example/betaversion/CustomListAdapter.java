@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +50,7 @@ public class CustomListAdapter extends BaseAdapter{
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        view = inflter.inflate(R.layout.custom_listview_layout, null);
+        view = inflter.inflate(R.layout.custom_listview_layout_lists, null);
         TextView title = (TextView) view.findViewById(R.id.item_title);
 
         TextView tv_day = (TextView) view.findViewById(R.id.ca_tv_day);

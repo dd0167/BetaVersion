@@ -65,7 +65,7 @@ public class CreditsActivity extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "Credits" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "About" + "</font>"));
     }
 
     public void click(View view) {
