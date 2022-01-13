@@ -1,6 +1,7 @@
 package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
+import static com.example.betaversion.FB_Ref.refLists;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -15,14 +16,27 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
-public class TasksActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class TasksActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, PopupMenu.OnMenuItemClickListener{
 
     BottomNavigationView bottomNavigationView;
+
+    FirebaseUser currentUser;
 
     String list_clicked_name;
     String list_clicked_date;
@@ -30,14 +44,28 @@ public class TasksActivity extends AppCompatActivity {
 
     TextView tv_list_name;
     TextView tv_list_date;
+    TextView tv_tasks_amount;
+
+    ListView tasks_listview;
+
+    ArrayList<String> tasks_array = new ArrayList<String>();
+    ArrayList<Task> tasks_values = new ArrayList<Task>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
+        currentUser = mAuth.getCurrentUser();
+
         tv_list_name=(TextView) findViewById(R.id.tv_list_name);
         tv_list_date=(TextView) findViewById(R.id.tv_list_date);
+        tv_tasks_amount=(TextView) findViewById(R.id.tv_tasks_amount);
+
+        tasks_listview=(ListView) findViewById(R.id.tasks_listview);
+        tasks_listview.setOnItemClickListener(this);
+        tasks_listview.setOnItemLongClickListener(this);
+        tasks_listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         gi = getIntent();
 
@@ -83,9 +111,33 @@ public class TasksActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Tasks" + "</font>"));
+
+        read_tasks();
     }
 
-    public void create_list(View view) {
+    public void read_tasks()
+    {
+        ValueEventListener tasks_array_listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dS) {
+                tasks_values.clear();
+                tasks_array.clear();
+                for(DataSnapshot data : dS.getChildren()) {
+                    Task stuTmp=data.child("Tasks").child("exampleTask").child("Task Data").getValue(Task.class);
+                    tasks_values.add(stuTmp);
+                    String taskName = stuTmp.getTaskName();
+                    tasks_array.add(taskName);
+                }
+                ArrayAdapter<String> adp = new ArrayAdapter<String>(TasksActivity.this, R.layout.support_simple_spinner_dropdown_item, tasks_array);
+                tasks_listview.setAdapter(adp);
+                tv_tasks_amount.setText("You have "+ tasks_array.size()+ " lists");
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(TasksActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        refLists.child(currentUser.getUid()).addValueEventListener(tasks_array_listener);
     }
 
     @Override
@@ -132,5 +184,23 @@ public class TasksActivity extends AppCompatActivity {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
         finish();
+    }
+
+    public void create_task(View view) {
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        return false;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
     }
 }

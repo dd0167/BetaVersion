@@ -48,13 +48,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     FirebaseUser currentUser;
 
-    User user;
     List list;
     List list_clicked;
     BottomNavigationView bottomNavigationView;
 
-    ArrayList<String> user_list = new ArrayList<String>();
-    ArrayList<List> user_values = new ArrayList<List>();
+    ArrayList<String> lists_array = new ArrayList<String>();
+    ArrayList<List> lists_values = new ArrayList<List>();
     String list_name;
     ListView lists_listview;
     TextView tv_lists_amount;
@@ -94,9 +93,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Lists" + "</font>"));
 
         currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            user=new User(currentUser.getUid()+"","Dean","David","17","Home",currentUser.getEmail()+"","0544953999", "Uidpicture");
-        }
 
         lists_listview=(ListView) findViewById(R.id.lists_listview);
         lists_listview.setOnItemClickListener(this);
@@ -239,11 +235,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void add_list (View view){
+
         EditText et_list_name=(EditText) bottomSheetDialog_list.findViewById(R.id.et_list_name);
         String listName=et_list_name.getText().toString();
+
         if (listName.isEmpty())
         {
             et_list_name.setError("List name is required!");
+            et_list_name.requestFocus();
+        }
+        else if (lists_array.contains(listName))
+        {
+            et_list_name.setError("There is a list with this name!");
             et_list_name.requestFocus();
         }
         else
@@ -253,14 +256,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             list=new List(listName,date);
             if (list_clicked!=null) {
                 list.setListCreationDate(list_clicked.getListCreationDate());
-                refLists.child(user.getUserUid()).child(list_clicked.getListName()).child("List Data").removeValue();
-                refLists.child(user.getUserUid()).child(listName).child("List Data").setValue(list);
+                refLists.child(currentUser.getUid()).child(list_clicked.getListName()).child("List Data").removeValue();
+                refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
                 Toast.makeText(this, "Update List Successfully", Toast.LENGTH_SHORT).show();
             }
             else
             {
-                refLists.child(user.getUserUid()).child(listName).child("List Data").setValue(list);
+                refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
                 Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
+
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                Task example_task=new Task("exampleTask","home","13-01-2022","15:00","13-01-2022","notes","black","exampleUid");
+                refLists.child(currentUser.getUid()).child(listName).child("Tasks").child("exampleTask").child("Task Data").setValue(example_task);
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
             bottomSheetDialog_list.cancel();
 
@@ -301,28 +309,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else
         {
-            ValueEventListener user_list_listener = new ValueEventListener() {
+            ValueEventListener lists_array_listener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dS) {
-                    user_values.clear();
-                    user_list.clear();
+                    lists_values.clear();
+                    lists_array.clear();
                     for(DataSnapshot data : dS.getChildren()) {
                         List stuTmp=data.child("List Data").getValue(List.class);
-                        user_values.add(stuTmp);
+                        lists_values.add(stuTmp);
                         list_name = stuTmp.getListName();
-                        user_list.add(list_name);
+                        lists_array.add(list_name);
                     }
                     CustomListAdapter customadp = new CustomListAdapter(MainActivity.this,
-                            user_list,user_values);
+                            lists_array,lists_values);
                     lists_listview.setAdapter(customadp);
-                    tv_lists_amount.setText("You have "+ user_list.size()+ " lists");
+                    tv_lists_amount.setText("You have "+ lists_array.size()+ " lists");
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             };
-            refLists.child(currentUser.getUid()).addValueEventListener(user_list_listener);
+            refLists.child(currentUser.getUid()).addValueEventListener(lists_array_listener);
         }
     }
 
@@ -341,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        List l=user_values.get(position);
+        List l=lists_values.get(position);
         Intent ta = new Intent(this,TasksActivity.class);
 
         ta.putExtra("list_clicked_name",l.getListName());
@@ -354,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        list_clicked=user_values.get(position);
+        list_clicked=lists_values.get(position);
         showPopup(view);
         return true;
     }
@@ -402,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    refLists.child(user.getUserUid()).child(list_clicked.getListName()).removeValue();
+                    refLists.child(currentUser.getUid()).child(list_clicked.getListName()).removeValue();
                     Toast.makeText(MainActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
                 }
             });
