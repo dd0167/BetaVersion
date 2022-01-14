@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -344,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ta.putExtra("list_clicked_name",l.getListName());
         ta.putExtra("list_clicked_date",l.getListCreationDate());
 
-        Toast.makeText(this, l.getListName(), Toast.LENGTH_SHORT).show();
         startActivity(ta);
     }
 

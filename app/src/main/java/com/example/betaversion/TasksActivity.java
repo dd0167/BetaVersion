@@ -7,11 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -19,9 +25,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -32,8 +43,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class TasksActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, PopupMenu.OnMenuItemClickListener{
@@ -57,10 +73,23 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
 
     BottomSheetDialog bottomSheetDialog_task;
 
+    //Date and Time
+    Calendar calendar=Calendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    int month = calendar.get(Calendar.MONTH);
+    int day = calendar.get(Calendar.DAY_OF_MONTH);
+    String date,time,date_and_time="",task_color="";
+
+    Uri imageUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.add_image_icon);
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         bottomSheetDialog_task=(BottomSheetDialog) new BottomSheetDialog(TasksActivity.this);
 
@@ -206,9 +235,86 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void add_task(View view) {
+        EditText et_task_name=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_name);
+        EditText et_task_address=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_address);
+        EditText et_task_notes=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_notes);
+
+        String taskName=et_task_name.getText().toString();
+        String taskAddress=et_task_address.getText().toString();
+        String taskNotes=et_task_notes.getText().toString();
+        String task_creationDate=get_current_date();
+
+        if (task_color.isEmpty())
+        {
+            Toast.makeText(TasksActivity.this, "Select Color", Toast.LENGTH_SHORT).show();
+        }
+        else if (taskName.isEmpty())
+        {
+            et_task_name.setError("Task name is required!");
+            et_task_name.requestFocus();
+        }
+        else if (taskAddress.isEmpty())
+        {
+            et_task_address.setError("Task address is required!");
+            et_task_address.requestFocus();
+        }
+        else if (date_and_time.isEmpty())
+        {
+            Toast.makeText(TasksActivity.this, "Select Date And Time", Toast.LENGTH_SHORT).show();
+        }
+        else if (tasks_array.contains(taskName))
+        {
+            et_task_name.setError("There is a task with this name!");
+            et_task_name.requestFocus();
+        }
+        else
+        {
+            Task task=new Task(taskName,taskAddress,date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
+            refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+            Toast.makeText(this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
+            bottomSheetDialog_task.cancel();
+            task_color="";
+            date_and_time="";
+        }
+    }
+
+    public String get_current_date()
+    {
+        return new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault()).format(new Date());
+    }
+
+    public void set_date_and_time(View view) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(TasksActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month=month+1;
+                date=dayOfMonth+"-"+month+"-"+year;
+
+                TimePickerDialog.OnTimeSetListener timeSetListener=new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                        calendar.set(Calendar.MINUTE,minute);
+
+                        SimpleDateFormat simpleTimeFormat=new SimpleDateFormat("HH:mm");
+
+                        time=simpleTimeFormat.format(calendar.getTime());
+
+                        date_and_time=date+" "+time;
+
+                        TextView tv_task_date_and_time=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
+                        tv_task_date_and_time.setText(date_and_time);
+                    }
+                };
+
+                new TimePickerDialog(TasksActivity.this,timeSetListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
+            }
+        },year,month,day);
+        datePickerDialog.show();
     }
 
     public void add_image(View view) {
+
     }
 
     public void task_color(View view) {
@@ -220,9 +326,13 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         colors.add("#0000ff"); //Blue
         colors.add("#ffffff"); //White
         colorPicker.setColors(colors).setColumns(5).setColorButtonTickColor(Color.GRAY).setDefaultColorButton(Color.WHITE).setRoundColorButton(true).setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onChooseColor(int position, int color) {
-                Toast.makeText(TasksActivity.this, colors.get(position), Toast.LENGTH_SHORT).show();
+                task_color=colors.get(position);
+                CircleImageView btn_task_color=(CircleImageView) bottomSheetDialog_task.findViewById(R.id.btn_task_color);
+                Drawable c = new ColorDrawable(color);
+                btn_task_color.setImageDrawable(c);
             }
 
             @Override

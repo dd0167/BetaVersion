@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="casual"
                 android:gravity="center"
-                android:text="Task Date"
+                android:text="Task Date And Time"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -98,44 +98,18 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
-            <EditText
-                android:id="@+id/et_task_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:hint="Type Text Here"
-                android:inputType="date" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
 
             <TextView
+                android:id="@+id/tv_task_date_and_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="casual"
                 android:gravity="center"
-                android:text="Task Time"
-                android:textColor="@color/black"
+                android:onClick="set_date_and_time"
+                android:text="Select Date And Time"
+                android:textColor="@color/gray"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
-            <EditText
-                android:id="@+id/et_task_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:hint="Type Text Here"
-                android:inputType="time" />
 
             <Space
                 android:layout_width="match_parent"
@@ -183,7 +157,7 @@
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/task_color"
+                android:id="@+id/btn_task_color"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
