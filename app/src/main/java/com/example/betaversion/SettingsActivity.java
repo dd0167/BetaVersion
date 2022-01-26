@@ -148,10 +148,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public void click(View view) {
-        Toast.makeText(this, "try" , Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);

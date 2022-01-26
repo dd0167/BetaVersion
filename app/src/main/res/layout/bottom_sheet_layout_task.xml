@@ -190,7 +190,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/user_image_settings"
+                android:id="@+id/task_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"

@@ -4,6 +4,7 @@ import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refLists;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -42,6 +44,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,9 +82,12 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     int year = calendar.get(Calendar.YEAR);
     int month = calendar.get(Calendar.MONTH);
     int day = calendar.get(Calendar.DAY_OF_MONTH);
-    String date,time,date_and_time="",task_color="";
 
+    String date,time,date_and_time="",task_color="#FFFFFFFF"; //task_color=white
+
+    //image
     Uri imageUri;
+    int PICK_IMAGE=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,11 +251,7 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         String taskNotes=et_task_notes.getText().toString();
         String task_creationDate=get_current_date();
 
-        if (task_color.isEmpty())
-        {
-            Toast.makeText(TasksActivity.this, "Select Color", Toast.LENGTH_SHORT).show();
-        }
-        else if (taskName.isEmpty())
+        if (taskName.isEmpty())
         {
             et_task_name.setError("Task name is required!");
             et_task_name.requestFocus();
@@ -314,7 +317,75 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void add_image(View view) {
+        ImageView task_image=(ImageView) bottomSheetDialog_task.findViewById(R.id.task_image);
 
+        String[] items={"Select Image From Gallery","Select The Default Image"};
+        AlertDialog.Builder adb;
+        adb=new AlertDialog.Builder(this);
+        adb.setTitle("Change Profile Image");
+        adb.setIcon(R.drawable.add_image_icon);
+        adb.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which==0)
+                {
+                    Intent galleryIntent=new Intent();
+                    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    galleryIntent.setType("image/*");
+                    startActivityForResult(galleryIntent,PICK_IMAGE);
+                }
+                else if (which==1)
+                {
+                    task_image.setImageResource(R.drawable.add_image_icon);
+                    imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.add_image_icon);
+                }
+            }
+        });
+        adb.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog ad= adb.create();
+        ad.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        ImageView task_image=(ImageView) bottomSheetDialog_task.findViewById(R.id.task_image);
+
+        if (requestCode==PICK_IMAGE && resultCode==RESULT_OK && data!=null)
+        {
+            imageUri=data.getData();
+
+            CropImage.activity(imageUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setCropShape(CropImageView.CropShape.RECTANGLE)
+                    .setBorderCornerLength(1)
+                    .setBorderLineColor(Color.WHITE)
+                    .setAutoZoomEnabled(true)
+                    .setActivityTitle("Crop Image")
+                    .setFixAspectRatio(true)
+                    .setCropMenuCropButtonTitle("Done")
+                    .start(this);
+        }
+        if (requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
+        {
+            CropImage.ActivityResult result=CropImage.getActivityResult(data);
+            if (resultCode==RESULT_OK)
+            {
+                imageUri=result.getUri();
+                task_image.setImageURI(imageUri);
+            }
+            else if (resultCode==CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE)
+            {
+                Exception error=result.getError();
+                Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void task_color(View view) {
