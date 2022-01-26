@@ -37,6 +37,8 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -195,10 +197,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
-    public void click(View view) {
-        Toast.makeText(this, "try" , Toast.LENGTH_SHORT).show();
-    }
-
 //    public void get_date(View view) {
 //        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
 //            @Override
@@ -213,6 +211,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //    }
 
     public void create_list(View view) {
+
+        list_clicked=null;
         show_bottomSheetDialog();
     }
 
@@ -245,8 +245,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             list=new List(listName,date);
             if (list_clicked!=null) {
                 list.setListCreationDate(list_clicked.getListCreationDate());
-                refLists.child(currentUser.getUid()).child(list_clicked.getListName()).child("List Data").removeValue();
                 refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
+
+                DatabaseReference ref = refLists.child(currentUser.getUid()).child(list_clicked.getListName()).child("Tasks");
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot data : dataSnapshot.getChildren()) {
+                            Task task=data.child("Task Data").getValue(Task.class);
+                            refLists.child(currentUser.getUid()).child(listName).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                refLists.child(currentUser.getUid()).child(list_clicked.getListName()).removeValue();
+
                 Toast.makeText(this, "Update List Successfully", Toast.LENGTH_SHORT).show();
             }
             else
@@ -254,11 +272,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
                 Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
 
-                //add task
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                Task example_task=new Task("exampleTask","home","13-01-2022","15:00","13-01-2022","notes","black","exampleUid");
-                refLists.child(currentUser.getUid()).child(listName).child("Tasks").child(example_task.getTaskName()).child("Task Data").setValue(example_task);
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                //add task
+//                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                Task example_task=new Task("exampleTask","home","13-01-2022","15:00","13-01-2022","notes","black","exampleUid");
+//                refLists.child(currentUser.getUid()).child(listName).child("Tasks").child(example_task.getTaskName()).child("Task Data").setValue(example_task);
+//                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
             bottomSheetDialog_list.cancel();
 

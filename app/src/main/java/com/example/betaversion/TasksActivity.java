@@ -167,9 +167,9 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
                 tasks_values.clear();
                 tasks_array.clear();
                 for(DataSnapshot data : dS.getChildren()) {
-                    Task stuTmp=data.child("Task Data").getValue(Task.class);
-                    tasks_values.add(stuTmp);
-                    String taskName = stuTmp.getTaskName();
+                    Task task=data.child("Task Data").getValue(Task.class);
+                    tasks_values.add(task);
+                    String taskName = task.getTaskName();
                     tasks_array.add(taskName);
                 }
                 ArrayAdapter<String> adp = new ArrayAdapter<String>(TasksActivity.this, R.layout.support_simple_spinner_dropdown_item, tasks_array);
