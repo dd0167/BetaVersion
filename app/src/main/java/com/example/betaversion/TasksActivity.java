@@ -172,8 +172,10 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
                     String taskName = task.getTaskName();
                     tasks_array.add(taskName);
                 }
-                ArrayAdapter<String> adp = new ArrayAdapter<String>(TasksActivity.this, R.layout.support_simple_spinner_dropdown_item, tasks_array);
-                tasks_listview.setAdapter(adp);
+                CustomTaskAdapter customadp = new CustomTaskAdapter(TasksActivity.this,
+                        tasks_array,tasks_values);
+                tasks_listview.setAdapter(customadp);
+
                 tv_tasks_amount.setText("You have "+ tasks_array.size()+ " tasks");
             }
             @Override
@@ -287,33 +289,42 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void set_date_and_time(View view) {
+        select_date();
+    }
+
+    public void select_date()
+    {
         DatePickerDialog datePickerDialog = new DatePickerDialog(TasksActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month=month+1;
                 date=dayOfMonth+"-"+month+"-"+year;
-
-                TimePickerDialog.OnTimeSetListener timeSetListener=new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
-                        calendar.set(Calendar.MINUTE,minute);
-
-                        SimpleDateFormat simpleTimeFormat=new SimpleDateFormat("HH:mm");
-
-                        time=simpleTimeFormat.format(calendar.getTime());
-
-                        date_and_time=date+" "+time;
-
-                        TextView tv_task_date_and_time=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
-                        tv_task_date_and_time.setText(date_and_time);
-                    }
-                };
-
-                new TimePickerDialog(TasksActivity.this,timeSetListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
+                select_time();
             }
         },year,month,day);
         datePickerDialog.show();
+    }
+
+    public void select_time()
+    {
+        TimePickerDialog.OnTimeSetListener timeSetListener=new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                calendar.set(Calendar.MINUTE,minute);
+
+                SimpleDateFormat simpleTimeFormat=new SimpleDateFormat("HH:mm");
+
+                time=simpleTimeFormat.format(calendar.getTime());
+
+                date_and_time=date+" "+time;
+
+                TextView tv_task_date_and_time=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
+                tv_task_date_and_time.setText(date_and_time);
+            }
+        };
+
+        new TimePickerDialog(TasksActivity.this,timeSetListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
     }
 
     public void add_image(View view) {
@@ -349,6 +360,10 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         });
         AlertDialog ad= adb.create();
         ad.show();
+    }
+
+    public void change_task_image(View view) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
     }
 
     @Override
