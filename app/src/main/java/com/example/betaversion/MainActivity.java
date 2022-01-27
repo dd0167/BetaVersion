@@ -271,12 +271,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             {
                 refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
                 Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
-
-//                //add task
-//                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                Task example_task=new Task("exampleTask","home","13-01-2022","15:00","13-01-2022","notes","black","exampleUid");
-//                refLists.child(currentUser.getUid()).child(listName).child("Tasks").child(example_task.getTaskName()).child("Task Data").setValue(example_task);
-//                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
             bottomSheetDialog_list.cancel();
 

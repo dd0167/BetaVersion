@@ -8,11 +8,10 @@
     android:padding="30dp">
 
     <ImageView
-        android:id="@+id/iv_task_layout"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_gravity="center"
-        app:srcCompat="@drawable/ic__add_task_"
+        app:srcCompat="@drawable/ic_add_task"
         tools:ignore="VectorDrawableCompat" />
 
     <Space

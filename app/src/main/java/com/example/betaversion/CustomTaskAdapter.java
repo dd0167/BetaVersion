@@ -79,8 +79,22 @@ public class CustomTaskAdapter extends BaseAdapter{
         iv_task_image.setImageURI(Uri.parse(task_values.get(i).getTaskPictureUid()));
         tv_time_of_the_task.setText("Time: "+task_values.get(i).getTaskHour());
         tv_task_completion_date.setText("Date: "+task_values.get(i).getTaskDay());
-        tv_task_notes.setText("Notes: "+task_values.get(i).getTaskNotes());
-        tv_task_address.setText("Address: "+task_values.get(i).getTaskAddress());
+        if (!task_values.get(i).getTaskNotes().isEmpty())
+        {
+            tv_task_notes.setText("Notes: "+task_values.get(i).getTaskNotes());
+        }
+        else
+        {
+            tv_task_notes.setText("");
+        }
+        if (!task_values.get(i).getTaskAddress().isEmpty())
+        {
+            tv_task_address.setText("Address: "+task_values.get(i).getTaskAddress());
+        }
+        else
+        {
+            tv_task_address.setText("");
+        }
         String color=task_values.get(i).getTaskColor();
         task_color_view.setBackgroundColor(Color.parseColor(color));
 

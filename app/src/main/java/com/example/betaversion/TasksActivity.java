@@ -56,7 +56,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import petrov.kristiyan.colorpicker.ColorPicker;
 
-public class TasksActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, PopupMenu.OnMenuItemClickListener{
+public class TasksActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     BottomNavigationView bottomNavigationView;
 
@@ -83,20 +83,20 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     int month = calendar.get(Calendar.MONTH);
     int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-    String date,time,date_and_time="",task_color="#FFFFFFFF"; //task_color=white
+    String date,time,date_and_time="",task_color="#808080"; //task_color=white
 
     //image
     Uri imageUri;
     int PICK_IMAGE=2;
+
+    Task task_clicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
         imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.add_image_icon);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         bottomSheetDialog_task=(BottomSheetDialog) new BottomSheetDialog(TasksActivity.this);
 
@@ -157,6 +157,8 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Tasks" + "</font>"));
 
         read_tasks();
+
+        task_clicked=null;
     }
 
     public void read_tasks()
@@ -247,6 +249,7 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         EditText et_task_name=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_name);
         EditText et_task_address=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_address);
         EditText et_task_notes=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_notes);
+        TextView tv_task_date_and_time=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
 
         String taskName=et_task_name.getText().toString();
         String taskAddress=et_task_address.getText().toString();
@@ -258,14 +261,19 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
             et_task_name.setError("Task name is required!");
             et_task_name.requestFocus();
         }
-        else if (taskAddress.isEmpty())
-        {
-            et_task_address.setError("Task address is required!");
-            et_task_address.requestFocus();
-        }
-        else if (date_and_time.isEmpty())
+        else if (tv_task_date_and_time.getText().toString().equals("Select Date And Time") )
         {
             Toast.makeText(TasksActivity.this, "Select Date And Time", Toast.LENGTH_SHORT).show();
+        }
+        else if(task_clicked!=null)
+        {
+            time=task_clicked.getTaskHour();
+            date=task_clicked.getTaskDay();
+            refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
+            Task task=new Task(taskName,taskAddress,date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
+            refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+            Toast.makeText(this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
+            change_data_to_default();
         }
         else if (tasks_array.contains(taskName))
         {
@@ -277,10 +285,17 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
             Task task=new Task(taskName,taskAddress,date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
             refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
             Toast.makeText(this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
-            bottomSheetDialog_task.cancel();
-            task_color="";
-            date_and_time="";
+            change_data_to_default();
         }
+    }
+
+    public void change_data_to_default()
+    {
+        task_clicked=null;
+        bottomSheetDialog_task.cancel();
+        task_color="#808080";
+        date_and_time="";
+        imageUri= Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.add_image_icon);
     }
 
     public String get_current_date()
@@ -410,8 +425,8 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         colors.add("#ff0000"); //Red
         colors.add("#00ff00"); //Green
         colors.add("#0000ff"); //Blue
-        colors.add("#ffffff"); //White
-        colorPicker.setColors(colors).setColumns(5).setColorButtonTickColor(Color.GRAY).setDefaultColorButton(Color.WHITE).setRoundColorButton(true).setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
+        colors.add("#808080"); //gray
+        colorPicker.setColors(colors).setColumns(5).setColorButtonTickColor(Color.WHITE).setDefaultColorButton(Color.WHITE).setRoundColorButton(true).setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
             @SuppressLint("ResourceType")
             @Override
             public void onChooseColor(int position, int color) {
@@ -429,16 +444,50 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        show_bottomSheetDialog();
 
+        task_clicked=tasks_values.get(position);
+
+        EditText et_task_name=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_name);
+        EditText et_task_address=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_address);
+        EditText et_task_notes=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_notes);
+        TextView tv_task_date_and_time=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
+        CircleImageView btn_task_color=(CircleImageView) bottomSheetDialog_task.findViewById(R.id.btn_task_color);
+        ImageView task_image=(ImageView) bottomSheetDialog_task.findViewById(R.id.task_image);
+        Button add_task=(Button) bottomSheetDialog_task.findViewById(R.id.add_task);
+
+        et_task_name.setText(tasks_values.get(position).getTaskName());
+        et_task_address.setText(tasks_values.get(position).getTaskAddress());
+        et_task_notes.setText(tasks_values.get(position).getTaskNotes());
+        tv_task_date_and_time.setText(tasks_values.get(position).getTaskDay()+" "+tasks_values.get(position).getTaskHour());
+        Drawable c = new ColorDrawable(Color.parseColor(tasks_values.get(position).getTaskColor()));
+        btn_task_color.setImageDrawable(c);
+        task_image.setImageURI(Uri.parse(tasks_values.get(position).getTaskPictureUid()));
+        add_task.setText("Update Task");
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        return false;
+        AlertDialog.Builder adb;
+        adb=new AlertDialog.Builder(this);
+        adb.setTitle("Delete List");
+        adb.setMessage("Are you sure you want delete "+tasks_values.get(position).getTaskName()+"?");
+        adb.setIcon(R.drawable.delete_list);
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(tasks_values.get(position).getTaskName()).child("Task Data").removeValue();
+                Toast.makeText(TasksActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+        adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog ad= adb.create();
+        ad.show();
+        return true;
     }
 }
