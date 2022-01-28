@@ -475,7 +475,8 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         et_task_address.setText(tasks_values.get(position).getTaskAddress());
         et_task_notes.setText(tasks_values.get(position).getTaskNotes());
         tv_task_date_and_time.setText(tasks_values.get(position).getTaskDay()+" "+tasks_values.get(position).getTaskHour());
-        Drawable c = new ColorDrawable(Color.parseColor(tasks_values.get(position).getTaskColor()));
+        task_color=tasks_values.get(position).getTaskColor();
+        Drawable c = new ColorDrawable(Color.parseColor(task_color));
         btn_task_color.setImageDrawable(c);
         imageUri=Uri.parse(tasks_values.get(position).getTaskPictureUid());
         task_image.setImageURI(imageUri);
