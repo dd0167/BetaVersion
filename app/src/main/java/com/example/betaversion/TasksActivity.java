@@ -283,8 +283,6 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         }
         else if(task_clicked!=null)
         {
-            time=task_clicked.getTaskHour();
-            date=task_clicked.getTaskDay();
             refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
             Task task=new Task(taskName,taskAddress,date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
             refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
@@ -474,7 +472,10 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         et_task_name.setText(tasks_values.get(position).getTaskName());
         et_task_address.setText(tasks_values.get(position).getTaskAddress());
         et_task_notes.setText(tasks_values.get(position).getTaskNotes());
-        tv_task_date_and_time.setText(tasks_values.get(position).getTaskDay()+" "+tasks_values.get(position).getTaskHour());
+        time=tasks_values.get(position).getTaskHour();
+        date=tasks_values.get(position).getTaskDay();
+        date_and_time=date+" "+time;
+        tv_task_date_and_time.setText(date_and_time);
         task_color=tasks_values.get(position).getTaskColor();
         Drawable c = new ColorDrawable(Color.parseColor(task_color));
         btn_task_color.setImageDrawable(c);
