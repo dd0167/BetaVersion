@@ -7,10 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +26,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -27,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -37,6 +47,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationBarView;
@@ -49,8 +63,10 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -384,7 +400,6 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         ImageView task_image=(ImageView) bottomSheetDialog_task.findViewById(R.id.task_image);
 
         if (requestCode==PICK_IMAGE && resultCode==RESULT_OK && data!=null)
@@ -462,7 +477,8 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         tv_task_date_and_time.setText(tasks_values.get(position).getTaskDay()+" "+tasks_values.get(position).getTaskHour());
         Drawable c = new ColorDrawable(Color.parseColor(tasks_values.get(position).getTaskColor()));
         btn_task_color.setImageDrawable(c);
-        task_image.setImageURI(Uri.parse(tasks_values.get(position).getTaskPictureUid()));
+        imageUri=Uri.parse(tasks_values.get(position).getTaskPictureUid());
+        task_image.setImageURI(imageUri);
         add_task.setText("Update Task");
     }
 

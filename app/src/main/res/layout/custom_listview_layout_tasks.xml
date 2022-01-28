@@ -21,7 +21,7 @@
 
             <TextView
                 android:id="@+id/ca_tv_date"
-                android:layout_width="30dp"
+                android:layout_width="35dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="20"
@@ -103,7 +103,7 @@
                         android:fontFamily="casual"
                         android:gravity="center"
                         android:singleLine="true"
-                        android:text="List Title"
+                        android:text="Task Title"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />

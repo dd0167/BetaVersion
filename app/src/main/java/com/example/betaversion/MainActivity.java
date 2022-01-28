@@ -228,10 +228,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         EditText et_list_name=(EditText) bottomSheetDialog_list.findViewById(R.id.et_list_name);
         String listName=et_list_name.getText().toString();
 
+        String date=get_current_date();
+        list=new List(listName,date);
+
         if (listName.isEmpty())
         {
             et_list_name.setError("List name is required!");
             et_list_name.requestFocus();
+        }
+        else if (list_clicked!=null) {
+            list.setListCreationDate(list_clicked.getListCreationDate());
+
+            DatabaseReference ref = refLists.child(currentUser.getUid()).child(list_clicked.getListName()).child("Tasks");
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot data : dataSnapshot.getChildren()) {
+                        Task task=data.child("Task Data").getValue(Task.class);
+                        refLists.child(currentUser.getUid()).child(listName).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            refLists.child(currentUser.getUid()).child(list_clicked.getListName()).removeValue();
+            refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
+
+            Toast.makeText(this, "Update List Successfully", Toast.LENGTH_SHORT).show();
+            bottomSheetDialog_list.cancel();
         }
         else if (lists_array.contains(listName))
         {
@@ -240,38 +268,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else
         {
-            String date=get_current_date();
+            refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
+            Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
 
-            list=new List(listName,date);
-            if (list_clicked!=null) {
-                list.setListCreationDate(list_clicked.getListCreationDate());
-                refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
-
-                DatabaseReference ref = refLists.child(currentUser.getUid()).child(list_clicked.getListName()).child("Tasks");
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot data : dataSnapshot.getChildren()) {
-                            Task task=data.child("Task Data").getValue(Task.class);
-                            refLists.child(currentUser.getUid()).child(listName).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-                refLists.child(currentUser.getUid()).child(list_clicked.getListName()).removeValue();
-
-                Toast.makeText(this, "Update List Successfully", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
-                Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
-            }
             bottomSheetDialog_list.cancel();
 
             list_clicked=null;
