@@ -26,10 +26,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +50,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -72,7 +76,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import petrov.kristiyan.colorpicker.ColorPicker;
 
-public class TasksActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     BottomNavigationView bottomNavigationView;
 
@@ -81,6 +85,7 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     String list_clicked_name;
     String list_clicked_date;
     Intent gi;
+    com.example.betaversion.List list_clicked;
 
     TextView tv_list_name;
     TextView tv_list_date;
@@ -112,7 +117,7 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
-        imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.add_image_icon);
+        imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.task_icon);
 
         bottomSheetDialog_task=(BottomSheetDialog) new BottomSheetDialog(TasksActivity.this);
 
@@ -129,8 +134,9 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
 
         gi = getIntent();
 
-        list_clicked_name = gi.getStringExtra("list_clicked_name");
-        list_clicked_date = gi.getStringExtra("list_clicked_date");
+        list_clicked=gi.getParcelableExtra("list_clicked");
+        list_clicked_name = list_clicked.getListName();
+        list_clicked_date = list_clicked.getListCreationDate();
         tv_list_name.setText(list_clicked_name);
         tv_list_date.setText(list_clicked_date);
 
@@ -251,6 +257,7 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void create_task(View view) {
+        change_data_to_default();
         show_bottomSheetDialog();
     }
 
@@ -262,6 +269,7 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void add_task(View view) {
+
         EditText et_task_name=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_name);
         EditText et_task_address=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_address);
         EditText et_task_notes=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_notes);
@@ -276,6 +284,11 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         {
             et_task_name.setError("Task name is required!");
             et_task_name.requestFocus();
+        }
+        else if (!taskAddress.isEmpty() && !correct_address(taskAddress))
+        {
+            et_task_address.setError("Error address!");
+            et_task_address.requestFocus();
         }
         else if (tv_task_date_and_time.getText().toString().equals("Select Date And Time") )
         {
@@ -309,7 +322,7 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         bottomSheetDialog_task.cancel();
         task_color="#808080";
         date_and_time="";
-        imageUri= Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.add_image_icon);
+        imageUri= Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.task_icon);
     }
 
     public String get_current_date()
@@ -376,8 +389,8 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
                 }
                 else if (which==1)
                 {
-                    task_image.setImageResource(R.drawable.add_image_icon);
-                    imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.add_image_icon);
+                    task_image.setImageResource(R.drawable.task_icon);
+                    imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.task_icon);
                 }
             }
         });
@@ -391,8 +404,20 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         ad.show();
     }
 
-    public void change_task_image(View view) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+    public boolean correct_address(String address)
+    {
+        Geocoder geocoder=new Geocoder(TasksActivity.this);
+        try {
+            List<Address> addressList=geocoder.getFromLocationName(address,6);
+            Address user_address=addressList.get(0);
+            LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
+            //Toast.makeText(TasksActivity.this, "Lat: "+latLng.latitude+", "+"Lng: "+latLng.longitude, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        catch (Exception e) {
+            //Toast.makeText(TasksActivity.this, "Error Address!", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     @Override
@@ -455,6 +480,14 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
         }).show();
     }
 
+    public void showPopup(View v)
+    {
+        PopupMenu popupMenu=new PopupMenu(this, v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.task_options);
+        popupMenu.show();
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         show_bottomSheetDialog();
@@ -486,26 +519,44 @@ public class TasksActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        AlertDialog.Builder adb;
-        adb=new AlertDialog.Builder(this);
-        adb.setTitle("Delete List");
-        adb.setMessage("Are you sure you want delete "+tasks_values.get(position).getTaskName()+"?");
-        adb.setIcon(R.drawable.delete_list);
-        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(tasks_values.get(position).getTaskName()).child("Task Data").removeValue();
-                Toast.makeText(TasksActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
-            }
-        });
-        adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog ad= adb.create();
-        ad.show();
+        showPopup(view);
+        task_clicked=tasks_values.get(position);
         return true;
+    }
+
+    // click in popup menu
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        int item_id=item.getItemId();
+        if (item_id == R.id.delete_task)
+        {
+            AlertDialog.Builder adb;
+            adb=new AlertDialog.Builder(this);
+            adb.setTitle("Delete List");
+            adb.setMessage("Are you sure you want delete "+task_clicked.getTaskName()+"?");
+            adb.setIcon(R.drawable.delete_list);
+            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
+                    Toast.makeText(TasksActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
+                }
+            });
+            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog ad= adb.create();
+            ad.show();
+        }
+        else if (item_id == R.id.show_task_in_map)
+        {
+            Intent stma = new Intent(this, ShowTaskMapActivity.class);
+            stma.putExtra("task_clicked", task_clicked);
+            startActivity(stma);
+        }
+        return false;
     }
 }

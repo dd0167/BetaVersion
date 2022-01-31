@@ -350,11 +350,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        List l=lists_values.get(position);
         Intent ta = new Intent(this,TasksActivity.class);
 
-        ta.putExtra("list_clicked_name",l.getListName());
-        ta.putExtra("list_clicked_date",l.getListCreationDate());
+        ta.putExtra("list_clicked",lists_values.get(position));
 
         startActivity(ta);
     }

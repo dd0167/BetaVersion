@@ -16,6 +16,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -32,6 +34,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,6 +51,7 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.List;
 import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -236,6 +242,12 @@ public class SettingsActivity extends AppCompatActivity {
                 et_home_address_settings.setError("Home address is required!");
                 et_home_address_settings.requestFocus();
             }
+            else if (!correct_address(home_address))
+            {
+                progressBar_settings.setVisibility(View.INVISIBLE);
+                et_home_address_settings.setError("Error address!");
+                et_home_address_settings.requestFocus();
+            }
             else if (phone.isEmpty())
             {
                 progressBar_settings.setVisibility(View.INVISIBLE);
@@ -306,6 +318,23 @@ public class SettingsActivity extends AppCompatActivity {
         et_age_settings.clearFocus();
         et_home_address_settings.clearFocus();
         et_phone_number_settings.clearFocus();
+    }
+
+    public boolean correct_address(String address)
+    {
+        progressBar_settings.setVisibility(View.VISIBLE);
+        Geocoder geocoder=new Geocoder(SettingsActivity.this);
+        try {
+            List<Address> addressList=geocoder.getFromLocationName(address,6);
+            Address user_address=addressList.get(0);
+            LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
+            //Toast.makeText(SettingsActivity.this, "Lat: "+latLng.latitude+", "+"Lng: "+latLng.longitude, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        catch (Exception e) {
+            Toast.makeText(SettingsActivity.this, "Error Address!", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     public void change_image(View view) {

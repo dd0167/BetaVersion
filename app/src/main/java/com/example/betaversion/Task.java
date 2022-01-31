@@ -1,6 +1,9 @@
 package com.example.betaversion;
 
-public class Task {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Task implements Parcelable {
 
     private String TaskName; // שם המטלה
     private String TaskAddress; // כתובת ביצוע המטלה
@@ -23,6 +26,29 @@ public class Task {
         TaskColor = taskColor;
         TaskPictureUid = taskPictureUid;
     }
+
+    protected Task(Parcel in) {
+        TaskName = in.readString();
+        TaskAddress = in.readString();
+        TaskDay = in.readString();
+        TaskHour = in.readString();
+        TaskCreationDate = in.readString();
+        TaskNotes = in.readString();
+        TaskColor = in.readString();
+        TaskPictureUid = in.readString();
+    }
+
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
 
     public String getTaskName() {
         return TaskName;
@@ -86,5 +112,22 @@ public class Task {
 
     public void setTaskPictureUid(String taskPictureUid) {
         TaskPictureUid = taskPictureUid;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(TaskName);
+        dest.writeString(TaskAddress);
+        dest.writeString(TaskDay);
+        dest.writeString(TaskHour);
+        dest.writeString(TaskCreationDate);
+        dest.writeString(TaskNotes);
+        dest.writeString(TaskColor);
+        dest.writeString(TaskPictureUid);
     }
 }

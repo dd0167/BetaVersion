@@ -183,9 +183,8 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/add_image_icon"
-                        tools:ignore="SpeakableTextPresentCheck"
-                        android:onClick="change_task_image"/>
+                        android:background="@drawable/task_icon"
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                 </LinearLayout>
 
             </LinearLayout>
