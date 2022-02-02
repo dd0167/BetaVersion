@@ -285,7 +285,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             et_task_name.setError("Task name is required!");
             et_task_name.requestFocus();
         }
-        else if (!taskAddress.isEmpty() && !correct_address(taskAddress))
+        else if (!taskAddress.isEmpty() && correct_address(taskAddress).equals("error"))
         {
             et_task_address.setError("Error address!");
             et_task_address.requestFocus();
@@ -297,7 +297,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         else if(task_clicked!=null)
         {
             refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
-            Task task=new Task(taskName,taskAddress,date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
+            Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
             refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
             Toast.makeText(this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
             change_data_to_default();
@@ -309,7 +309,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
         else
         {
-            Task task=new Task(taskName,taskAddress,date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
+            Task task=new Task(taskName,correct_address(taskAddress),date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
             refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
             Toast.makeText(this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
             change_data_to_default();
@@ -404,20 +404,21 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         ad.show();
     }
 
-    public boolean correct_address(String address)
+    public String correct_address(String address)
     {
         Geocoder geocoder=new Geocoder(TasksActivity.this);
         try {
             List<Address> addressList=geocoder.getFromLocationName(address,6);
             Address user_address=addressList.get(0);
             LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
+            //Toast.makeText(TasksActivity.this, "Address: "+user_address.getAddressLine(0), Toast.LENGTH_SHORT).show();
             //Toast.makeText(TasksActivity.this, "Lat: "+latLng.latitude+", "+"Lng: "+latLng.longitude, Toast.LENGTH_SHORT).show();
-            return true;
+            return user_address.getAddressLine(0);
         }
         catch (Exception e) {
             //Toast.makeText(TasksActivity.this, "Error Address!", Toast.LENGTH_SHORT).show();
         }
-        return false;
+        return "error";
     }
 
     @Override

@@ -2,14 +2,19 @@ package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -28,7 +33,7 @@ public class ShowTaskMapActivity extends AppCompatActivity {
     Intent gi;
     Task task_clicked;
 
-    TextView textView;
+    TextView tv_task_name,tv_task_address_map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,19 +76,37 @@ public class ShowTaskMapActivity extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Tasks" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "Task In Map" + "</font>"));
 
         gi = getIntent();
 
         task_clicked = gi.getParcelableExtra("task_clicked");
 
-        textView=(TextView) findViewById(R.id.textView);
-        textView.setText(task_clicked.getTaskName());
+        tv_task_name=(TextView) findViewById(R.id.tv_task_name);
+        tv_task_address_map=(TextView) findViewById(R.id.tv_task_address_map);
+        tv_task_name.setText(task_clicked.getTaskName());
+        tv_task_address_map.setText(task_clicked.getTaskAddress());
     }
 
     public void click(View view) {
         Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        getLocation();
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "permission is good", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "permission is good", Toast.LENGTH_SHORT).show();
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {

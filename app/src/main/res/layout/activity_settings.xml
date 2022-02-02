@@ -54,7 +54,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="300dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -186,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="casual"
                 android:gravity="center"
-                android:text="After entering all the required data, click Update"
+                android:text="After entering all the required data, click on the round icon"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
@@ -243,20 +243,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="10" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:fontFamily="casual"
-        android:onClick="update"
-        android:text="Update"
-        android:textColor="#000000" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="50" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -291,11 +277,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
-                android:src="@drawable/ic_add"
+                android:onClick="update"
+                android:src="@drawable/add_user"
                 app:backgroundTint="@color/black"
                 app:layout_anchor="@id/bottomAppBar"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:onClick="click"/>
+                app:maxImageSize="30dp"
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>
