@@ -285,7 +285,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             et_task_name.setError("Task name is required!");
             et_task_name.requestFocus();
         }
-        else if (!taskAddress.isEmpty() && correct_address(taskAddress).equals("error"))
+        else if (!taskAddress.isEmpty() && correct_address(taskAddress).equals(""))
         {
             et_task_address.setError("Error address!");
             et_task_address.requestFocus();
@@ -418,7 +418,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         catch (Exception e) {
             //Toast.makeText(TasksActivity.this, "Error Address!", Toast.LENGTH_SHORT).show();
         }
-        return "error";
+        return "";
     }
 
     @Override
@@ -520,9 +520,42 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        showPopup(view);
         task_clicked=tasks_values.get(position);
+
+        if (task_clicked.getTaskAddress().isEmpty())
+        {
+            delete_task();
+        }
+        else
+        {
+            showPopup(view);
+        }
+
         return true;
+    }
+
+    public void delete_task()
+    {
+        AlertDialog.Builder adb;
+        adb=new AlertDialog.Builder(this);
+        adb.setTitle("Delete List");
+        adb.setMessage("Are you sure you want delete "+task_clicked.getTaskName()+"?");
+        adb.setIcon(R.drawable.delete_list);
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
+                Toast.makeText(TasksActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+        adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog ad= adb.create();
+        ad.show();
     }
 
     // click in popup menu
@@ -531,26 +564,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         int item_id=item.getItemId();
         if (item_id == R.id.delete_task)
         {
-            AlertDialog.Builder adb;
-            adb=new AlertDialog.Builder(this);
-            adb.setTitle("Delete List");
-            adb.setMessage("Are you sure you want delete "+task_clicked.getTaskName()+"?");
-            adb.setIcon(R.drawable.delete_list);
-            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
-                    Toast.makeText(TasksActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
-                }
-            });
-            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            AlertDialog ad= adb.create();
-            ad.show();
+            delete_task();
         }
         else if (item_id == R.id.show_task_in_map)
         {
