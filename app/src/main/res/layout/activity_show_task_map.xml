@@ -160,11 +160,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
-                android:src="@drawable/ic_add"
+                android:onClick="click"
+                android:src="@drawable/show_address_in_map"
                 app:backgroundTint="@color/black"
                 app:layout_anchor="@id/bottomAppBar"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:onClick="click"/>
+                app:maxImageSize="30dp"
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>
