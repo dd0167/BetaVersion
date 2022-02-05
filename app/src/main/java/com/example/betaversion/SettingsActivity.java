@@ -242,7 +242,7 @@ public class SettingsActivity extends AppCompatActivity {
                 et_home_address_settings.setError("Home address is required!");
                 et_home_address_settings.requestFocus();
             }
-            else if (!correct_address(home_address))
+            else if (correct_address(home_address).equals(""))
             {
                 progressBar_settings.setVisibility(View.INVISIBLE);
                 et_home_address_settings.setError("Error address!");
@@ -268,7 +268,7 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.putBoolean("stayConnect",checkBox_settings.isChecked());
                 editor.commit();
 
-                String file_name="User Images/"+et_first_name_settings.getText().toString()+" "+et_last_name_settings.getText().toString()+" image.png";
+                String file_name="User Images/"+currentUser.getUid()+" image.png";
                 StorageReference fileRef=reference.child(file_name);
                 if (is_changed)
                 {
@@ -279,7 +279,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     Toast.makeText(SettingsActivity.this, "User data changed successfully!", Toast.LENGTH_SHORT).show();
-                                    User user=new User(currentUser.getUid(),first_name,last_name,age,home_address,currentUser.getEmail(),phone,uri.toString());
+                                    User user=new User(currentUser.getUid(),first_name,last_name,age,correct_address(home_address),currentUser.getEmail(),phone,uri.toString());
                                     refUsers.child(currentUser.getUid()).child("User Data").setValue(user);
                                     progressBar_settings.setVisibility(View.INVISIBLE);
                                     is_changed=false;
@@ -305,7 +305,7 @@ public class SettingsActivity extends AppCompatActivity {
                 else
                 {
                     progressBar_settings.setVisibility(View.VISIBLE);
-                    User user=new User(currentUser.getUid(),first_name,last_name,age,home_address,currentUser.getEmail(),phone,imageUri.toString());
+                    User user=new User(currentUser.getUid(),first_name,last_name,age,correct_address(home_address),currentUser.getEmail(),phone,imageUri.toString());
                     refUsers.child(currentUser.getUid()).child("User Data").setValue(user);
                     Toast.makeText(SettingsActivity.this, "User data changed successfully!", Toast.LENGTH_SHORT).show();
                     move_main();
@@ -320,21 +320,21 @@ public class SettingsActivity extends AppCompatActivity {
         et_phone_number_settings.clearFocus();
     }
 
-    public boolean correct_address(String address)
+    public String correct_address(String address)
     {
-        progressBar_settings.setVisibility(View.VISIBLE);
         Geocoder geocoder=new Geocoder(SettingsActivity.this);
         try {
             List<Address> addressList=geocoder.getFromLocationName(address,6);
             Address user_address=addressList.get(0);
             LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
-            //Toast.makeText(SettingsActivity.this, "Lat: "+latLng.latitude+", "+"Lng: "+latLng.longitude, Toast.LENGTH_SHORT).show();
-            return true;
+            //Toast.makeText(TasksActivity.this, "Address: "+user_address.getAddressLine(0), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(TasksActivity.this, "Lat: "+latLng.latitude+", "+"Lng: "+latLng.longitude, Toast.LENGTH_SHORT).show();
+            return user_address.getAddressLine(0);
         }
         catch (Exception e) {
-            Toast.makeText(SettingsActivity.this, "Error Address!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(TasksActivity.this, "Error Address!", Toast.LENGTH_SHORT).show();
         }
-        return false;
+        return "";
     }
 
     public void change_image(View view) {

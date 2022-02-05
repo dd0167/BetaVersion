@@ -1,6 +1,13 @@
 package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
+import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
+
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.pow;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -15,6 +22,10 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -23,6 +34,7 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +58,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.gun0912.tedpermission.PermissionListener;
@@ -65,7 +78,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
     Task task_clicked;
 
     TextView tv_task_name, tv_task_address_map;
-    TextView tv_task_country, tv_task_city;
+    TextView tv_task_country, tv_task_city, tv_distance;
 
     MapView mapView_Task;
     GoogleMap gmap;
@@ -74,6 +87,9 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
     String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     FusedLocationProviderClient fusedLocationProviderClient;
+    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+    ProgressBar progressBar_showMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +144,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
         tv_task_city = (TextView) findViewById(R.id.tv_task_city);
         tv_task_country = (TextView) findViewById(R.id.tv_task_country);
+        tv_distance = (TextView) findViewById(R.id.tv_distance);
         mapView_Task = (MapView) findViewById(R.id.mapView_task);
 
         show_locationData();
@@ -140,6 +157,9 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         mapView_Task.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        progressBar_showMap=(ProgressBar) findViewById(R.id.progressBar_showMap);
+        progressBar_showMap.setVisibility(View.VISIBLE);
     }
 
     @SuppressLint("MissingPermission")
@@ -157,7 +177,57 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
     }
 
     public void click(View view) {
-        Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
+        progressBar_showMap.setVisibility(View.VISIBLE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        com.google.android.gms.tasks.Task<Location> currentLocationTask = fusedLocationProviderClient.getCurrentLocation(
+                PRIORITY_HIGH_ACCURACY,
+                cancellationTokenSource.getToken()
+        );
+
+        currentLocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                try {
+                    Geocoder geocoder=new Geocoder(ShowTaskMapActivity.this);
+
+                    List<Address> task_address=geocoder.getFromLocationName(task_clicked.getTaskAddress(),6);
+                    LatLng latLng_task=new LatLng(task_address.get(0).getLatitude(),task_address.get(0).getLongitude());
+
+                    double latitude = location.getLatitude();
+                    double longitude=location.getLongitude();
+
+                    LatLng latLng = new LatLng(latitude, longitude);
+
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title("My Location");
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_icon));
+                    gmap.addMarker(markerOptions);
+
+                    float zoomLevel = 17.0f; //This goes up to 21
+                    gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+
+                    double d = distance(latitude, latLng_task.latitude , longitude, latLng_task.longitude);
+                    String distance = String.valueOf(d);
+                    tv_distance.setText("The distance between the task and your current location: " + distance.substring(0, 5) + " km");
+                }
+
+                catch (IOException e) {
+                    Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        progressBar_showMap.setVisibility(View.INVISIBLE);
     }
 
     public void checkPermission() {
@@ -204,7 +274,6 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         });
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void getLocation() {
         PermissionListener permissionListener = new PermissionListener() {
             @Override
@@ -224,7 +293,6 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                 .setPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
                 .check();
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -286,6 +354,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         uiSettings.setZoomGesturesEnabled(true);
         uiSettings.setScrollGesturesEnabled(true);
         uiSettings.setRotateGesturesEnabled(true);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -296,8 +365,20 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        gmap.setMyLocationEnabled(true);
-
+//        gmap.setMyLocationEnabled(true);
+//        gmap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+//            @Override
+//            public boolean onMyLocationButtonClick() {
+//                try {
+//                    LatLng latLng = new LatLng(gmap.getMyLocation().getLatitude(), gmap.getMyLocation().getLongitude());
+//                    float zoomLevel = 17.0f; //This goes up to 21
+//                    gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+//                } catch (Exception e) {
+//                    Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+//                }
+//                return true;
+//          }
+//        });
         LatLng isr = new LatLng(31.38269, 35.071805);
         gmap.animateCamera(CameraUpdateFactory.newLatLng(isr));
 
@@ -307,7 +388,6 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
 
         //show task address on map
-
         Geocoder geocoder=new Geocoder(ShowTaskMapActivity.this);
         try {
             List<Address> addressList=geocoder.getFromLocationName(task_clicked.getTaskAddress(),6);
@@ -317,20 +397,47 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
             //gmap.clear();
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.title("Task Address");
+            markerOptions.title(task_clicked.getTaskName()+" Address");
             markerOptions.position(latLng);
             gmap.addMarker(markerOptions);
 
             zoomLevel = 17.0f; //This goes up to 21
             gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-
-//            Toast.makeText(ShowTaskMapActivity.this, "Latitude: "+user_address.getLatitude(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(ShowTaskMapActivity.this, "Longitude: "+user_address.getLongitude(), Toast.LENGTH_SHORT).show();
         }
         catch (Exception e)
         {
             Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
+
+        progressBar_showMap.setVisibility(View.INVISIBLE);
+    }
+
+    public static double distance(double lat1, double lat2, double lon1, double lon2)
+    {
+
+        // The math module contains a function
+        // named toRadians which converts from
+        // degrees to radians.
+        lon1 = Math.toRadians(lon1);
+        lon2 = Math.toRadians(lon2);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        // Haversine formula
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2),2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        // Radius of earth in kilometers. Use 3956
+        // for miles 6371;
+        double r = 3956;
+
+        // calculate the result
+        return(c * r);
     }
 
     @Override
