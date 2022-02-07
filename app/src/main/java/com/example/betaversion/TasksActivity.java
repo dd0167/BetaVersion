@@ -100,9 +100,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     //Date and Time
     Calendar calendar=Calendar.getInstance();
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
+    int year;
+    int month;
+    int day;
 
     String date,time,date_and_time="",task_color="#808080"; //task_color=white
 
@@ -336,6 +336,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     public void select_date()
     {
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(TasksActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -344,6 +348,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 select_time();
             }
         },year,month,day);
+        datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis()); // Disable Previous or Future Dates in Datepicker
         datePickerDialog.show();
     }
 
@@ -366,7 +371,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             }
         };
 
-        new TimePickerDialog(TasksActivity.this,timeSetListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
+        TimePickerDialog timePickerDialog=new TimePickerDialog(TasksActivity.this,timeSetListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true);
+        timePickerDialog.show();
     }
 
     public void add_image(View view) {

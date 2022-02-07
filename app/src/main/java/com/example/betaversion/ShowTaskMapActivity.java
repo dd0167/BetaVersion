@@ -197,6 +197,8 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onSuccess(Location location) {
                 try {
+                    gmap.clear();
+
                     Geocoder geocoder=new Geocoder(ShowTaskMapActivity.this);
 
                     List<Address> task_address=geocoder.getFromLocationName(task_clicked.getTaskAddress(),6);
@@ -205,17 +207,26 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                     double latitude = location.getLatitude();
                     double longitude=location.getLongitude();
 
-                    LatLng latLng = new LatLng(latitude, longitude);
+                    LatLng latLng_current_location = new LatLng(latitude, longitude);
 
                     MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
+                    markerOptions.position(latLng_current_location);
                     markerOptions.title("My Location");
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_icon));
                     gmap.addMarker(markerOptions);
 
                     float zoomLevel = 17.0f; //This goes up to 21
-                    gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                    gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng_current_location, zoomLevel));
+
+                    // add task list marker
+                    List<Address> addressList=geocoder.getFromLocationName(task_clicked.getTaskAddress(),6);
+                    Address user_address=addressList.get(0);
+                    LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
+                    MarkerOptions markerOptions_task = new MarkerOptions();
+                    markerOptions_task.title(task_clicked.getTaskName()+" Address");
+                    markerOptions_task.position(latLng);
+                    gmap.addMarker(markerOptions_task);
 
                     double d = distance(latitude, latLng_task.latitude , longitude, latLng_task.longitude);
                     String distance = String.valueOf(d);
