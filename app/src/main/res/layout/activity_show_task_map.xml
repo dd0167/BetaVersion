@@ -10,7 +10,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="10" />
+        android:layout_weight="5" />
 
     <TextView
         android:id="@+id/tv_task_name"
@@ -160,7 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
-                android:onClick="click"
+                android:onClick="get_current_location"
                 android:src="@drawable/show_address_in_map"
                 app:backgroundTint="@color/black"
                 app:layout_anchor="@id/bottomAppBar"
