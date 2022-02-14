@@ -15,15 +15,15 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class CustomListAdapter extends BaseAdapter{
+public class CustomTasksDayListAdapter extends BaseAdapter{
     Context context;
     ArrayList<String> lists;
     LayoutInflater inflter;
-    ArrayList<List> list_values;
+    ArrayList<TasksDay> list_values;
     SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
     SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
 
-    public CustomListAdapter(Context applicationContext, ArrayList<String> lists, ArrayList<List> list_values) {
+    public CustomTasksDayListAdapter(Context applicationContext, ArrayList<String> lists, ArrayList<TasksDay> list_values) {
         this.context = applicationContext;
         this.lists = lists;
         this.list_values=list_values;
@@ -48,13 +48,13 @@ public class CustomListAdapter extends BaseAdapter{
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        view = inflter.inflate(R.layout.custom_listview_layout_lists, null);
+        view = inflter.inflate(R.layout.custom_listview_layout_tasks_day_list, null);
         TextView title = (TextView) view.findViewById(R.id.item_title);
 
         TextView tv_day = (TextView) view.findViewById(R.id.ca_tv_day);
         TextView tv_month = (TextView) view.findViewById(R.id.ca_tv_month);
         TextView tv_date = (TextView) view.findViewById(R.id.ca_tv_date);
-        String get_date = list_values.get(i).getListCreationDate();
+        String get_date = list_values.get(i).getTasksDayDate();
         String[] date=convert_date(get_date);
         tv_day.setText(date[0]);
         tv_date.setText(date[1]);

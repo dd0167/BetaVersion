@@ -1,13 +1,14 @@
 package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
-import static com.example.betaversion.FB_Ref.refLists;
+import static com.example.betaversion.FB_Ref.refTasksDays;
 import static com.example.betaversion.FB_Ref.refTasksDays;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -40,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -59,6 +64,13 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
     TextView tv_tasksDay_amount;
 
     BottomSheetDialog bottomSheetDialog_tasksDay;
+
+    //Date
+    Calendar calendar=Calendar.getInstance();
+    int year;
+    int month;
+    int day;
+    String date="Select Tasks Day Date";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,13 +186,14 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
                         tasksDay_name = stuTmp.getTasksDayName();
                         tasksDay_array.add(tasksDay_name);
                     }
-//                    CustomListAdapter customadp = new CustomListAdapter(MainActivity.this,
-//                            lists_array,lists_values);
-//                    lists_listview.setAdapter(customadp);
-
-                    ArrayAdapter<String> adp=new ArrayAdapter<String>(TasksDayListsActivity.this,R.layout.support_simple_spinner_dropdown_item,tasksDay_array);
-                    tasksDay_listview.setAdapter(adp);
+                    CustomTasksDayListAdapter customadp = new CustomTasksDayListAdapter(TasksDayListsActivity.this,
+                            tasksDay_array,tasksDay_values);
+                    tasksDay_listview.setAdapter(customadp);
                     tv_tasksDay_amount.setText("You have "+ tasksDay_array.size()+ " tasks days");
+
+                    //ArrayAdapter<String> adp=new ArrayAdapter<String>(TasksDayListsActivity.this,R.layout.support_simple_spinner_dropdown_item,tasksDay_array);
+                    //tasksDay_listview.setAdapter(adp);
+                    //tv_tasksDay_amount.setText("You have "+ tasksDay_array.size()+ " tasks days");
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -255,8 +268,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         TextView tv_tasksDay_date=(TextView) bottomSheetDialog_tasksDay.findViewById(R.id.tv_tasksDay_date);
         String tasksDayName=et_tasksDay_name.getText().toString();
 
-        //String date=set_tasksDay_date(view);
-        String date="14-02-2022";
+        date=tv_tasksDay_date.getText().toString();
         tasksDay=new TasksDay(tasksDayName,date);
 
         if (tasksDayName.isEmpty())
@@ -264,17 +276,37 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             et_tasksDay_name.setError("Tasks Day name is required!");
             et_tasksDay_name.requestFocus();
         }
-        else if (tv_tasksDay_date.getText().toString().equals("Select Tasks Day Date") )
-        {
-            Toast.makeText(TasksDayListsActivity.this, "Select Date", Toast.LENGTH_SHORT).show();
-        }
         else if (tasksDay_clicked!=null) {
-            // copy and edit from main!!!!! ///////////////////////////////////////////////////////////////////////////////////
+            DatabaseReference ref = refTasksDays.child(currentUser.getUid()).child(tasksDay_clicked.getTasksDayName()).child("Tasks");
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot data : dataSnapshot.getChildren()) {
+                        Task task=data.child("Task Data").getValue(Task.class);
+                        refTasksDays.child(currentUser.getUid()).child(tasksDayName).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(TasksDayListsActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            refTasksDays.child(currentUser.getUid()).child(tasksDay_clicked.getTasksDayName()).removeValue();
+            refTasksDays.child(currentUser.getUid()).child(tasksDayName).child("Tasks Day Data").setValue(tasksDay);
+
+            Toast.makeText(this, "Update List Successfully", Toast.LENGTH_SHORT).show();
+            bottomSheetDialog_tasksDay.cancel();
         }
         else if (tasksDay_array.contains(tasksDayName))
         {
             et_tasksDay_name.setError("There is a Tasks Day with this name!");
             et_tasksDay_name.requestFocus();
+        }
+        else if (tv_tasksDay_date.getText().toString().equals("Select Tasks Day Date") )
+        {
+            Toast.makeText(TasksDayListsActivity.this, "Select Date", Toast.LENGTH_SHORT).show();
         }
         else
         {
@@ -287,18 +319,89 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
     }
 
+    public void set_tasksDay_date(View view)
+    {
+        TextView tv_tasksDay_date=(TextView) bottomSheetDialog_tasksDay.findViewById(R.id.tv_tasksDay_date);
+
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(TasksDayListsActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month=month+1;
+                date=dayOfMonth+"-"+month+"-"+year;
+                tv_tasksDay_date.setText(date);
+            }
+        },year,month,day);
+        datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis()); // Disable Previous or Future Dates in Datepicker
+        datePickerDialog.show();
+    }
+
+    public void showPopup(View v)
+    {
+        PopupMenu popupMenu=new PopupMenu(this, v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.list_options);
+        popupMenu.show();
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent ta = new Intent(this,TasksActivity.class);
 
+        ta.putExtra("tasksDay_clicked",tasksDay_values.get(position));
+        ta.putExtra("reference","Tasks Days");
+
+        startActivity(ta);
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
+        tasksDay_clicked=tasksDay_values.get(position);
+        showPopup(view);
+        return true;
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        return false;
+        int item_id=item.getItemId();
+        if (item_id == R.id.update_list)
+        {
+            show_bottomSheetDialog();
+            EditText et_tasksDay_name=(EditText) bottomSheetDialog_tasksDay.findViewById(R.id.et_tasksDay_name);
+            TextView tv_tasksDay_date=(TextView) bottomSheetDialog_tasksDay.findViewById(R.id.tv_tasksDay_date);
+            Button add_tasksDay=(Button) bottomSheetDialog_tasksDay.findViewById(R.id.add_tasksDay);
+            ImageView iv_TasksDay_layout=(ImageView) bottomSheetDialog_tasksDay.findViewById(R.id.iv_TasksDay_layout);
+            et_tasksDay_name.setText(tasksDay_clicked.getTasksDayName());
+            add_tasksDay.setText("Update Tasks Day");
+            tv_tasksDay_date.setText(tasksDay_clicked.getTasksDayDate());
+            iv_TasksDay_layout.setImageResource(R.drawable.update_list);
+        }
+        else if (item_id == R.id.delete_list)
+        {
+            AlertDialog.Builder adb;
+            adb=new AlertDialog.Builder(this);
+            adb.setTitle("Delete List");
+            adb.setMessage("Are you sure you want delete "+tasksDay_clicked.getTasksDayName()+"?");
+            adb.setIcon(R.drawable.delete_list);
+            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    refTasksDays.child(currentUser.getUid()).child(tasksDay_clicked.getTasksDayName()).removeValue();
+                    Toast.makeText(TasksDayListsActivity.this, "Delete Tasks Day Successfully", Toast.LENGTH_SHORT).show();
+                }
+            });
+            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog ad= adb.create();
+            ad.show();
+        }
+        return true;
     }
 }

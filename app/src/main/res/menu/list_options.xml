@@ -2,13 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/update_list"
+    <item
+        android:id="@+id/update_list"
         android:icon="@drawable/update_list"
-        android:title="Update List" />
+        android:title="Update" />
 
-    <item android:id="@+id/delete_list"
+    <item
+        android:id="@+id/delete_list"
         android:icon="@drawable/delete_list"
-        android:title="Delete List" />
+        android:title="Delete" />
 
 
 

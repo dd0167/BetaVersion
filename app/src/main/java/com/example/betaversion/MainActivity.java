@@ -62,15 +62,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     ListView lists_listview;
     TextView tv_lists_amount;
 
-//    DatePickerDialog.OnDateSetListener mDateSetListener;
-//    Calendar calendar=Calendar.getInstance();
-//    int year = calendar.get(Calendar.YEAR);
-//    int month = calendar.get(Calendar.MONTH);
-//    int day = calendar.get(Calendar.DAY_OF_MONTH);
-//    String date;
-//    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
-//    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
-
     BottomSheetDialog bottomSheetDialog_list;
 
     @Override
@@ -79,16 +70,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
         bottomSheetDialog_list=(BottomSheetDialog) new BottomSheetDialog(MainActivity.this);
-
-//        taskDate=(TextView) findViewById(R.id.taskDate);
-//        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-//            @Override
-//            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-//                month = month + 1;
-//                String date = day + "/" + month + "/" + year;
-//                taskDate.setText(date);
-//            }
-//        };
 
         tv_lists_amount=(TextView) findViewById(R.id.tv_lists_amount);
 
@@ -204,19 +185,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
-//    public void get_date(View view) {
-//        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
-//            @Override
-//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                month=month+1;
-//                date=dayOfMonth+"-"+month+"-"+year;
-//
-//                convert_date(date);
-//            }
-//        },year,month,day);
-//        datePickerDialog.show();
-//    }
-
     public void create_list(View view) {
 
         list_clicked=null;
@@ -258,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -360,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent ta = new Intent(this,TasksActivity.class);
 
         ta.putExtra("list_clicked",lists_values.get(position));
+        ta.putExtra("reference","Lists");
 
         startActivity(ta);
     }
@@ -379,23 +348,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         popupMenu.show();
     }
 
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         int item_id=item.getItemId();
         if (item_id == R.id.update_list)
         {
-
-//            try {
-//                BottomSheetDialog bottomSheetDialog=new BottomSheetDialog(context.getApplicationContext());
-//                EditText et_list_name=(EditText) bottomSheetDialog.findViewById(R.id.et_list_name);
-//                String list_name=et_list_name.getText().toString();
-//            }
-//            catch (Exception e)
-//            {
-//                Toast.makeText(context.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-
             show_bottomSheetDialog();
             EditText et_list_name=(EditText) bottomSheetDialog_list.findViewById(R.id.et_list_name);
             Button add_list=(Button) bottomSheetDialog_list.findViewById(R.id.add_list);
@@ -427,6 +384,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             AlertDialog ad= adb.create();
             ad.show();
         }
-        return false;
+        return true;
     }
 }

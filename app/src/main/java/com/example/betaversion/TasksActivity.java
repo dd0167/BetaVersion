@@ -1,7 +1,8 @@
 package com.example.betaversion;
 
+import static com.example.betaversion.FB_Ref.FBDB;
 import static com.example.betaversion.FB_Ref.mAuth;
-import static com.example.betaversion.FB_Ref.refLists;
+import static com.example.betaversion.FB_Ref.reference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -61,6 +62,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -78,6 +80,8 @@ import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
+    DatabaseReference reference;
+
     BottomNavigationView bottomNavigationView;
 
     FirebaseUser currentUser;
@@ -85,7 +89,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     String list_clicked_name;
     String list_clicked_date;
     Intent gi;
+
     com.example.betaversion.List list_clicked;
+    TasksDay tasksDay_clicked;
 
     TextView tv_list_name;
     TextView tv_list_date;
@@ -127,18 +133,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         tv_list_date=(TextView) findViewById(R.id.tv_list_date);
         tv_tasks_amount=(TextView) findViewById(R.id.tv_tasks_amount);
 
+        get_data_from_intent();
+
         tasks_listview=(ListView) findViewById(R.id.tasks_listview);
         tasks_listview.setOnItemClickListener(this);
         tasks_listview.setOnItemLongClickListener(this);
         tasks_listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        gi = getIntent();
-
-        list_clicked=gi.getParcelableExtra("list_clicked");
-        list_clicked_name = list_clicked.getListName();
-        list_clicked_date = list_clicked.getListCreationDate();
-        tv_list_name.setText(list_clicked_name);
-        tv_list_date.setText(list_clicked_date);
 
         bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
@@ -189,6 +189,29 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         task_clicked=null;
     }
 
+    public void get_data_from_intent()
+    {
+        gi = getIntent();
+        String ref=gi.getStringExtra("reference");
+
+        if (ref.equals("Lists"))
+        {
+            list_clicked=gi.getParcelableExtra("list_clicked");
+            list_clicked_name = list_clicked.getListName();
+            list_clicked_date = list_clicked.getListCreationDate();
+        }
+        else if (ref.equals("Tasks Days"))
+        {
+            tasksDay_clicked=gi.getParcelableExtra("tasksDay_clicked");
+            list_clicked_name = tasksDay_clicked.getTasksDayName();
+            list_clicked_date = tasksDay_clicked.getTasksDayDate();
+        }
+
+        tv_list_name.setText(list_clicked_name);
+        tv_list_date.setText(list_clicked_date);
+        reference=FBDB.getReference(ref);
+    }
+
     public void read_tasks()
     {
         ValueEventListener tasks_array_listener = new ValueEventListener() {
@@ -213,7 +236,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 Toast.makeText(TasksActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
-        refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").addValueEventListener(tasks_array_listener);
+        reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").addValueEventListener(tasks_array_listener);
     }
 
     @Override
@@ -302,9 +325,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
         else if(task_clicked!=null)
         {
-            refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
+            reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
             Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
-            refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+            reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
             Toast.makeText(this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
             change_data_to_default();
         }
@@ -316,7 +339,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         else
         {
             Task task=new Task(taskName,correct_address(taskAddress),date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
-            refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+            reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
             Toast.makeText(this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
             change_data_to_default();
         }
@@ -556,7 +579,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                refLists.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
+                reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                 Toast.makeText(TasksActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
             }
         });
