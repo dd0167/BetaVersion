@@ -2,8 +2,8 @@ package com.example.betaversion;
 
 public class TasksDay {
 
-    private String TasksDayName; // שם המטלה
-    private String TasksDayDate; // יום ביצוע המטלה
+    private String TasksDayName; // שם היום
+    private String TasksDayDate; // יום ביצוע המטלות
 
     public TasksDay() {}
 

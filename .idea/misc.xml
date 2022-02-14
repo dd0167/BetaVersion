@@ -17,7 +17,7 @@
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/action_bar_layout.xml" value="0.21331521739130435" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_credits.xml" value="0.21422101449275363" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_login.xml" value="0.20425724637681159" />
-        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_main.xml" value="0.2421875" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_main.xml" value="0.23641304347826086" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_menu.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_registration.xml" value="0.2421875" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_settings.xml" value="0.21422101449275363" />
@@ -25,8 +25,10 @@
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_signup.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_splash.xml" value="0.19882246376811594" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_tasks.xml" value="0.2421875" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_tasks_day_lists.xml" value="0.23641304347826086" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/bottom_sheet_layout_list.xml" value="0.23324275362318841" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/bottom_sheet_layout_task.xml" value="0.23324275362318841" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/bottom_sheet_layout_tasks_day.xml" value="0.23641304347826086" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout.xml" value="0.6" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout_lists.xml" value="0.21965579710144928" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout_tasks.xml" value="0.6" />

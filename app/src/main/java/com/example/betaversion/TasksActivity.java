@@ -170,6 +170,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                     startActivity(sa);
                     finish();
                 }
+                else if (id==R.id.tasks_day)
+                {
+                    Intent td=new Intent(TasksActivity.this,TasksDayListsActivity.class);
+                    startActivity(td);
+                    finish();
+                }
                 return true;
             }
         });

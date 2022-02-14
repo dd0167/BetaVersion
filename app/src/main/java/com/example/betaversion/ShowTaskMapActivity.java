@@ -121,6 +121,12 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                     startActivity(sa);
                     finish();
                 }
+                else if (id==R.id.tasks_day)
+                {
+                    Intent td=new Intent(ShowTaskMapActivity.this,TasksDayListsActivity.class);
+                    startActivity(td);
+                    finish();
+                }
                 return true;
             }
         });
@@ -224,7 +230,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                     Address user_address=addressList.get(0);
                     LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
                     MarkerOptions markerOptions_task = new MarkerOptions();
-                    markerOptions_task.title(task_clicked.getTaskName()+" Address");
+                    markerOptions_task.title(task_clicked.getTaskName());
                     markerOptions_task.position(latLng);
                     gmap.addMarker(markerOptions_task);
 

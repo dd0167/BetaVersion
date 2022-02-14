@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     List list;
     List list_clicked;
+
     BottomNavigationView bottomNavigationView;
 
     ArrayList<String> lists_array = new ArrayList<String>();
@@ -134,6 +135,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     Intent sa = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(sa);
+                    finish();
+                }
+                else if (id==R.id.tasks_day)
+                {
+                    Intent td=new Intent(MainActivity.this,TasksDayListsActivity.class);
+                    startActivity(td);
                     finish();
                 }
                 return true;
@@ -263,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else if (lists_array.contains(listName))
         {
-            et_list_name.setError("There is a list with this name!");
+            et_list_name.setError("There is a List with this name!");
             et_list_name.requestFocus();
         }
         else
@@ -328,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             };
             refLists.child(currentUser.getUid()).addValueEventListener(lists_array_listener);

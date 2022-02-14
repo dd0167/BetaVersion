@@ -106,6 +106,12 @@ public class SettingsActivity extends AppCompatActivity {
                     startActivity(sa);
                     finish();
                 }
+                else if (id==R.id.tasks_day)
+                {
+                    Intent td=new Intent(SettingsActivity.this,TasksDayListsActivity.class);
+                    startActivity(td);
+                    finish();
+                }
                 return true;
             }
         });

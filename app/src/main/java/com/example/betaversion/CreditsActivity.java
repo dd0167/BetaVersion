@@ -59,6 +59,12 @@ public class CreditsActivity extends AppCompatActivity {
                     startActivity(sa);
                     finish();
                 }
+                else if (id==R.id.tasks_day)
+                {
+                    Intent td=new Intent(CreditsActivity.this,TasksDayListsActivity.class);
+                    startActivity(td);
+                    finish();
+                }
                 return true;
             }
         });

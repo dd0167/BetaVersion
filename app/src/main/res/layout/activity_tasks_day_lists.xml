@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".TasksDayListsActivity">
 
     <Space
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/annie_use_your_telescope"
         android:gravity="center"
-        android:text="Lists"
+        android:text="Tasks Days"
         android:textColor="@color/black"
         android:textSize="50sp"
         android:textStyle="bold" />
@@ -28,12 +28,12 @@
         android:layout_weight="10" />
 
     <TextView
-        android:id="@+id/tv_lists_amount"
+        android:id="@+id/tv_tasksDay_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/annie_use_your_telescope"
         android:gravity="center"
-        android:text="Lists Amount"
+        android:text="Tasks Days Amount"
         android:textColor="@color/black"
         android:textSize="15sp" />
 
@@ -43,7 +43,7 @@
         android:layout_weight="10" />
 
     <ListView
-        android:id="@+id/lists_listview"
+        android:id="@+id/tasksDay_listview"
         android:layout_width="match_parent"
         android:layout_height="500dp" />
 
@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
-                android:onClick="create_list"
+                android:onClick="create_tasks_day"
                 android:src="@drawable/ic_add"
                 app:backgroundTint="@color/black"
                 app:layout_anchor="@id/bottomAppBar"
