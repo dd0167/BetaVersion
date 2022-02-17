@@ -1,5 +1,6 @@
 package com.example.betaversion;
 
+import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 import static com.example.betaversion.FB_Ref.mAuth;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -28,7 +31,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class CreditsActivity extends AppCompatActivity {
 
-    private static final String CHANNEL_ID = "Channel";
+    private static final String CHANNEL_ID = "Notifications";
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -137,27 +140,31 @@ public class CreditsActivity extends AppCompatActivity {
     public void notification(View view) {
         Toast.makeText(this, "notification", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, CreditsActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle("Notification Title")
-                .setContentText("textContent")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                // Set the intent that will fire when the user taps the notification
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+        for (int i=0;i<1;i++)
+        {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setContentTitle("Notification Title"+i)
+                    .setContentText("textContent"+i)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    // Set the intent that will fire when the user taps the notification
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        int notification_amount=0 ;//(0=1 notification)
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        createNotificationChannel();
+            int notification_amount=i ;//(0=1 notification)
+
+            createNotificationChannel();
 
 // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(notification_amount, builder.build());
+            notificationManager.notify(notification_amount, builder.build());
+        }
     }
 
     private void createNotificationChannel() {
