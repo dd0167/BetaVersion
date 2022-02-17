@@ -5,11 +5,17 @@ import static com.example.betaversion.FB_Ref.mAuth;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -22,6 +28,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class CreditsActivity extends AppCompatActivity {
 
+    private static final String CHANNEL_ID = "Channel";
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -72,10 +79,6 @@ public class CreditsActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "About" + "</font>"));
-    }
-
-    public void click(View view) {
-        Toast.makeText(this, "try" , Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -129,5 +132,47 @@ public class CreditsActivity extends AppCompatActivity {
         Intent ma = new Intent(this, MainActivity.class);
         startActivity(ma);
         finish();
+    }
+
+    public void notification(View view) {
+        Toast.makeText(this, "notification", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, CreditsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("Notification Title")
+                .setContentText("textContent")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        int notification_amount=0 ;//(0=1 notification)
+
+        createNotificationChannel();
+
+// notificationId is a unique int for each notification that you must define
+        notificationManager.notify(notification_amount, builder.build());
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = CHANNEL_ID;
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

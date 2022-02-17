@@ -62,9 +62,9 @@
                 android:backgroundTint="@color/white"
                 android:src="@drawable/ic_add"
                 app:backgroundTint="@color/black"
+                android:onClick="notification"
                 app:layout_anchor="@id/bottomAppBar"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:onClick="click"/>
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>

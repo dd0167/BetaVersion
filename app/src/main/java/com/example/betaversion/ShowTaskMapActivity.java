@@ -3,29 +3,18 @@ package com.example.betaversion;
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 
-import static java.lang.Math.atan2;
-import static java.lang.Math.cos;
-import static java.lang.Math.pow;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -46,18 +35,15 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.CancellationTokenSource;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -65,7 +51,6 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
 import java.io.IOException;
-import java.security.Permission;
 import java.util.List;
 
 public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -78,7 +63,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
     Task task_clicked;
 
     TextView tv_task_name, tv_task_address_map;
-    TextView tv_task_country, tv_task_city, tv_distance;
+    TextView tv_task_current_address, tv_distance;
 
     MapView mapView_Task;
     GoogleMap gmap;
@@ -148,12 +133,9 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         getLocation();
         checkPermission();
 
-        tv_task_city = (TextView) findViewById(R.id.tv_task_city);
-        tv_task_country = (TextView) findViewById(R.id.tv_task_country);
+        tv_task_current_address = (TextView) findViewById(R.id.tv_task_current_address);
         tv_distance = (TextView) findViewById(R.id.tv_distance);
         mapView_Task = (MapView) findViewById(R.id.mapView_task);
-
-        show_locationData();
 
         mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -168,15 +150,14 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         progressBar_showMap.setVisibility(View.VISIBLE);
     }
 
-    @SuppressLint("MissingPermission")
-    public void show_locationData() {
-        //show City and Country
+    //show City and Country
+    public void show_locationData(LatLng latLng) {
         Geocoder geocoder = new Geocoder(ShowTaskMapActivity.this);
+
         try {
-            List<Address> addressList = geocoder.getFromLocationName(task_clicked.getTaskAddress(), 6);
-            Address user_address = addressList.get(0);
-            tv_task_city.setText("City: " + user_address.getLocality());
-            tv_task_country.setText("Country: " + user_address.getCountryName());
+            List<Address> address=geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
+            Address user_address = address.get(0);
+            tv_task_current_address.setText("Current Address: " + user_address.getAddressLine(0));
         } catch (IOException e) {
             Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -214,6 +195,8 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                     double longitude=location.getLongitude();
 
                     LatLng latLng_current_location = new LatLng(latitude, longitude);
+
+                    show_locationData(latLng_current_location);
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng_current_location);

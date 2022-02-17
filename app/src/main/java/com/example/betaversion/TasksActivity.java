@@ -2,6 +2,8 @@ package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.FBDB;
 import static com.example.betaversion.FB_Ref.mAuth;
+import static com.example.betaversion.FB_Ref.refLists;
+import static com.example.betaversion.FB_Ref.refTasksDays;
 import static com.example.betaversion.FB_Ref.reference;
 
 import androidx.annotation.NonNull;
@@ -205,6 +207,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             tasksDay_clicked=gi.getParcelableExtra("tasksDay_clicked");
             list_clicked_name = tasksDay_clicked.getTasksDayName();
             list_clicked_date = tasksDay_clicked.getTasksDayDate();
+            date=list_clicked_date;
         }
 
         tv_list_name.setText(list_clicked_name);
@@ -295,6 +298,16 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         bottomSheetDialog_task.setContentView(R.layout.bottom_sheet_layout_task);
         bottomSheetDialog_task.setCanceledOnTouchOutside(true);
         bottomSheetDialog_task.show();
+
+        TextView tv_task_date_and_time=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
+        if (reference.equals(refLists))
+        {
+            tv_task_date_and_time.setText("Select Date And Time");
+        }
+        else if (reference.equals(refTasksDays))
+        {
+            tv_task_date_and_time.setText("Select Time");
+        }
     }
 
     public void add_task(View view) {
@@ -319,9 +332,16 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             et_task_address.setError("Error address!");
             et_task_address.requestFocus();
         }
-        else if (tv_task_date_and_time.getText().toString().equals("Select Date And Time") )
+        else if (tv_task_date_and_time.getText().toString().equals("Select Date And Time") || tv_task_date_and_time.getText().toString().equals("Select Time"))
         {
-            Toast.makeText(TasksActivity.this, "Select Date And Time", Toast.LENGTH_SHORT).show();
+            if (reference.equals(refLists))
+            {
+                Toast.makeText(TasksActivity.this, "Select Date And Time", Toast.LENGTH_SHORT).show();
+            }
+            else if (reference.equals(refTasksDays))
+            {
+                Toast.makeText(TasksActivity.this, "Select Time", Toast.LENGTH_SHORT).show();
+            }
         }
         else if(task_clicked!=null)
         {
@@ -360,7 +380,14 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     }
 
     public void set_date_and_time(View view) {
-        select_date();
+        if (reference.equals(refLists))
+        {
+            select_date();
+        }
+        else if (reference.equals(refTasksDays))
+        {
+            select_time();
+        }
     }
 
     public void select_date()
