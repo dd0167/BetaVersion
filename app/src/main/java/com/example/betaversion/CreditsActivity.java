@@ -1,6 +1,5 @@
 package com.example.betaversion;
 
-import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 import static com.example.betaversion.FB_Ref.mAuth;
 
 import androidx.annotation.NonNull;
