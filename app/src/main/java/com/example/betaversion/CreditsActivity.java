@@ -4,7 +4,6 @@ import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 import static com.example.betaversion.FB_Ref.mAuth;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -25,7 +24,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +35,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapDrawableResource;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class CreditsActivity extends AppCompatActivity {
+public class CreditsActivity extends AppCompatActivity{
 
     private static final String CHANNEL_ID = "Notifications";
     BottomNavigationView bottomNavigationView;
@@ -146,7 +144,6 @@ public class CreditsActivity extends AppCompatActivity {
     }
 
     public void notification(View view) {
-
         Toast.makeText(this, "notification", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, MainActivity.class);
@@ -173,7 +170,7 @@ public class CreditsActivity extends AppCompatActivity {
 
             createNotificationChannel();
 
-            // notificationId is a unique int for each notification that you must define
+// notificationId is a unique int for each notification that you must define
             notificationManager.notify(notification_amount, builder.build());
         }
     }
