@@ -4,6 +4,7 @@ import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 import static com.example.betaversion.FB_Ref.mAuth;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -12,20 +13,27 @@ import androidx.core.app.NotificationManagerCompat;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.resource.bitmap.BitmapDrawableResource;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -138,6 +146,7 @@ public class CreditsActivity extends AppCompatActivity {
     }
 
     public void notification(View view) {
+
         Toast.makeText(this, "notification", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, MainActivity.class);
@@ -148,6 +157,8 @@ public class CreditsActivity extends AppCompatActivity {
         {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.notification_icon)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.drawable.task_icon))
                     .setContentTitle("Notification Title"+i)
                     .setContentText("textContent"+i)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -162,7 +173,7 @@ public class CreditsActivity extends AppCompatActivity {
 
             createNotificationChannel();
 
-// notificationId is a unique int for each notification that you must define
+            // notificationId is a unique int for each notification that you must define
             notificationManager.notify(notification_amount, builder.build());
         }
     }

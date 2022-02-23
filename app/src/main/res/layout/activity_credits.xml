@@ -12,19 +12,73 @@
         android:layout_height="wrap_content"
         android:layout_weight="50" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/ic_notification" />
+
     <TextView
-        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="cursive"
+        android:gravity="center"
+        android:text="Remind"
+        android:textColor="@color/black"
+        android:textSize="96sp"
+        android:textStyle="bold" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="100" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="casual"
-        android:text="This app was developed by Dean David"
-        android:textAlignment="center"
-        android:textSize="50dp" />
+        android:gravity="center"
+        android:text="By"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="cursive"
+        android:gravity="center"
+        android:text="Dean David"
+        android:textColor="@color/black"
+        android:textSize="34sp"
+        android:textStyle="bold" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="50" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="casual"
+        android:gravity="center"
+        android:text="Contact Us"
+        android:textColor="@color/gray"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="casual"
+        android:gravity="center"
+        android:text="Email: dd0167@bs.amalnet.k12.il"
+        android:textColor="@color/gray"
+        android:textSize="14sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10" />
 
     <LinearLayout
         android:layout_width="match_parent"
