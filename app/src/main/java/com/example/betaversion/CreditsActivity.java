@@ -36,15 +36,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.resource.bitmap.BitmapDrawableResource;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class CreditsActivity extends AppCompatActivity{
+public class CreditsActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "Notifications";
-    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -52,7 +51,7 @@ public class CreditsActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credits);
 
-        bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setBackground(null);
         bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false);
@@ -64,27 +63,20 @@ public class CreditsActivity extends AppCompatActivity{
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if (id==R.id.my_lists)
-                {
-                    Intent ma = new Intent(CreditsActivity.this,MainActivity.class);
+                if (id == R.id.my_lists) {
+                    Intent ma = new Intent(CreditsActivity.this, MainActivity.class);
                     startActivity(ma);
                     finish();
-                }
-                else if (id==R.id.about)
-                {
+                } else if (id == R.id.about) {
                     Intent ca = new Intent(CreditsActivity.this, CreditsActivity.class);
                     startActivity(ca);
                     finish();
-                }
-                else if (id==R.id.settings)
-                {
+                } else if (id == R.id.settings) {
                     Intent sa = new Intent(CreditsActivity.this, SettingsActivity.class);
                     startActivity(sa);
                     finish();
-                }
-                else if (id==R.id.tasks_day)
-                {
-                    Intent td=new Intent(CreditsActivity.this,TasksDayListsActivity.class);
+                } else if (id == R.id.tasks_day) {
+                    Intent td = new Intent(CreditsActivity.this, TasksDayListsActivity.class);
                     startActivity(td);
                     finish();
                 }
@@ -98,18 +90,17 @@ public class CreditsActivity extends AppCompatActivity{
     }
 
     @Override
-    public boolean onCreateOptionsMenu (Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected (MenuItem item) {
-        String title=item.getTitle().toString();
-        if (title.equals("Log Out"))
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String title = item.getTitle().toString();
+        if (title.equals("Log Out")) {
             AlertDialog.Builder adb;
-            adb=new AlertDialog.Builder(this);
+            adb = new AlertDialog.Builder(this);
             adb.setTitle("Log Out");
             adb.setMessage("Are you sure you want log out?");
             adb.setIcon(R.drawable.log_out_icon);
@@ -117,9 +108,9 @@ public class CreditsActivity extends AppCompatActivity{
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mAuth.signOut();
-                    SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+                    SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("stayConnect",false);
+                    editor.putBoolean("stayConnect", false);
                     editor.commit();
                     move_login();
                 }
@@ -130,57 +121,22 @@ public class CreditsActivity extends AppCompatActivity{
                     dialog.cancel();
                 }
             });
-            AlertDialog ad= adb.create();
+            AlertDialog ad = adb.create();
             ad.show();
         }
         return true;
     }
 
-    public void move_login()
-    {
+    public void move_login() {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
         finish();
     }
 
-    public void move_main()
-    {
+    public void move_main() {
         Intent ma = new Intent(this, MainActivity.class);
         startActivity(ma);
         finish();
-    }
-
-    public void start(View view)
-    {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(CreditsActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
-        }
-        else
-        {
-            startLocationService();
-        }
-    }
-
-    public void stop(View view)
-    {
-        stopLocationService();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode==REQUEST_CODE_LOCATION_PERMISSION && grantResults.length>0)
-        {
-            if (grantResults[0]==PackageManager.PERMISSION_GRANTED)
-            {
-                startLocationService();
-            }
-            else
-            {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     public void notification(View view) {
@@ -190,14 +146,13 @@ public class CreditsActivity extends AppCompatActivity{
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        for (int i=0;i<1;i++)
-        {
+        for (int i = 0; i < 1; i++) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.notification_icon)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(),
                             R.drawable.task_icon))
-                    .setContentTitle("Notification Title"+i)
-                    .setContentText("textContent"+i)
+                    .setContentTitle("Notification Title" + i)
+                    .setContentText("textContent" + i)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     // Set the intent that will fire when the user taps the notification
                     .setContentIntent(pendingIntent)
@@ -206,7 +161,7 @@ public class CreditsActivity extends AppCompatActivity{
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-            int notification_amount=i ;//(0=1 notification)
+            int notification_amount = i;//(0=1 notification)
 
             createNotificationChannel();
 
@@ -232,13 +187,13 @@ public class CreditsActivity extends AppCompatActivity{
     }
 
 
-
-
-
-
-
-
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void start(View view) {
+        Toast.makeText(this, "start button", Toast.LENGTH_SHORT).show();
+    }
 
+    public void stop(View view)
+    {
+        Toast.makeText(this, "stop button", Toast.LENGTH_SHORT).show();
+    }
 }
