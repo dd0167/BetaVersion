@@ -58,4 +58,7 @@ dependencies {
     //location
     implementation 'gun0912.ted:tedpermission:2.2.2'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
+
+    //backgroung
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 }

@@ -2,7 +2,6 @@ package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refUsers;
-import static com.example.betaversion.FB_Ref.reference;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;

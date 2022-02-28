@@ -4,7 +4,8 @@ import static com.example.betaversion.FB_Ref.FBDB;
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refLists;
 import static com.example.betaversion.FB_Ref.refTasksDays;
-import static com.example.betaversion.FB_Ref.reference;
+import static com.example.betaversion.FB_Ref.refUsers;
+import static com.example.betaversion.FB_Ref.referenceStorage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +55,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -66,6 +69,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -348,7 +354,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
             Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
             reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-            Toast.makeText(this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(TasksActivity.this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
             change_data_to_default();
         }
         else if (tasks_array.contains(taskName))
@@ -360,7 +366,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         {
             Task task=new Task(taskName,correct_address(taskAddress),date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
             reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-            Toast.makeText(this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(TasksActivity.this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
             change_data_to_default();
         }
     }
@@ -575,9 +581,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         task_color=tasks_values.get(position).getTaskColor();
         Drawable c = new ColorDrawable(Color.parseColor(task_color));
         btn_task_color.setImageDrawable(c);
-        imageUri=Uri.parse(tasks_values.get(position).getTaskPictureUid());
-        task_image.setImageURI(imageUri);
         add_task.setText("Update Task");
+
+        imageUri= Uri.parse(tasks_values.get(position).getTaskPictureUid());
+        task_image.setImageURI(imageUri);
     }
 
     @Override

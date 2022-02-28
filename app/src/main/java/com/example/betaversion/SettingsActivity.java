@@ -2,7 +2,7 @@ package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refUsers;
-import static com.example.betaversion.FB_Ref.reference;
+import static com.example.betaversion.FB_Ref.referenceStorage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -275,7 +275,7 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.commit();
 
                 String file_name="User Images/"+currentUser.getUid()+" image.png";
-                StorageReference fileRef=reference.child(file_name);
+                StorageReference fileRef=referenceStorage.child(file_name);
                 if (is_changed)
                 {
                     fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

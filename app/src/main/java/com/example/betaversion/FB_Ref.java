@@ -12,7 +12,7 @@ class FB_Ref {
     public static FirebaseDatabase FBDB = FirebaseDatabase.getInstance();
     public static FirebaseStorage FBCS = FirebaseStorage.getInstance();
 
-    public static StorageReference reference=FBCS.getReference();
+    public static StorageReference referenceStorage=FBCS.getReference();
 
     public static DatabaseReference refUsers=FBDB.getReference("Users");
     public static DatabaseReference refLists=FBDB.getReference("Lists");

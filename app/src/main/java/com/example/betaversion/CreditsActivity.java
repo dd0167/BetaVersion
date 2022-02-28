@@ -5,17 +5,24 @@ import static com.example.betaversion.FB_Ref.mAuth;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.ActivityManager;
+import android.app.DownloadManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -37,6 +44,7 @@ import com.google.android.material.navigation.NavigationBarView;
 public class CreditsActivity extends AppCompatActivity{
 
     private static final String CHANNEL_ID = "Notifications";
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -142,6 +150,39 @@ public class CreditsActivity extends AppCompatActivity{
         finish();
     }
 
+    public void start(View view)
+    {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(CreditsActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+        }
+        else
+        {
+            startLocationService();
+        }
+    }
+
+    public void stop(View view)
+    {
+        stopLocationService();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode==REQUEST_CODE_LOCATION_PERMISSION && grantResults.length>0)
+        {
+            if (grantResults[0]==PackageManager.PERMISSION_GRANTED)
+            {
+                startLocationService();
+            }
+            else
+            {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     public void notification(View view) {
         Toast.makeText(this, "notification", Toast.LENGTH_SHORT).show();
 
@@ -189,4 +230,15 @@ public class CreditsActivity extends AppCompatActivity{
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+
+
+
+
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
