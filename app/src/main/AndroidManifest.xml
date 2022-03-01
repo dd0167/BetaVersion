@@ -70,6 +70,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCq4mu1gZ6DF0wtMgOrxgfOWq4Nr2mCQbo" />
 
+        <receiver android:name=".AlertReceiver" />
     </application>
 
 </manifest>

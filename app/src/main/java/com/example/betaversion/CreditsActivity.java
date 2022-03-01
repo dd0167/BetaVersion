@@ -12,14 +12,17 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.DownloadManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -30,7 +33,10 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,10 +47,16 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class CreditsActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "Notifications";
     BottomNavigationView bottomNavigationView;
+
+    Runnable runnable;
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,10 +202,92 @@ public class CreditsActivity extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void start(View view) {
         Toast.makeText(this, "start button", Toast.LENGTH_SHORT).show();
+
+
+
+//        int milliseconds=10000;
+//        handler = new Handler(Looper.getMainLooper());
+//        runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                // Do the task...
+//                //Toast.makeText(CreditsActivity.this, "hi", Toast.LENGTH_SHORT).show();
+//
+//                Calendar c = Calendar.getInstance();
+//                c.set(Calendar.HOUR_OF_DAY, c.getTime().getHours());
+//                c.set(Calendar.MINUTE, c.getTime().getMinutes());
+//                c.set(Calendar.SECOND, c.getTime().getSeconds()+5);
+//                startAlarm(c);
+//
+//                Log.e("Alarm",c.getTime().toString());
+//
+//                handler.postDelayed(this, milliseconds); // Optional, to repeat the task.
+//            }
+//        };
+//        handler.postDelayed(runnable, milliseconds);
+
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, c.getTime().getHours());
+        c.set(Calendar.MINUTE, c.getTime().getMinutes());
+        c.set(Calendar.SECOND, c.getTime().getSeconds()+5);
+        startAlarm(c);
     }
 
     public void stop(View view)
     {
         Toast.makeText(this, "stop button", Toast.LENGTH_SHORT).show();
+
+        cancelAlarm();
+    }
+
+
+
+
+    public void startAlarm(Calendar c) {
+//        int milliseconds=5000;
+//
+//        handler = new Handler(Looper.getMainLooper());
+//        runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                // Do the task...
+//                Toast.makeText(CreditsActivity.this, "hi", Toast.LENGTH_SHORT).show();
+//                handler.postDelayed(this, milliseconds); // Optional, to repeat the task.
+//            }
+//        };
+//        handler.postDelayed(runnable, milliseconds);
+
+
+
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+
+    public void cancelAlarm() {
+        // Stop a repeating task like this.
+        //handler.removeCallbacks(runnable);
+
+
+
+
+
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+
+
+        AlertReceiver.stop_hi();
     }
 }
