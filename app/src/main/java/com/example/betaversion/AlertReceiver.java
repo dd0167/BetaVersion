@@ -33,7 +33,7 @@ public class AlertReceiver extends BroadcastReceiver {
 //      handler.postDelayed(runnable, milliseconds);
 
 
-      show_notification(context);
+      //show_notification(context);
 
 
 
@@ -46,7 +46,7 @@ public class AlertReceiver extends BroadcastReceiver {
 
 
 
-      int milliseconds=5000;
+      int milliseconds=10000;
       handler = new Handler(Looper.getMainLooper());
       runnable = new Runnable() {
          @Override

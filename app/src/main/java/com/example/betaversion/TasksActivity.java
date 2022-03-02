@@ -526,6 +526,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     }
 
     public void task_color(View view) {
+        int default_color=Color.parseColor("#808080");
+        if (task_clicked!=null)
+        {
+            default_color=Color.parseColor(task_clicked.getTaskColor());
+        }
+
         ColorPicker colorPicker=new ColorPicker(this);
         ArrayList<String> colors=new ArrayList<>();
         colors.add("#000000"); //Black
@@ -533,7 +539,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         colors.add("#00ff00"); //Green
         colors.add("#0000ff"); //Blue
         colors.add("#808080"); //gray
-        colorPicker.setColors(colors).setColumns(5).setColorButtonTickColor(Color.WHITE).setDefaultColorButton(Color.WHITE).setRoundColorButton(true).setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
+        colorPicker.setColors(colors).setColumns(5).setColorButtonTickColor(Color.WHITE).setDefaultColorButton(default_color).setRoundColorButton(true).setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
             @SuppressLint("ResourceType")
             @Override
             public void onChooseColor(int position, int color) {

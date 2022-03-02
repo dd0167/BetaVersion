@@ -177,12 +177,12 @@ public class CreditsActivity extends AppCompatActivity {
 
             createNotificationChannel();
 
-// notificationId is a unique int for each notification that you must define
+            // notificationId is a unique int for each notification that you must define
             notificationManager.notify(notification_amount, builder.build());
         }
     }
 
-    private void createNotificationChannel() {
+    public void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -270,6 +270,8 @@ public class CreditsActivity extends AppCompatActivity {
         }
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+
+        AlertReceiver.show_notification(getApplicationContext());
     }
 
     public void cancelAlarm() {
