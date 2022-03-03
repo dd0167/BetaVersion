@@ -271,7 +271,9 @@ public class CreditsActivity extends AppCompatActivity {
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
 
-        AlertReceiver.show_notification(getApplicationContext());
+        Toast.makeText(this, "notification", Toast.LENGTH_SHORT).show();
+
+        //AlertReceiver.show_notification(getApplicationContext());
     }
 
     public void cancelAlarm() {

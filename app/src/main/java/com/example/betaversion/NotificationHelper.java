@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -64,15 +65,17 @@ public class NotificationHelper extends ContextWrapper {
       return mManager;
    }
 
-   public NotificationCompat.Builder getChannelNotification() {
-      Intent intent = new Intent(this, CreditsActivity.class);
+   public NotificationCompat.Builder getChannelNotification(Context context,String latitude, String longitude) {
+      Intent intent = new Intent(context, CreditsActivity.class);
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
       PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-      return new NotificationCompat.Builder(getApplicationContext(), channelID)
+      return new NotificationCompat.Builder(context, channelID)
               .setContentTitle("Alarm!")
-              .setContentText("Your AlarmManager is working. ")
+              .setContentText("Message -> "+latitude+", "+longitude)
               .setSmallIcon(R.drawable.notification_icon)
+              .setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                      R.drawable.task_icon))
               .setContentIntent(pendingIntent)
               .setAutoCancel(true);
    }
