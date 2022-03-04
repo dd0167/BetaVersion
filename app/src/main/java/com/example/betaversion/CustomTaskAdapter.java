@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.w3c.dom.Text;
 
 import java.text.ParseException;
@@ -76,7 +78,7 @@ public class CustomTaskAdapter extends BaseAdapter{
         tv_month.setText(date[2]);
 
         title.setText(tasks.get(i));
-        iv_task_image.setImageURI(Uri.parse(task_values.get(i).getTaskPictureUid()));
+        Glide.with(iv_task_image.getContext()).load(task_values.get(i).getTaskPictureUid()).into(iv_task_image);
         tv_time_of_the_task.setText("Time: "+task_values.get(i).getTaskHour());
         tv_task_completion_date.setText("Date: "+task_values.get(i).getTaskDay());
         if (!task_values.get(i).getTaskNotes().isEmpty())

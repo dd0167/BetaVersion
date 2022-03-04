@@ -136,6 +136,7 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(SignupActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
 
                         move_settings();
+                        Toast.makeText(SignupActivity.this, "Enter User Data", Toast.LENGTH_SHORT).show();
 
                     }else{
                         Toast.makeText(SignupActivity.this, "Registration Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();

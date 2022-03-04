@@ -54,6 +54,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -126,6 +127,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     Task task_clicked;
 
+    Boolean is_image_changed;
+
+    int default_color;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,6 +200,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         read_tasks();
 
         task_clicked=null;
+        is_image_changed=false;
     }
 
     public void get_data_from_intent()
@@ -351,11 +357,50 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
         else if(task_clicked!=null)
         {
-            reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
-            Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
-            reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-            Toast.makeText(TasksActivity.this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
-            change_data_to_default();
+            String file_name="Images";
+            if (reference.equals(refTasksDays))
+            {
+                file_name="Tasks Days Images/"+tasksDay_clicked.getTasksDayName()+"/"+task_clicked.getTaskName()+" image.png";
+            }
+            else if (reference.equals(refLists))
+            {
+                file_name="Tasks Lists Images/"+list_clicked.getListName()+"/"+task_clicked.getTaskName()+" image.png";
+            }
+
+            if (is_image_changed)
+            {
+                StorageReference fileRef=referenceStorage.child(file_name);
+                fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+
+                                imageUri=uri;
+                                reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
+                                Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
+                                reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+                                Toast.makeText(TasksActivity.this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
+                                change_data_to_default();
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(TasksActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else
+            {
+                reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
+                Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
+                reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+                Toast.makeText(TasksActivity.this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
+                change_data_to_default();
+            }
         }
         else if (tasks_array.contains(taskName))
         {
@@ -364,10 +409,38 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
         else
         {
-            Task task=new Task(taskName,correct_address(taskAddress),date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
-            reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-            Toast.makeText(TasksActivity.this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
-            change_data_to_default();
+            String file_name="Images";
+            if (reference.equals(refTasksDays))
+            {
+                file_name="Tasks Days Images/"+tasksDay_clicked.getTasksDayName()+"/"+taskName+" image.png";
+            }
+            else if (reference.equals(refLists))
+            {
+                file_name="Tasks Lists Images/"+list_clicked.getListName()+"/"+taskName+" image.png";
+            }
+
+            StorageReference fileRef=referenceStorage.child(file_name);
+            fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+
+                            imageUri=uri;
+                            Task task=new Task(taskName,correct_address(taskAddress),date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
+                            reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
+                            Toast.makeText(TasksActivity.this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
+                            change_data_to_default();
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(TasksActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -378,6 +451,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         task_color="#808080";
         date_and_time="";
         imageUri= Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.task_icon);
+        is_image_changed=false;
     }
 
     public String get_current_date()
@@ -454,11 +528,15 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                     galleryIntent.setType("image/*");
                     startActivityForResult(galleryIntent,PICK_IMAGE);
+
+                    is_image_changed=true;
                 }
                 else if (which==1)
                 {
                     task_image.setImageResource(R.drawable.task_icon);
                     imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.task_icon);
+
+                    is_image_changed=true;
                 }
             }
         });
@@ -526,7 +604,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     }
 
     public void task_color(View view) {
-        int default_color=Color.parseColor("#808080");
+        default_color=Color.parseColor("#808080");
         if (task_clicked!=null)
         {
             default_color=Color.parseColor(task_clicked.getTaskColor());
@@ -545,8 +623,16 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             public void onChooseColor(int position, int color) {
                 task_color=colors.get(position);
                 CircleImageView btn_task_color=(CircleImageView) bottomSheetDialog_task.findViewById(R.id.btn_task_color);
-                Drawable c = new ColorDrawable(color);
-                btn_task_color.setImageDrawable(c);
+                if (color==0)
+                {
+                    Drawable c = new ColorDrawable(default_color);
+                    btn_task_color.setImageDrawable(c);
+                }
+                else
+                {
+                    Drawable c = new ColorDrawable(color);
+                    btn_task_color.setImageDrawable(c);
+                }
             }
 
             @Override
@@ -590,7 +676,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         add_task.setText("Update Task");
 
         imageUri= Uri.parse(tasks_values.get(position).getTaskPictureUid());
-        task_image.setImageURI(imageUri);
+        Glide.with(task_image.getContext()).load(imageUri).into(task_image);
     }
 
     @Override
