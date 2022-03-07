@@ -20,6 +20,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,6 +51,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -130,6 +132,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     Boolean is_image_changed;
 
     int default_color;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -307,6 +311,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     public void show_bottomSheetDialog()
     {
+        bottomSheetDialog_task=new BottomSheetDialog(this,R.style.BottomSheetTheme);
+
         bottomSheetDialog_task.setContentView(R.layout.bottom_sheet_layout_task);
         bottomSheetDialog_task.setCanceledOnTouchOutside(true);
         bottomSheetDialog_task.show();
@@ -323,7 +329,6 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     }
 
     public void add_task(View view) {
-
         EditText et_task_name=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_name);
         EditText et_task_address=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_address);
         EditText et_task_notes=(EditText) bottomSheetDialog_task.findViewById(R.id.et_task_notes);
@@ -357,6 +362,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
         else if(task_clicked!=null)
         {
+            progressDialog=ProgressDialog.show(this,"Updating The Task","Loading...",true);
+
             String file_name="Images";
             if (reference.equals(refTasksDays))
             {
@@ -376,13 +383,14 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                         fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-
                                 imageUri=uri;
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                                 Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                                 Toast.makeText(TasksActivity.this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
                                 change_data_to_default();
+
+                                progressDialog.dismiss();
                             }
                         });
                     }
@@ -390,6 +398,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(TasksActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        progressDialog.dismiss();
                     }
                 });
             }
@@ -400,6 +410,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                 Toast.makeText(TasksActivity.this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
                 change_data_to_default();
+                progressDialog.dismiss();
             }
         }
         else if (tasks_array.contains(taskName))
@@ -409,6 +420,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
         else
         {
+            progressDialog=ProgressDialog.show(this,"Creates The Task","Loading...",true);
+
             String file_name="Images";
             if (reference.equals(refTasksDays))
             {
@@ -426,12 +439,13 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                     fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-
                             imageUri=uri;
                             Task task=new Task(taskName,correct_address(taskAddress),date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
                             reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                             Toast.makeText(TasksActivity.this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
                             change_data_to_default();
+
+                            progressDialog.dismiss();
                         }
                     });
                 }
@@ -439,6 +453,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(TasksActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    progressDialog.dismiss();
                 }
             });
         }

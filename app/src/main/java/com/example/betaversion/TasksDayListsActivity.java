@@ -257,6 +257,8 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
     public void show_bottomSheetDialog()
     {
+        bottomSheetDialog_tasksDay=new BottomSheetDialog(this,R.style.BottomSheetTheme);
+
         bottomSheetDialog_tasksDay.setContentView(R.layout.bottom_sheet_layout_tasks_day);
         bottomSheetDialog_tasksDay.setCanceledOnTouchOutside(true);
         bottomSheetDialog_tasksDay.show();

@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.25833333333333336" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/bottom_sheet_style.xml" value="0.2235" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/bottom_sheet_task_corners_background.xml" value="0.244" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/color_selected_shape.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic__add_task_.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_add.xml" value="0.25833333333333336" />

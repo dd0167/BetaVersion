@@ -193,6 +193,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void show_bottomSheetDialog()
     {
+        bottomSheetDialog_list=new BottomSheetDialog(this,R.style.BottomSheetTheme);
+
         bottomSheetDialog_list.setContentView(R.layout.bottom_sheet_layout_list);
         bottomSheetDialog_list.setCanceledOnTouchOutside(true);
         bottomSheetDialog_list.show();
