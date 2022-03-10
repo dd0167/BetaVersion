@@ -41,6 +41,7 @@ import android.os.Parcelable;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -134,6 +135,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     int default_color;
 
     ProgressDialog progressDialog;
+
+    ImageView cancel_bottom_sheet_dialog_task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -314,7 +317,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         bottomSheetDialog_task=new BottomSheetDialog(this,R.style.BottomSheetTheme);
 
         bottomSheetDialog_task.setContentView(R.layout.bottom_sheet_layout_task);
-        bottomSheetDialog_task.setCanceledOnTouchOutside(true);
+        bottomSheetDialog_task.setCancelable(false);
         bottomSheetDialog_task.show();
 
         TextView tv_task_date_and_time=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
@@ -326,6 +329,14 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         {
             tv_task_date_and_time.setText("Select Time");
         }
+
+        cancel_bottom_sheet_dialog_task=(ImageView) bottomSheetDialog_task.findViewById(R.id.cancel_bottom_sheet_dialog_task);
+        cancel_bottom_sheet_dialog_task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog_task.cancel();
+            }
+        });
     }
 
     public void add_task(View view) {

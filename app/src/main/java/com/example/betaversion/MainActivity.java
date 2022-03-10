@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     BottomSheetDialog bottomSheetDialog_list;
 
+    ImageView cancel_bottom_sheet_dialog_list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,8 +198,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         bottomSheetDialog_list=new BottomSheetDialog(this,R.style.BottomSheetTheme);
 
         bottomSheetDialog_list.setContentView(R.layout.bottom_sheet_layout_list);
-        bottomSheetDialog_list.setCanceledOnTouchOutside(true);
+        bottomSheetDialog_list.setCancelable(false);
         bottomSheetDialog_list.show();
+
+        cancel_bottom_sheet_dialog_list=(ImageView) bottomSheetDialog_list.findViewById(R.id.cancel_bottom_sheet_dialog_list);
+        cancel_bottom_sheet_dialog_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog_list.cancel();
+            }
+        });
     }
 
     public void add_list (View view){

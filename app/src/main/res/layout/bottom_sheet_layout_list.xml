@@ -5,8 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="30dp"
+    android:paddingTop="15dp"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:paddingBottom="30dp"
     android:background="@drawable/bottom_sheet_style">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        app:srcCompat="@drawable/swipe_icon"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <ImageView
+        android:id="@+id/cancel_bottom_sheet_dialog_list"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right"
+        app:srcCompat="@drawable/close_icon" />
 
     <ImageView
         android:id="@+id/iv_list_layout"

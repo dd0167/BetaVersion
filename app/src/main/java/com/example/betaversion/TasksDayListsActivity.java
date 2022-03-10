@@ -72,6 +72,8 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
     int day;
     String date="Select Tasks Day Date";
 
+    ImageView cancel_bottom_sheet_dialog_tasksDays;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -260,8 +262,16 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         bottomSheetDialog_tasksDay=new BottomSheetDialog(this,R.style.BottomSheetTheme);
 
         bottomSheetDialog_tasksDay.setContentView(R.layout.bottom_sheet_layout_tasks_day);
-        bottomSheetDialog_tasksDay.setCanceledOnTouchOutside(true);
+        bottomSheetDialog_tasksDay.setCancelable(false);
         bottomSheetDialog_tasksDay.show();
+
+        cancel_bottom_sheet_dialog_tasksDays=(ImageView) bottomSheetDialog_tasksDay.findViewById(R.id.cancel_bottom_sheet_dialog_tasksDays);
+        cancel_bottom_sheet_dialog_tasksDays.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog_tasksDay.cancel();
+            }
+        });
     }
 
     public void add_tasksDay (View view){
