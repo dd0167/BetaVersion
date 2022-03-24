@@ -92,12 +92,12 @@ public class LoginActivity extends AppCompatActivity {
                     if (getUser.getUserFirstName().isEmpty() || getUser.getUserLastName().isEmpty() || getUser.getUserAge().isEmpty() ||getUser.getUserHomeAddress().isEmpty() || getUser.getUserPhoneNumber().isEmpty())
                     {
                         move_settings();
-                        Toast.makeText(LoginActivity.this, "Enter User Data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "הכנס את הפרטים הנדרשים", Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(LoginActivity.this, "User Data Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "שגיאה", Toast.LENGTH_SHORT).show();
                 }
             });
             move_main();
@@ -111,13 +111,13 @@ public class LoginActivity extends AppCompatActivity {
         if (email.isEmpty())
         {
             progressBar_login.setVisibility(View.INVISIBLE);
-            et_email_login.setError("Email is required!");
+            et_email_login.setError("הכנס אימייל!");
             et_email_login.requestFocus();
         }
         else if (password.isEmpty())
         {
             progressBar_login.setVisibility(View.INVISIBLE);
-            et_password_login.setError("Password is required!");
+            et_password_login.setError("הכנס סיסמה!");
             et_password_login.requestFocus();
         }
         else
@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        Toast.makeText(LoginActivity.this, "User logged in successfully!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(LoginActivity.this, "User logged in successfully!", Toast.LENGTH_SHORT).show();
                         move_main();
 
                         SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                         et_email_login.setText("");
                         et_password_login.setText("");
                     }else{
-                        Toast.makeText(LoginActivity.this, "Log in Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Login Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                     progressBar_login.setVisibility(View.INVISIBLE);
                 }

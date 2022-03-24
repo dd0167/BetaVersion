@@ -109,13 +109,13 @@ public class SignupActivity extends AppCompatActivity {
         if (email.isEmpty())
         {
             progressBar_signup.setVisibility(View.INVISIBLE);
-            et_email_signup.setError("Email is required!");
+            et_email_signup.setError("הכנס אימייל!");
             et_email_signup.requestFocus();
         }
         else if (password.isEmpty())
         {
             progressBar_signup.setVisibility(View.INVISIBLE);
-            et_password_signup.setError("Password is required!");
+            et_password_signup.setError("הכנס סיסמה!");
             et_password_signup.requestFocus();
         }
         else
@@ -133,10 +133,10 @@ public class SignupActivity extends AppCompatActivity {
                         FirebaseUser currentUser = mAuth.getCurrentUser();
                         User user=new User(currentUser.getUid(),"","","","",currentUser.getEmail(),"",imageUri.toString());
                         refUsers.child(currentUser.getUid()).child("User Data").setValue(user);
-                        Toast.makeText(SignupActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SignupActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
 
                         move_settings();
-                        Toast.makeText(SignupActivity.this, "Enter User Data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this, "הכנס את הפרטים הנדרשים", Toast.LENGTH_SHORT).show();
 
                     }else{
                         Toast.makeText(SignupActivity.this, "Registration Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
