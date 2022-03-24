@@ -15,9 +15,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
+        android:fontFamily="@font/abraham"
         android:gravity="center"
-        android:text="Sign Up"
+        android:text="הרשמה"
         android:textColor="@color/black"
         android:textSize="60sp" />
 
@@ -29,11 +29,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
-        android:text="Email"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
+        android:text="אימייל"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <Space
         android:layout_width="match_parent"
@@ -45,9 +46,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:ems="10"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:hint="Type Text Here"
+        android:hint="הקלד טקסט כאן"
         android:inputType="textEmailAddress" />
 
     <Space
@@ -58,11 +59,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
-        android:text="Password"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
+        android:text="סיסמה"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <Space
         android:layout_width="match_parent"
@@ -74,20 +76,20 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:ems="10"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:hint="Type Text Here"
+        android:hint="הקלד טקסט כאן"
         android:inputType="textPassword" />
 
     <Switch
         android:id="@+id/switch_signup"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:checked="false"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Show Password" />
+        android:minHeight="48dp"
+        android:text="הצג סיסמה" />
 
     <Space
         android:layout_width="match_parent"
@@ -106,12 +108,11 @@
 
         <CheckBox
             android:id="@+id/checkBox_signup"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:fontFamily="casual"
+            android:fontFamily="@font/calibri"
             android:gravity="center"
-            android:text="Stay Connect?"
+            android:text="זכור אותי"
             android:textSize="14sp"
             tools:ignore="TouchTargetSizeCheck" />
 
@@ -131,9 +132,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#FFFFFF"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:onClick="sign_up"
-        android:text="Sign Up"
+        android:text="הירשם"
         android:textColor="#000000" />
 
     <Space
@@ -157,28 +158,42 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
+        <Space
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="100"
-            android:backgroundTint="#FFFFFF"
-            android:fontFamily="casual"
-            android:gravity="center"
-            android:hint="Sign In"
-            android:onClick="sign_in"
-            android:text="Sign In"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:layout_weight="30" />
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="50"
-            android:fontFamily="casual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/calibri"
             android:gravity="center"
-            android:text="Already have an account?"
+            android:text="יש לך חשבון?"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20dp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="10" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:backgroundTint="#FFFFFF"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:hint="כניסה"
+            android:onClick="sign_in"
+            android:text="כניסה"
+            tools:ignore="TouchTargetSizeCheck"
+            android:textSize="20dp"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="30" />
+
     </LinearLayout>
 
     <Space

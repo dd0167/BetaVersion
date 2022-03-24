@@ -16,15 +16,18 @@
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_launcher_background.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/shape.xml" value="0.25833333333333336" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/font/allura.xml" value="0.2682291666666667" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/font/annie_use_your_telescope.xml" value="0.2682291666666667" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/font/arizonia.xml" value="0.2682291666666667" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/action_bar_layout.xml" value="0.21331521739130435" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_credits.xml" value="0.21422101449275363" />
-        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_login.xml" value="0.20425724637681159" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_login.xml" value="0.23802083333333332" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_main.xml" value="0.23641304347826086" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_menu.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_registration.xml" value="0.2421875" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_settings.xml" value="0.21422101449275363" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_show_task_map.xml" value="0.23802083333333332" />
-        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_signup.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_signup.xml" value="0.23802083333333332" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_splash.xml" value="0.19882246376811594" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_tasks.xml" value="0.2421875" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_tasks_day_lists.xml" value="0.23641304347826086" />

@@ -139,15 +139,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         finish();
     }
 
-
-//
-//    public void create_tasks_day(View view) {
-//        TasksDay tasksDay=new TasksDay("Example tasksday name","30.11.2021");
-//        refTasksDays.child(namechild).child(tasksDay.getTasksDayName()).child("Tasks Day Data").setValue(tasksDay);
-//        Task task=new Task("Example Task","address","30.11.2021","15:00","30.11.2021","encienciencwoincoenc","white","exampleuid");
-//        refTasksDays.child(namechild).child(tasksDay.getTasksDayName()).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-//    }
-
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
