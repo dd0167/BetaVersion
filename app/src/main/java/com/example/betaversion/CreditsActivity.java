@@ -98,7 +98,7 @@ public class CreditsActivity extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "About" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "אודות" + "</font>"));
     }
 
     @Override
@@ -113,10 +113,10 @@ public class CreditsActivity extends AppCompatActivity {
         if (title.equals("Log Out")) {
             AlertDialog.Builder adb;
             adb = new AlertDialog.Builder(this);
-            adb.setTitle("Log Out");
-            adb.setMessage("Are you sure you want log out?");
+            adb.setTitle("התנתקות");
+            adb.setMessage("אתה בטוח שברצונך להתנתק מהאפליקציה?");
             adb.setIcon(R.drawable.log_out_icon);
-            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mAuth.signOut();
@@ -127,7 +127,7 @@ public class CreditsActivity extends AppCompatActivity {
                     move_login();
                 }
             });
-            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+            adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();

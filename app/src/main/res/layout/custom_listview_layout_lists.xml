@@ -25,12 +25,12 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="20"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Date"
+                android:text="10"
                 android:textColor="@color/teal_700"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -48,12 +48,12 @@
                 android:layout_gravity="center"
                 android:layout_weight="20"
                 android:alpha="0.5"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Day"
+                android:text="א'"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/ca_tv_month"
@@ -62,12 +62,12 @@
                 android:layout_gravity="center"
                 android:layout_weight="20"
                 android:alpha="0.5"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Month"
+                android:text="ינו'"
                 android:textColor="@color/black"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -81,7 +81,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
             android:layout_weight="0.2"
             android:orientation="vertical">
 
@@ -94,19 +93,19 @@
                     android:id="@+id/item_title"
                     android:layout_width="235dp"
                     android:layout_height="match_parent"
-                    android:fontFamily="casual"
+                    android:fontFamily="@font/calibri"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="List Title"
+                    android:text="שם הרשימה"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"

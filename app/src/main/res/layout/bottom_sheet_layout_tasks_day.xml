@@ -42,11 +42,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Tasks Day Name"
+        android:text="מטרת היום המרוכז"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <Space
@@ -56,11 +56,11 @@
     <EditText
         android:id="@+id/et_tasksDay_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:ems="10"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:hint="Type Text Here"
+        android:hint="הקלד טקסט כאן"
         android:inputType="textPersonName" />
 
     <Space
@@ -70,19 +70,17 @@
     <TextView
         android:id="@+id/tv_tasksDay_date"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="casual"
+        android:layout_height="50dp"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:minHeight="48dp"
         android:onClick="set_tasksDay_date"
-        android:text="Select Tasks Day Date"
+        android:text="בחר תאריך יעד"
         android:textColor="@color/gray"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="24sp" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="20dp" />
 
     <Button
         android:id="@+id/add_tasksDay"
@@ -93,7 +91,7 @@
         android:fontFamily="casual"
         android:gravity="center"
         android:onClick="add_tasksDay"
-        android:text="Add Tasks Day"
+        android:text="יצירת היום המרוכז"
         android:textColor="#000000" />
 
 </LinearLayout>

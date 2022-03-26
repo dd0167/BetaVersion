@@ -5,13 +5,13 @@
     <item
         android:id="@+id/my_lists"
         android:icon="@drawable/list_icon"
-        android:title="My Lists"
+        android:title="הרשימות שלי"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/tasks_day"
         android:icon="@drawable/tasks_day"
-        android:title="Tasks Day"
+        android:title="הימים המרוכזים שלי"
         app:showAsAction="always" />
 
     <item
@@ -19,13 +19,15 @@
         android:title=""
         app:showAsAction="always" />
 
-    <item android:id="@+id/about"
-        android:title="About"
+    <item
+        android:id="@+id/about"
         android:icon="@drawable/about_icon"
-        app:showAsAction="always"/>
+        android:title="אודות"
+        app:showAsAction="always" />
 
-    <item android:id="@+id/settings"
-        android:title="Settings"
+    <item
+        android:id="@+id/settings"
         android:icon="@drawable/settings_icon"
-        app:showAsAction="always"/>
+        android:title="הגדרות"
+        app:showAsAction="always" />
 </menu>

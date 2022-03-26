@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,9 +68,10 @@ public class SettingsActivity extends AppCompatActivity {
     CheckBox checkBox_settings;
     FirebaseUser currentUser;
     Uri imageUri;
-    ProgressBar progressBar_settings;
     boolean is_changed;
     int PICK_IMAGE=2;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +120,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "Settings" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "הגדרות" + "</font>"));
 
         user_image_settings=(ImageView) findViewById(R.id.user_image_settings);
         et_first_name_settings=(EditText) findViewById(R.id.et_first_name_settings);
@@ -127,13 +129,11 @@ public class SettingsActivity extends AppCompatActivity {
         et_home_address_settings=(EditText) findViewById(R.id.et_home_address_settings);
         et_phone_number_settings=(EditText) findViewById(R.id.et_phone_number_settings);
         checkBox_settings=(CheckBox) findViewById(R.id.checkBox_settings);
-        progressBar_settings=(ProgressBar) findViewById(R.id.progressBar_settings);
 
         currentUser = mAuth.getCurrentUser();
 
         if (currentUser!=null)
         {
-            progressBar_settings.setVisibility(View.VISIBLE);
             refUsers.child(currentUser.getUid()).child("User Data").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dS) {
@@ -153,10 +153,9 @@ public class SettingsActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(SettingsActivity.this, "User Data Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-            progressBar_settings.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -169,31 +168,30 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
         String title=item.getTitle().toString();
-        if (title.equals("Log Out"))
-        {
+        if (title.equals("Log Out")) {
             AlertDialog.Builder adb;
-            adb=new AlertDialog.Builder(this);
-            adb.setTitle("Log Out");
-            adb.setMessage("Are you sure you want log out?");
+            adb = new AlertDialog.Builder(this);
+            adb.setTitle("התנתקות");
+            adb.setMessage("אתה בטוח שברצונך להתנתק מהאפליקציה?");
             adb.setIcon(R.drawable.log_out_icon);
-            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mAuth.signOut();
-                    SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+                    SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("stayConnect",false);
+                    editor.putBoolean("stayConnect", false);
                     editor.commit();
                     move_login();
                 }
             });
-            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+            adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
                 }
             });
-            AlertDialog ad= adb.create();
+            AlertDialog ad = adb.create();
             ad.show();
         }
         return true;
@@ -208,7 +206,27 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void update(View view) {
         if (!is_Internet_Connected()) {
-            Toast.makeText(SettingsActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder adb;
+            adb=new AlertDialog.Builder(this);
+            adb.setTitle("אין חיבור אינטרנט");
+            adb.setMessage("אין אפשרות לעדכן את הנתונים, אנא התחבר לאינטרנט");
+            adb.setIcon(R.drawable.no_wifi);
+            adb.setCancelable(false);
+            adb.setPositiveButton("נסה שוב", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    update(view);
+                }
+            });
+            adb.setNeutralButton("יציאה מהאפליקציה", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    finish();
+                }
+            });
+            AlertDialog ad= adb.create();
+            ad.show();
         }
         else
         {
@@ -220,55 +238,48 @@ public class SettingsActivity extends AppCompatActivity {
 
             if (first_name.isEmpty())
             {
-                progressBar_settings.setVisibility(View.INVISIBLE);
-                et_first_name_settings.setError("First name is required!");
+                et_first_name_settings.setError("כתוב שם פרטי!");
                 et_first_name_settings.requestFocus();
             }
             else if (last_name.isEmpty())
             {
-                progressBar_settings.setVisibility(View.INVISIBLE);
-                et_last_name_settings.setError("Last name is required!");
+                et_last_name_settings.setError("כתוב שם משפחה!");
                 et_last_name_settings.requestFocus();
             }
             else if (age.isEmpty())
             {
-                progressBar_settings.setVisibility(View.INVISIBLE);
-                et_age_settings.setError("Age is required!");
+                et_age_settings.setError("הכנס את גילך!");
                 et_age_settings.requestFocus();
             }
             else if (Integer.parseInt(age)>120 || Integer.parseInt(age)<=0)
             {
-                progressBar_settings.setVisibility(View.INVISIBLE);
-                et_age_settings.setError("Error age!");
+                et_age_settings.setError("גיל שגוי!");
                 et_age_settings.requestFocus();
             }
             else if (home_address.isEmpty())
             {
-                progressBar_settings.setVisibility(View.INVISIBLE);
-                et_home_address_settings.setError("Home address is required!");
+                et_home_address_settings.setError("כתוב את כתובת ביתך!");
                 et_home_address_settings.requestFocus();
             }
             else if (correct_address(home_address).equals(""))
             {
-                progressBar_settings.setVisibility(View.INVISIBLE);
-                et_home_address_settings.setError("Error address!");
+                et_home_address_settings.setError("כתובת שגויה!");
                 et_home_address_settings.requestFocus();
             }
             else if (phone.isEmpty())
             {
-                progressBar_settings.setVisibility(View.INVISIBLE);
-                et_phone_number_settings.setError("Phone number is required!");
+                et_phone_number_settings.setError("הכנס מספר טלפון!");
                 et_phone_number_settings.requestFocus();
             }
             else if (phone.length()!=10 || !phone.startsWith("05"))
             {
-                progressBar_settings.setVisibility(View.INVISIBLE);
-                et_phone_number_settings.setError("Error Phone number!");
+                et_phone_number_settings.setError("מספר טלפון שגוי!");
                 et_phone_number_settings.requestFocus();
             }
             else
             {
-                progressBar_settings.setVisibility(View.VISIBLE);
+                progressDialog=ProgressDialog.show(this,"מעדכן נתונים","טוען...",true);
+
                 SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("stayConnect",checkBox_settings.isChecked());
@@ -284,11 +295,11 @@ public class SettingsActivity extends AppCompatActivity {
                             fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    Toast.makeText(SettingsActivity.this, "User data changed successfully!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SettingsActivity.this, "עדכון הנתונים בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                                     User user=new User(currentUser.getUid(),first_name,last_name,age,correct_address(home_address),currentUser.getEmail(),phone,uri.toString());
                                     refUsers.child(currentUser.getUid()).child("User Data").setValue(user);
-                                    progressBar_settings.setVisibility(View.INVISIBLE);
                                     is_changed=false;
+                                    progressDialog.dismiss();
                                     move_main();
                                 }
                             });
@@ -296,29 +307,29 @@ public class SettingsActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(SettingsActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            progressBar_settings.setVisibility(View.INVISIBLE);
+                            Toast.makeText(SettingsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                             is_changed=false;
                         }
                     }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                            progressBar_settings.setVisibility(View.VISIBLE);
                             is_changed=false;
                         }
                     });
                 }
                 else
                 {
-                    progressBar_settings.setVisibility(View.VISIBLE);
+                    progressDialog=ProgressDialog.show(this,"שומר נתונים","טוען...",true);
+
                     User user=new User(currentUser.getUid(),first_name,last_name,age,correct_address(home_address),currentUser.getEmail(),phone,imageUri.toString());
                     refUsers.child(currentUser.getUid()).child("User Data").setValue(user);
-                    Toast.makeText(SettingsActivity.this, "User data changed successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "עדכון הנתונים בוצע בהצלחה", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                     move_main();
                 }
             }
         }
-        progressBar_settings.setVisibility(View.INVISIBLE);
         et_first_name_settings.clearFocus();
         et_last_name_settings.clearFocus();
         et_age_settings.clearFocus();
@@ -344,11 +355,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void change_image(View view) {
-        String[] items={"Select Image From Gallery","Select The Default Image"};
-        Typeface typeface=Typeface.create("casual",Typeface.NORMAL);
+        String[] items={"בחר תמונה מהגלריה","בחר את תמונת ברירת המחדל"};
+        //Typeface typeface=Typeface.create("casual",Typeface.NORMAL);
         AlertDialog.Builder adb;
         adb=new AlertDialog.Builder(this);
-        adb.setTitle("Change Profile Image");
+        adb.setTitle("שנה תמונת פרופיל");
         //adb.setMessage("Select Image");
         adb.setIcon(R.drawable.user_icon);
         adb.setItems(items, new DialogInterface.OnClickListener() {
@@ -370,7 +381,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
-        adb.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+        adb.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -400,9 +411,9 @@ public class SettingsActivity extends AppCompatActivity {
                     .setBorderCornerLength(1)
                     .setBorderLineColor(Color.WHITE)
                     .setAutoZoomEnabled(true)
-                    .setActivityTitle("Crop Image")
+                    .setActivityTitle("חתוך תמונה")
                     .setFixAspectRatio(true)
-                    .setCropMenuCropButtonTitle("Done")
+                    .setCropMenuCropButtonTitle("סיום")
                     .start(this);
         }
         if (requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -74,7 +75,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
     FusedLocationProviderClient fusedLocationProviderClient;
     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-    ProgressBar progressBar_showMap;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +119,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "Task In Map" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "הצגת המטלה על המפה" + "</font>"));
 
         gi = getIntent();
 
@@ -127,7 +128,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         tv_task_name = (TextView) findViewById(R.id.tv_task_name);
         tv_task_address_map = (TextView) findViewById(R.id.tv_task_address_map);
         tv_task_name.setText(task_clicked.getTaskName());
-        tv_task_address_map.setText("Address: " + task_clicked.getTaskAddress());
+        tv_task_address_map.setText("כתובת המטלה: " + task_clicked.getTaskAddress());
 
         //location permission
         getLocation();
@@ -145,9 +146,6 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         mapView_Task.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        progressBar_showMap=(ProgressBar) findViewById(R.id.progressBar_showMap);
-        progressBar_showMap.setVisibility(View.VISIBLE);
     }
 
     //show City and Country
@@ -157,14 +155,14 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         try {
             List<Address> address=geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
             Address user_address = address.get(0);
-            tv_task_current_address.setText("Current Address: " + user_address.getAddressLine(0));
+            tv_task_current_address.setText("מיקומך הנוכחי: " + user_address.getAddressLine(0));
         } catch (IOException e) {
             Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
     public void get_current_location(View view) {
-        progressBar_showMap.setVisibility(View.VISIBLE);
+        progressDialog=ProgressDialog.show(this,"מוצא את המיקום הנוכחי","טוען...",true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -200,7 +198,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng_current_location);
-                    markerOptions.title("My Location");
+                    markerOptions.title("המיקום שלי");
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_icon));
                     gmap.addMarker(markerOptions);
@@ -219,15 +217,16 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
                     double d = distance(latitude, latLng_task.latitude , longitude, latLng_task.longitude);
                     String distance = String.valueOf(d);
-                    tv_distance.setText("The distance between the task and your current location: " + distance.substring(0, 5) + " km");
+                    tv_distance.setText("המרחק בין המטלה לבין מיקומך הנוכחי: " + distance.substring(0, 5) +" ק\"מ");
+                    progressDialog.dismiss();
                 }
 
                 catch (IOException e) {
                     Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }
             }
         });
-        progressBar_showMap.setVisibility(View.INVISIBLE);
     }
 
     public void checkPermission() {
@@ -306,10 +305,10 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         if (title.equals("Log Out")) {
             AlertDialog.Builder adb;
             adb = new AlertDialog.Builder(this);
-            adb.setTitle("Log Out");
-            adb.setMessage("Are you sure you want log out?");
+            adb.setTitle("התנתקות");
+            adb.setMessage("אתה בטוח שברצונך להתנתק מהאפליקציה?");
             adb.setIcon(R.drawable.log_out_icon);
-            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mAuth.signOut();
@@ -320,7 +319,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                     move_login();
                 }
             });
-            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+            adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -397,7 +396,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
             //gmap.clear();
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.title(task_clicked.getTaskName()+" Address");
+            markerOptions.title(task_clicked.getTaskName());
             markerOptions.position(latLng);
             gmap.addMarker(markerOptions);
 
@@ -408,8 +407,6 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         {
             Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
-        progressBar_showMap.setVisibility(View.INVISIBLE);
     }
 
     public static double distance(double lat1, double lat2, double lon1, double lon2)

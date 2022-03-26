@@ -20,8 +20,11 @@ public class CustomListAdapter extends BaseAdapter{
     ArrayList<String> lists;
     LayoutInflater inflter;
     ArrayList<List> list_values;
-    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+    //SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
+    //SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", new Locale("he"));
+    SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
 
     public CustomListAdapter(Context applicationContext, ArrayList<String> lists, ArrayList<List> list_values) {
         this.context = applicationContext;

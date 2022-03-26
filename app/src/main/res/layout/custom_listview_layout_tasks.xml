@@ -25,49 +25,59 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="20"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Date"
+                android:text="10"
                 android:textColor="@color/teal_700"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:orientation="vertical">
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="100" />
+
             <TextView
                 android:id="@+id/ca_tv_day"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="20"
+                android:layout_weight="30"
                 android:alpha="0.5"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Day"
+                android:text="א'"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/ca_tv_month"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="20"
+                android:layout_weight="30"
                 android:alpha="0.5"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Month"
-                android:textColor="#808080"
+                android:text="ינו'"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="100" />
 
         </LinearLayout>
 
@@ -82,8 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="0.2"
+            android:layout_weight="50"
             android:orientation="vertical">
 
             <LinearLayout
@@ -100,12 +109,12 @@
                         android:id="@+id/item_title"
                         android:layout_width="235dp"
                         android:layout_height="40dp"
-                        android:fontFamily="casual"
+                        android:fontFamily="@font/calibri"
                         android:gravity="center"
                         android:singleLine="true"
-                        android:text="Task Title"
+                        android:text="שם המטלה"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -123,24 +132,24 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="80"
-                                android:fontFamily="casual"
+                                android:fontFamily="@font/calibri"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="Date"
+                                android:text="תאריך ביצוע"
                                 android:textColor="@color/black"
-                                android:textSize="10sp" />
+                                android:textSize="12sp" />
 
                             <TextView
                                 android:id="@+id/tv_time_of_the_task"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="20"
-                                android:fontFamily="casual"
+                                android:fontFamily="@font/calibri"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="Time"
+                                android:text="שעת ביצוע"
                                 android:textColor="@color/black"
-                                android:textSize="10sp" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -149,10 +158,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="20"
-                            android:fontFamily="casual"
+                            android:fontFamily="@font/calibri"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="Notes"
+                            android:text="כתובת"
                             android:textColor="@color/black"
                             android:textSize="10sp" />
 
@@ -161,12 +170,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="20"
-                            android:fontFamily="casual"
+                            android:fontFamily="@font/calibri"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="Notes"
+                            android:text="הערות"
                             android:textColor="@color/black"
-                            android:textSize="8sp" />
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
@@ -180,8 +189,8 @@
 
                     <ImageView
                         android:id="@+id/iv_task_image"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:background="@drawable/task_icon"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />

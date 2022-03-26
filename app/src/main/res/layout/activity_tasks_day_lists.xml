@@ -15,12 +15,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/abraham"
         android:gravity="center"
-        android:text="Tasks Days"
+        android:text="ימים מרוכזים"
         android:textColor="@color/black"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:textSize="50sp" />
 
     <Space
         android:layout_width="match_parent"
@@ -31,9 +30,9 @@
         android:id="@+id/tv_tasksDay_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Tasks Days Amount"
+        android:text="כמות הימים המרוכזים"
         android:textColor="@color/black"
         android:textSize="15sp" />
 

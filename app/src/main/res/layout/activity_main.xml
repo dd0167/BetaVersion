@@ -15,12 +15,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/abraham"
         android:gravity="center"
-        android:text="Lists"
+        android:text="רשימות"
         android:textColor="@color/black"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:textSize="50sp" />
 
     <Space
         android:layout_width="match_parent"
@@ -31,9 +30,9 @@
         android:id="@+id/tv_lists_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Lists Amount"
+        android:text="כמות הרשימות"
         android:textColor="@color/black"
         android:textSize="15sp" />
 

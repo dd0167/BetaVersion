@@ -20,8 +20,10 @@ public class CustomTasksDayListAdapter extends BaseAdapter{
     ArrayList<String> lists;
     LayoutInflater inflter;
     ArrayList<TasksDay> list_values;
-    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+//    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
+//    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", new Locale("he"));
+    SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
 
     public CustomTasksDayListAdapter(Context applicationContext, ArrayList<String> lists, ArrayList<TasksDay> list_values) {
         this.context = applicationContext;

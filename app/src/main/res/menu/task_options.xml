@@ -3,10 +3,10 @@
 
     <item android:id="@+id/show_task_in_map"
         android:icon="@drawable/show_address_in_map"
-        android:title="Show Task In Map" />
+        android:title="הצגת המטלה על המפה" />
 
     <item android:id="@+id/delete_task"
         android:icon="@drawable/delete_task"
-        android:title="Delete Task" />
+        android:title="מחיקת המטלה" />
 
 </menu>

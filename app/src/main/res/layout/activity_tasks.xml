@@ -16,10 +16,10 @@
         android:id="@+id/tv_list_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
         android:singleLine="true"
-        android:text="List Name"
+        android:text="שם הרשימה"
         android:textColor="@color/black"
         android:textSize="50sp"
         android:textStyle="bold" />
@@ -28,9 +28,9 @@
         android:id="@+id/tv_list_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="List Date"
+        android:text="תאריך יצירת הרשימה"
         android:textColor="@color/black"
         android:textSize="15sp" />
 
@@ -53,9 +53,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Tasks"
+        android:text="מטלות"
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold" />
@@ -64,11 +64,16 @@
         android:id="@+id/tv_tasks_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Tasks Amount"
+        android:text="כמות המטלות"
         android:textColor="@color/black"
         android:textSize="15sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" />
 
     <ListView
         android:id="@+id/tasks_listview"

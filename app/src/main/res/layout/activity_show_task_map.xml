@@ -16,10 +16,10 @@
         android:id="@+id/tv_task_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
         android:singleLine="true"
-        android:text="Task Name"
+        android:text="שם המטלה"
         android:textColor="@color/black"
         android:textSize="50sp"
         android:textStyle="bold" />
@@ -28,9 +28,9 @@
         android:id="@+id/tv_task_address_map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Task Address"
+        android:text="כתובת המטלה"
         android:textColor="@color/black"
         android:textSize="15sp" />
 
@@ -67,44 +67,34 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_task_current_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_task_current_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="50"
-                android:fontFamily="@font/annie_use_your_telescope"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="Current Address"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-        </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/progressBar_showMap"
-            style="@android:style/Widget.DeviceDefault.ProgressBar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
             android:layout_gravity="center"
-            android:visibility="visible" />
+            android:layout_weight="50"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="מיקום נוכחי"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
         <TextView
             android:id="@+id/tv_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/annie_use_your_telescope"
+            android:layout_weight="50"
+            android:fontFamily="@font/calibri"
             android:gravity="center"
             android:singleLine="true"
-            android:text="The distance between the task and your current location"
+            android:text="המרחק בין המטלה לבין מיקומך הנוכחי"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 

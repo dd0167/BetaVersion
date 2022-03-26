@@ -139,6 +139,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     ImageView cancel_bottom_sheet_dialog_task;
 
+    String SELECT_DATE_AND_TIME="בחר תאריך ושעה";
+    String SELECT_TIME="בחר שעה";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,7 +206,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Tasks" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "המטלות שלי" + "</font>"));
 
         read_tasks();
 
@@ -252,7 +255,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                         tasks_array,tasks_values);
                 tasks_listview.setAdapter(customadp);
 
-                tv_tasks_amount.setText("You have "+ tasks_array.size()+ " tasks");
+                tv_tasks_amount.setText("קיימות "+ tasks_array.size()+ " מטלות");
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -271,31 +274,30 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
         String title=item.getTitle().toString();
-        if (title.equals("Log Out"))
-        {
+        if (title.equals("Log Out")) {
             AlertDialog.Builder adb;
-            adb=new AlertDialog.Builder(this);
-            adb.setTitle("Log Out");
-            adb.setMessage("Are you sure you want log out?");
+            adb = new AlertDialog.Builder(this);
+            adb.setTitle("התנתקות");
+            adb.setMessage("אתה בטוח שברצונך להתנתק מהאפליקציה?");
             adb.setIcon(R.drawable.log_out_icon);
-            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mAuth.signOut();
-                    SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+                    SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("stayConnect",false);
+                    editor.putBoolean("stayConnect", false);
                     editor.commit();
                     move_login();
                 }
             });
-            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+            adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
                 }
             });
-            AlertDialog ad= adb.create();
+            AlertDialog ad = adb.create();
             ad.show();
         }
         return true;
@@ -324,11 +326,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         TextView tv_task_date_and_time=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
         if (reference.equals(refLists))
         {
-            tv_task_date_and_time.setText("Select Date And Time");
+            tv_task_date_and_time.setText(SELECT_DATE_AND_TIME);
         }
         else if (reference.equals(refTasksDays))
         {
-            tv_task_date_and_time.setText("Select Time");
+            tv_task_date_and_time.setText(SELECT_TIME);
         }
 
         cancel_bottom_sheet_dialog_task=(ImageView) bottomSheetDialog_task.findViewById(R.id.cancel_bottom_sheet_dialog_task);
@@ -353,28 +355,28 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         if (taskName.isEmpty())
         {
-            et_task_name.setError("Task name is required!");
+            et_task_name.setError("כתוב את שם המטלה!");
             et_task_name.requestFocus();
         }
         else if (!taskAddress.isEmpty() && correct_address(taskAddress).equals(""))
         {
-            et_task_address.setError("Error address!");
+            et_task_address.setError("כתובת שגויה!");
             et_task_address.requestFocus();
         }
-        else if (tv_task_date_and_time.getText().toString().equals("Select Date And Time") || tv_task_date_and_time.getText().toString().equals("Select Time"))
+        else if (tv_task_date_and_time.getText().toString().equals(SELECT_DATE_AND_TIME) || tv_task_date_and_time.getText().toString().equals(SELECT_TIME))
         {
             if (reference.equals(refLists))
             {
-                Toast.makeText(TasksActivity.this, "Select Date And Time", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TasksActivity.this, SELECT_DATE_AND_TIME, Toast.LENGTH_SHORT).show();
             }
             else if (reference.equals(refTasksDays))
             {
-                Toast.makeText(TasksActivity.this, "Select Time", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TasksActivity.this, SELECT_TIME, Toast.LENGTH_SHORT).show();
             }
         }
         else if(task_clicked!=null)
         {
-            progressDialog=ProgressDialog.show(this,"Updating The Task","Loading...",true);
+            progressDialog=ProgressDialog.show(this,"מעדכן את פרטי המטלה","טוען...",true);
 
             String file_name="Images";
             if (reference.equals(refTasksDays))
@@ -399,7 +401,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                                 Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-                                Toast.makeText(TasksActivity.this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                                 change_data_to_default();
 
                                 progressDialog.dismiss();
@@ -420,19 +422,19 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                 Task task=new Task(taskName,correct_address(taskAddress),date,time,task_clicked.getTaskCreationDate(),taskNotes,task_color,imageUri.toString());
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-                Toast.makeText(TasksActivity.this, "Update Task Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                 change_data_to_default();
                 progressDialog.dismiss();
             }
         }
         else if (tasks_array.contains(taskName))
         {
-            et_task_name.setError("There is a task with this name!");
+            et_task_name.setError("קיימת מטלה עם שם זה!");
             et_task_name.requestFocus();
         }
         else
         {
-            progressDialog=ProgressDialog.show(this,"Creates The Task","Loading...",true);
+            progressDialog=ProgressDialog.show(this,"יוצר את המטלה","טוען...",true);
 
             String file_name="Images";
             if (reference.equals(refTasksDays))
@@ -454,7 +456,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                             imageUri=uri;
                             Task task=new Task(taskName,correct_address(taskAddress),date,time,task_creationDate,taskNotes,task_color,imageUri.toString());
                             reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
-                            Toast.makeText(TasksActivity.this, "Add Task Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TasksActivity.this, "יצירת המטלה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
                             change_data_to_default();
 
                             progressDialog.dismiss();
@@ -542,10 +544,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     public void add_image(View view) {
         ImageView task_image=(ImageView) bottomSheetDialog_task.findViewById(R.id.task_image);
 
-        String[] items={"Select Image From Gallery","Select The Default Image"};
+        String[] items={"בחר תמונה מהגלריה","בחר את תמונת ברירת המחדל"};
         AlertDialog.Builder adb;
         adb=new AlertDialog.Builder(this);
-        adb.setTitle("Change Profile Image");
+        adb.setTitle("תמונת המטלה");
         adb.setIcon(R.drawable.add_image_icon);
         adb.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -568,7 +570,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 }
             }
         });
-        adb.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+        adb.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -610,9 +612,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                     .setBorderCornerLength(1)
                     .setBorderLineColor(Color.WHITE)
                     .setAutoZoomEnabled(true)
-                    .setActivityTitle("Crop Image")
+                    .setActivityTitle("חתוך תמונה")
                     .setFixAspectRatio(true)
-                    .setCropMenuCropButtonTitle("Done")
+                    .setCropMenuCropButtonTitle("סיום")
                     .start(this);
         }
         if (requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
@@ -701,7 +703,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         task_color=tasks_values.get(position).getTaskColor();
         Drawable c = new ColorDrawable(Color.parseColor(task_color));
         btn_task_color.setImageDrawable(c);
-        add_task.setText("Update Task");
+        add_task.setText("עדכון המטלה");
 
         imageUri= Uri.parse(tasks_values.get(position).getTaskPictureUid());
         Glide.with(task_image.getContext()).load(imageUri).into(task_image);
@@ -727,17 +729,17 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     {
         AlertDialog.Builder adb;
         adb=new AlertDialog.Builder(this);
-        adb.setTitle("Delete List");
-        adb.setMessage("Are you sure you want delete "+task_clicked.getTaskName()+"?");
+        adb.setTitle("מחיקת המטלה");
+        adb.setMessage("אתה בטוח שברצונך למחוק את המטלה "+task_clicked.getTaskName()+"?");
         adb.setIcon(R.drawable.delete_list);
-        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
-                Toast.makeText(TasksActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TasksActivity.this, "מחיקת המטלה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
             }
         });
-        adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+        adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();

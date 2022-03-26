@@ -10,188 +10,213 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="25" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_image_settings"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:background="@color/transparent"
-        android:onClick="change_image"
-        android:src="@drawable/user_icon"
-        app:civ_border_width="1dp"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_weight="10" />
 
-    <TextView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
-        android:gravity="center"
-        android:text="Profile Image"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="casual"
-        android:gravity="center"
-        android:text="Click on the image to change it"
-        android:textColor="@color/black"
-        android:textSize="10sp" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="50" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="300dp">
+        app:cardCornerRadius="30dp"
+        android:layout_margin="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="First Name"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:layout_weight="100"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/et_first_name_settings"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:hint="Type Text Here"
-                android:inputType="textPersonName" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_image_settings"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_gravity="center"
+                    android:background="@color/transparent"
+                    android:onClick="change_image"
+                    android:src="@drawable/user_icon"
+                    app:civ_border_width="1dp"
+                    tools:ignore="SpeakableTextPresentCheck" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center"
+                    android:text="תמונת פרופיל"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="Last Name"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center"
+                    android:text="לחץ על התמונה על מנת לשנות אותה"
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
 
-            <EditText
-                android:id="@+id/et_last_name_settings"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:hint="Type Text Here"
-                android:inputType="textPersonName" />
+            </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="Age"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/et_age_settings"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:hint="Type Text Here"
-                android:inputType="date" />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:background="@color/black" />
 
             <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="Home Address"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_weight="100"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/et_home_address_settings"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:hint="Type Text Here"
-                android:inputType="textPostalAddress" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center"
+                    android:text="שם פרטי"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                <EditText
+                    android:id="@+id/et_first_name_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:ems="10"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center"
+                    android:hint="הקלד טקסט כאן"
+                    android:inputType="textPersonName" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="Phone Number"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
 
-            <EditText
-                android:id="@+id/et_phone_number_settings"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:hint="Type Text Here"
-                android:inputType="phone" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center"
+                    android:text="שם משפחה"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="After entering all the required data, click on the round icon"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                <EditText
+                    android:id="@+id/et_last_name_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:ems="10"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center"
+                    android:hint="הקלד טקסט כאן"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:text="גיל"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_age_settings"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:hint="הקלד טקסט כאן"
+            android:inputType="date" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:text="כתובת בית"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_home_address_settings"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:hint="הקלד טקסט כאן"
+            android:inputType="textPostalAddress" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:text="מספר טלפון"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_phone_number_settings"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:hint="הקלד טקסט כאן"
+            android:inputType="phone" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:text="לסיום ושמירה, לחץ על הכפתור העגול בתפריט למטה"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+    </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
@@ -210,12 +235,11 @@
 
         <CheckBox
             android:id="@+id/checkBox_settings"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:fontFamily="casual"
+            android:fontFamily="@font/calibri"
             android:gravity="center"
-            android:text="Stay Connect?"
+            android:text="זכור אותי"
             android:textSize="14sp"
             tools:ignore="TouchTargetSizeCheck" />
 
@@ -229,19 +253,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="10" />
-
-    <ProgressBar
-        android:id="@+id/progressBar_settings"
-        style="@android:style/Widget.DeviceDefault.ProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="10" />
+        android:layout_weight="30" />
 
     <LinearLayout
         android:layout_width="match_parent"

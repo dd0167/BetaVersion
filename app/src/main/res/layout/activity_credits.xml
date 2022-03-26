@@ -85,18 +85,28 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Contact Us"
+        android:text="צור קשר"
         android:textColor="@color/gray"
         android:textSize="14sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="Email: dd0167@bs.amalnet.k12.il"
+        android:text="אימייל: dd0167@bs.amalnet.k12.il"
+        android:textColor="@color/gray"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/calibri"
+        android:gravity="center"
+        android:text="טלפון: 0544953999"
         android:textColor="@color/gray"
         android:textSize="14sp" />
 

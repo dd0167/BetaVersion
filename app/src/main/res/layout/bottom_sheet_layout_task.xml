@@ -51,11 +51,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="Task Name"
+                android:text="שם המטלה"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <Space
@@ -65,11 +65,11 @@
             <EditText
                 android:id="@+id/et_task_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:ems="10"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:hint="Type Text Here"
+                android:hint="הקלד טקסט כאן"
                 android:inputType="textPersonName" />
 
             <Space
@@ -79,11 +79,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="Task Address"
+                android:text="כתובת המטלה"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <Space
@@ -93,11 +93,11 @@
             <EditText
                 android:id="@+id/et_task_address"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:ems="10"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:hint="Type Text Here"
+                android:hint="הקלד טקסט כאן"
                 android:inputType="textPostalAddress" />
 
             <Space
@@ -107,11 +107,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="Task Date And Time"
+                android:text="זמן ביצוע המטלה"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <Space
@@ -122,13 +122,12 @@
                 android:id="@+id/tv_task_date_and_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
                 android:onClick="set_date_and_time"
-                android:text="Select Date And Time"
+                android:text="בחר תאריך ושעה"
                 android:textColor="@color/gray"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
 
             <Space
                 android:layout_width="match_parent"
@@ -137,11 +136,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="Task Notes"
+                android:text="הערות למטלה"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <Space
@@ -151,11 +150,11 @@
             <EditText
                 android:id="@+id/et_task_notes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:ems="10"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:hint="Type Text Here" />
+                android:hint="הקלד טקסט כאן" />
         </LinearLayout>
     </ScrollView>
 
@@ -193,9 +192,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="Click to select color"
+                android:text="לחץ כדי לבחור צבע"
                 android:textColor="@color/black"
                 android:textSize="10sp" />
 
@@ -226,9 +225,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
+                android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="Click to select image"
+                android:text="לחץ כדי לבחור תמונה"
                 android:textColor="@color/black"
                 android:textSize="10sp" />
 
@@ -245,11 +244,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:backgroundTint="#FFFFFF"
-        android:fontFamily="casual"
+        android:fontFamily="@font/calibri"
         android:gravity="center"
         android:minHeight="48dp"
         android:onClick="add_task"
-        android:text="Add Task"
-        android:textColor="#000000" />
+        android:text="יצירת המטלה"
+        android:textColor="#000000"/>
 
 </LinearLayout>

@@ -5,12 +5,12 @@
     <item
         android:id="@+id/update_list"
         android:icon="@drawable/update_list"
-        android:title="Update" />
+        android:title="עדכון" />
 
     <item
         android:id="@+id/delete_list"
         android:icon="@drawable/delete_list"
-        android:title="Delete" />
+        android:title="מחיקה" />
 
 
 

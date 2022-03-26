@@ -29,8 +29,10 @@ public class CustomTaskAdapter extends BaseAdapter{
     ArrayList<String> tasks;
     LayoutInflater inflter;
     ArrayList<Task> task_values;
-    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+//    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
+//    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", new Locale("he"));
+    SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
 
     public CustomTaskAdapter(Context applicationContext, ArrayList<String> tasks, ArrayList<Task> task_values) {
         this.context = applicationContext;
@@ -79,11 +81,11 @@ public class CustomTaskAdapter extends BaseAdapter{
 
         title.setText(tasks.get(i));
         Glide.with(iv_task_image.getContext()).load(task_values.get(i).getTaskPictureUid()).into(iv_task_image);
-        tv_time_of_the_task.setText("Time: "+task_values.get(i).getTaskHour());
-        tv_task_completion_date.setText("Date: "+task_values.get(i).getTaskDay());
+        tv_time_of_the_task.setText("שעת ביצוע: "+task_values.get(i).getTaskHour());
+        tv_task_completion_date.setText("תאריך ביצוע: "+task_values.get(i).getTaskDay());
         if (!task_values.get(i).getTaskNotes().isEmpty())
         {
-            tv_task_notes.setText("Notes: "+task_values.get(i).getTaskNotes());
+            tv_task_notes.setText("הערות: "+task_values.get(i).getTaskNotes());
         }
         else
         {
@@ -91,7 +93,7 @@ public class CustomTaskAdapter extends BaseAdapter{
         }
         if (!task_values.get(i).getTaskAddress().isEmpty())
         {
-            tv_task_address.setText("Address: "+task_values.get(i).getTaskAddress());
+            tv_task_address.setText("כתובת המטלה: "+task_values.get(i).getTaskAddress());
         }
         else
         {

@@ -7,7 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,6 +49,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener,PopupMenu.OnMenuItemClickListener {
 
     FirebaseUser currentUser;
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "My Lists" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "הרשימות שלי" + "</font>"));
 
         currentUser = mAuth.getCurrentUser();
 
@@ -86,9 +90,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lists_listview.setOnItemLongClickListener(this);
         lists_listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-
         read_lists();
-
 
         bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
@@ -148,31 +150,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
         String title=item.getTitle().toString();
-        if (title.equals("Log Out"))
-        {
+        if (title.equals("Log Out")) {
             AlertDialog.Builder adb;
-            adb=new AlertDialog.Builder(this);
-            adb.setTitle("Log Out");
-            adb.setMessage("Are you sure you want log out?");
+            adb = new AlertDialog.Builder(this);
+            adb.setTitle("התנתקות");
+            adb.setMessage("אתה בטוח שברצונך להתנתק מהאפליקציה?");
             adb.setIcon(R.drawable.log_out_icon);
-            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mAuth.signOut();
-                    SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+                    SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("stayConnect",false);
+                    editor.putBoolean("stayConnect", false);
                     editor.commit();
                     move_login();
                 }
             });
-            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+            adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
                 }
             });
-            AlertDialog ad= adb.create();
+            AlertDialog ad = adb.create();
             ad.show();
         }
         return true;
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (listName.isEmpty())
         {
-            et_list_name.setError("List name is required!");
+            et_list_name.setError("כתוב את שם הרשימה!");
             et_list_name.requestFocus();
         }
         else if (list_clicked!=null) {
@@ -236,18 +237,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             refLists.child(currentUser.getUid()).child(list_clicked.getListName()).removeValue();
             refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
 
-            Toast.makeText(this, "Update List Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "עדכון הרשימה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
             bottomSheetDialog_list.cancel();
         }
         else if (lists_array.contains(listName))
         {
-            et_list_name.setError("There is a List with this name!");
+            et_list_name.setError("קיימת רשימה עם שם זה!");
             et_list_name.requestFocus();
         }
         else
         {
             refLists.child(currentUser.getUid()).child(listName).child("List Data").setValue(list);
-            Toast.makeText(this, "Add List Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "יצירת הרשימה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
 
             bottomSheetDialog_list.cancel();
 
@@ -266,17 +267,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         {
             AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
-            adb.setTitle("No Internet");
-            adb.setMessage("Unable to read data");
+            adb.setTitle("אין חיבור אינטרנט");
+            adb.setMessage("אין אפשרות לקרוא את הנתונים הנדרשים, אנא התחבר לאינטרנט");
             adb.setIcon(R.drawable.no_wifi);
             adb.setCancelable(false);
-            adb.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+            adb.setPositiveButton("נסה שוב", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     read_lists();
                 }
             });
-            adb.setNeutralButton("Exit", new DialogInterface.OnClickListener() {
+            adb.setNeutralButton("יציאה מהאפליקציה", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     CustomListAdapter customadp = new CustomListAdapter(MainActivity.this,
                             lists_array,lists_values);
                     lists_listview.setAdapter(customadp);
-                    tv_lists_amount.setText("You have "+ lists_array.size()+ " lists");
+                    tv_lists_amount.setText("קיימות "+ lists_array.size()+ " רשימות");
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -361,24 +362,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Button add_list=(Button) bottomSheetDialog_list.findViewById(R.id.add_list);
             ImageView iv_list_layout=(ImageView) bottomSheetDialog_list.findViewById(R.id.iv_list_layout);
             et_list_name.setText(list_clicked.getListName());
-            add_list.setText("Update List");
+            add_list.setText("עדכון הרשימה");
             iv_list_layout.setImageResource(R.drawable.update_list);
         }
         else if (item_id == R.id.delete_list)
         {
             AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
-            adb.setTitle("Delete List");
-            adb.setMessage("Are you sure you want delete "+list_clicked.getListName()+"?");
+            adb.setTitle("מחיקת הרשימה");
+            adb.setMessage("אתה בטוח שברצונך למחוק את הרשימה "+list_clicked.getListName()+"?");
             adb.setIcon(R.drawable.delete_list);
-            adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     refLists.child(currentUser.getUid()).child(list_clicked.getListName()).removeValue();
-                    Toast.makeText(MainActivity.this, "Delete List Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "מחיקת הרשימה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
                 }
             });
-            adb.setNeutralButton("No", new DialogInterface.OnClickListener() {
+            adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
