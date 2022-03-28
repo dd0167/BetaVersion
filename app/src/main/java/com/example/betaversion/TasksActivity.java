@@ -381,11 +381,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             String file_name="Images";
             if (reference.equals(refTasksDays))
             {
-                file_name="Tasks Days Images/"+tasksDay_clicked.getTasksDayName()+"/"+task_clicked.getTaskName()+" image.png";
+                file_name=currentUser.getUid()+"/"+"Tasks Days Images/"+tasksDay_clicked.getTasksDayName()+"/"+taskName+" image.png";
             }
             else if (reference.equals(refLists))
             {
-                file_name="Tasks Lists Images/"+list_clicked.getListName()+"/"+task_clicked.getTaskName()+" image.png";
+                file_name=currentUser.getUid()+"/"+"Tasks Lists Images/"+list_clicked.getListName()+"/"+taskName+" image.png";
             }
 
             if (is_image_changed)
@@ -439,11 +439,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             String file_name="Images";
             if (reference.equals(refTasksDays))
             {
-                file_name="Tasks Days Images/"+tasksDay_clicked.getTasksDayName()+"/"+taskName+" image.png";
+                file_name=currentUser.getUid()+"/"+"Tasks Days Images/"+tasksDay_clicked.getTasksDayName()+"/"+taskName+" image.png";
             }
             else if (reference.equals(refLists))
             {
-                file_name="Tasks Lists Images/"+list_clicked.getListName()+"/"+taskName+" image.png";
+                file_name=currentUser.getUid()+"/"+"Tasks Lists Images/"+list_clicked.getListName()+"/"+taskName+" image.png";
             }
 
             StorageReference fileRef=referenceStorage.child(file_name);

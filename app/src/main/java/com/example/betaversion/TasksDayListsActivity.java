@@ -35,13 +35,16 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,6 +76,13 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
     String date="בחר תאריך יעד";
 
     ImageView cancel_bottom_sheet_dialog_tasksDays;
+
+    Chip chip_name;
+    Chip chip_date;
+
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-M-dd", new Locale("he"));
+    SimpleDateFormat dateFormat_before = new SimpleDateFormat("dd-MM-yyyy", new Locale("he"));
+    SimpleDateFormat dateFormat_after = new SimpleDateFormat("yyyy-MM-dd", new Locale("he"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +145,9 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         tasksDay_listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         read_tasksDays();
+
+        chip_name=(Chip) findViewById(R.id.sort_by_name);
+        chip_date=(Chip) findViewById(R.id.sort_by_date);
     }
 
     public boolean is_Internet_Connected() {
@@ -279,7 +292,17 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         TextView tv_tasksDay_date=(TextView) bottomSheetDialog_tasksDay.findViewById(R.id.tv_tasksDay_date);
         String tasksDayName=et_tasksDay_name.getText().toString();
 
-        date=tv_tasksDay_date.getText().toString();
+        try {
+            date=tv_tasksDay_date.getText().toString();
+            Date result = dateFormat_before.parse(date);
+            date = dateFormat_after.format(result);
+            tv_tasksDay_date.setText(date);
+        }
+        catch (Exception e)
+        {
+            //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
         tasksDay=new TasksDay(tasksDayName,date);
 
         if (tasksDayName.isEmpty())
@@ -315,7 +338,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             et_tasksDay_name.setError("קיים יום מרוכז עם אותו השם");
             et_tasksDay_name.requestFocus();
         }
-        else if (tv_tasksDay_date.getText().toString().equals("בחר תאריך יעד") )
+        else if (date.equals("בחר תאריך יעד") )
         {
             Toast.makeText(TasksDayListsActivity.this, "בחר תאריך", Toast.LENGTH_SHORT).show();
         }
@@ -323,11 +346,11 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         {
             refTasksDays.child(currentUser.getUid()).child(tasksDayName).child("Tasks Day Data").setValue(tasksDay);
             Toast.makeText(this, "יצירת היום המרוכז בוצע בהצלחה", Toast.LENGTH_SHORT).show();
-
             bottomSheetDialog_tasksDay.cancel();
-
-            tasksDay_clicked=null;
         }
+        tasksDay_clicked=null;
+        date="בחר תאריך יעד";
+        chip_name.setChecked(true);
     }
 
     public void set_tasksDay_date(View view)
@@ -344,6 +367,13 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
                 month=month+1;
                 date=dayOfMonth+"-"+month+"-"+year;
                 tv_tasksDay_date.setText(date);
+                date=year+"-"+month+"-"+dayOfMonth;
+                try {
+                    Date result_date = inputDateFormat.parse(date);
+                    date = dateFormat_after.format(result_date);
+                } catch (ParseException e) {
+                    Toast.makeText(TasksDayListsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         },year,month,day);
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis()); // Disable Previous or Future Dates in Datepicker
@@ -387,7 +417,15 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             ImageView iv_TasksDay_layout=(ImageView) bottomSheetDialog_tasksDay.findViewById(R.id.iv_TasksDay_layout);
             et_tasksDay_name.setText(tasksDay_clicked.getTasksDayName());
             add_tasksDay.setText("עדכן את היום המרוכז");
-            tv_tasksDay_date.setText(tasksDay_clicked.getTasksDayDate());
+
+            try {
+                Date result = dateFormat_after.parse(tasksDay_clicked.getTasksDayDate());
+                String old_date = dateFormat_before.format(result);
+                tv_tasksDay_date.setText(old_date);
+            } catch (ParseException e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
             iv_TasksDay_layout.setImageResource(R.drawable.update_list);
         }
         else if (item_id == R.id.delete_list)
@@ -414,5 +452,61 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             ad.show();
         }
         return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void sort_items(View view) {
+        ValueEventListener tasksDay_array_listener_sort = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dS) {
+                tasksDay_values.clear();
+                tasksDay_array.clear();
+                for(DataSnapshot data : dS.getChildren()) {
+                    TasksDay stuTmp=data.child("Tasks Day Data").getValue(TasksDay.class);
+                    tasksDay_values.add(stuTmp);
+                    tasksDay_name = stuTmp.getTasksDayName();
+                    tasksDay_array.add(tasksDay_name);
+                }
+                CustomTasksDayListAdapter customadp = new CustomTasksDayListAdapter(TasksDayListsActivity.this,
+                        tasksDay_array,tasksDay_values);
+                tasksDay_listview.setAdapter(customadp);
+                tv_tasksDay_amount.setText("קיימים "+ tasksDay_array.size()+ " ימים מרוכזים");
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(TasksDayListsActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        };
+
+        if (chip_name.isChecked())
+        {
+            //Toast.makeText(this, "Name Is Checked", Toast.LENGTH_SHORT).show();
+
+            Query query=refTasksDays.child(currentUser.getUid()).orderByKey();
+            query.addListenerForSingleValueEvent(tasksDay_array_listener_sort);
+        }
+        else if (chip_date.isChecked())
+        {
+            //Toast.makeText(this, "Date Is Checked", Toast.LENGTH_SHORT).show();
+
+            Query query=refTasksDays.child(currentUser.getUid()).orderByChild("Tasks Day Data/tasksDayDate");
+            query.addListenerForSingleValueEvent(tasksDay_array_listener_sort);
+        }
     }
 }

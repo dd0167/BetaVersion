@@ -22,7 +22,7 @@ public class CustomTasksDayListAdapter extends BaseAdapter{
     ArrayList<TasksDay> list_values;
 //    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
 //    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
-    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", new Locale("he"));
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-M-dd", new Locale("he"));
     SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
 
     public CustomTasksDayListAdapter(Context applicationContext, ArrayList<String> lists, ArrayList<TasksDay> list_values) {
@@ -75,9 +75,9 @@ public class CustomTasksDayListAdapter extends BaseAdapter{
             Date result_date=inputDateFormat.parse(date);
             String outputDateString = dateFormat.format(result_date);
             String[] items1 = outputDateString.split(" ");
-            String day = items1[0];
+            String day = items1[2];
             String dd = items1[1];
-            String mon = items1[2];
+            String mon = items1[0];
 
             result[0]=day;
             result[1]=dd;

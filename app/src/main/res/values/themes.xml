@@ -22,4 +22,8 @@
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
     </style>
 
+    <style name="AppTheme.GenderChip" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:fontFamily">@font/calibri</item>
+    </style>
+
 </resources>
