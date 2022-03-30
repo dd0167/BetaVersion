@@ -84,6 +84,8 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
     SimpleDateFormat dateFormat_before = new SimpleDateFormat("dd-MM-yyyy", new Locale("he"));
     SimpleDateFormat dateFormat_after = new SimpleDateFormat("yyyy-MM-dd", new Locale("he"));
 
+    ValueEventListener tasksDay_array_listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,7 +192,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
         else
         {
-            ValueEventListener tasksDay_array_listener = new ValueEventListener() {
+             tasksDay_array_listener= new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dS) {
                     tasksDay_values.clear();
@@ -472,41 +474,20 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
 
     public void sort_items(View view) {
-        ValueEventListener tasksDay_array_listener_sort = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dS) {
-                tasksDay_values.clear();
-                tasksDay_array.clear();
-                for(DataSnapshot data : dS.getChildren()) {
-                    TasksDay stuTmp=data.child("Tasks Day Data").getValue(TasksDay.class);
-                    tasksDay_values.add(stuTmp);
-                    tasksDay_name = stuTmp.getTasksDayName();
-                    tasksDay_array.add(tasksDay_name);
-                }
-                CustomTasksDayListAdapter customadp = new CustomTasksDayListAdapter(TasksDayListsActivity.this,
-                        tasksDay_array,tasksDay_values);
-                tasksDay_listview.setAdapter(customadp);
-                tv_tasksDay_amount.setText("קיימים "+ tasksDay_array.size()+ " ימים מרוכזים");
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(TasksDayListsActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        };
 
         if (chip_name.isChecked())
         {
             //Toast.makeText(this, "Name Is Checked", Toast.LENGTH_SHORT).show();
 
             Query query=refTasksDays.child(currentUser.getUid()).orderByKey();
-            query.addListenerForSingleValueEvent(tasksDay_array_listener_sort);
+            query.addListenerForSingleValueEvent(tasksDay_array_listener);
         }
         else if (chip_date.isChecked())
         {
             //Toast.makeText(this, "Date Is Checked", Toast.LENGTH_SHORT).show();
 
             Query query=refTasksDays.child(currentUser.getUid()).orderByChild("Tasks Day Data/tasksDayDate");
-            query.addListenerForSingleValueEvent(tasksDay_array_listener_sort);
+            query.addListenerForSingleValueEvent(tasksDay_array_listener);
         }
     }
 }

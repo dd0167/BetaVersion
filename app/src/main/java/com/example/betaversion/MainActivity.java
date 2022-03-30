@@ -2,6 +2,7 @@ package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
 import static com.example.betaversion.FB_Ref.refLists;
+import static com.example.betaversion.FB_Ref.refTasksDays;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -35,12 +36,14 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -69,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     BottomSheetDialog bottomSheetDialog_list;
 
     ImageView cancel_bottom_sheet_dialog_list;
+
+    Chip chip_name;
+    Chip chip_date;
+
+    ValueEventListener lists_array_listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +140,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
         // overridePendingTransition(0,0);
+
+        chip_name=(Chip) findViewById(R.id.sort_by_name);
+        chip_date=(Chip) findViewById(R.id.sort_by_date);
     }
 
     public void move_login()
@@ -254,11 +265,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             list_clicked=null;
         }
+        chip_name.setChecked(true);
     }
 
     public String get_current_date()
     {
-        return new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault()).format(new Date());
+        return new SimpleDateFormat("yyyy-MM-dd",new Locale("he")).format(new Date());
     }
 
     public void read_lists()
@@ -289,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else
         {
-            ValueEventListener lists_array_listener = new ValueEventListener() {
+            lists_array_listener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dS) {
                     lists_values.clear();
@@ -389,5 +401,47 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ad.show();
         }
         return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void sort_items(View view) {
+        if (chip_name.isChecked())
+        {
+            //Toast.makeText(this, "Name Is Checked", Toast.LENGTH_SHORT).show();
+
+            Query query=refLists.child(currentUser.getUid()).orderByKey();
+            query.addListenerForSingleValueEvent(lists_array_listener);
+        }
+        else if (chip_date.isChecked())
+        {
+            //Toast.makeText(this, "Date Is Checked", Toast.LENGTH_SHORT).show();
+
+            Query query=refLists.child(currentUser.getUid()).orderByChild("List Data/listCreationDate");
+            query.addListenerForSingleValueEvent(lists_array_listener);
+        }
     }
 }

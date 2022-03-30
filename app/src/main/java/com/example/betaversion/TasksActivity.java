@@ -142,6 +142,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     String SELECT_DATE_AND_TIME="בחר תאריך ושעה";
     String SELECT_TIME="בחר שעה";
 
+    SimpleDateFormat dateFormat_before = new SimpleDateFormat("dd-MM-yyyy", new Locale("he"));
+    SimpleDateFormat dateFormat_after = new SimpleDateFormat("yyyy-MM-dd", new Locale("he"));
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -231,6 +234,15 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             list_clicked_name = tasksDay_clicked.getTasksDayName();
             list_clicked_date = tasksDay_clicked.getTasksDayDate();
             date=list_clicked_date;
+        }
+
+        try {
+            Date result = dateFormat_after.parse(list_clicked_date);
+            list_clicked_date = dateFormat_before.format(result);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         tv_list_name.setText(list_clicked_name);

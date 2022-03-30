@@ -41,6 +41,45 @@
         android:layout_height="wrap_content"
         android:layout_weight="10" />
 
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/sort_by_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:onClick="sort_items"
+            android:text="מיון לפי שם"
+            android:textAlignment="center"
+            app:checkedIcon="@drawable/checked_icon"
+            app:chipStrokeColor="@color/light_gray"
+            app:chipStrokeWidth="1dp"
+            android:textAppearance="@style/AppTheme.GenderChip"
+            android:checked="true"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/sort_by_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:onClick="sort_items"
+            android:text="מיון לפי תאריך יצירה"
+            android:textAlignment="center"
+            android:textAppearance="@style/AppTheme.GenderChip"
+            app:checkedIcon="@drawable/checked_icon"
+            app:chipStrokeColor="@color/light_gray"
+            app:chipStrokeWidth="1dp" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10" />
+
     <ListView
         android:id="@+id/lists_listview"
         android:layout_width="match_parent"
