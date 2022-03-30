@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         chip_name=(Chip) findViewById(R.id.sort_by_name);
         chip_date=(Chip) findViewById(R.id.sort_by_date);
+        chip_name.setClickable(false);
     }
 
     public void move_login()
@@ -266,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             list_clicked=null;
         }
         chip_name.setChecked(true);
+        chip_name.setClickable(false);
     }
 
     public String get_current_date()
@@ -403,31 +405,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void sort_items(View view) {
         if (chip_name.isChecked())
         {
@@ -435,6 +412,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Query query=refLists.child(currentUser.getUid()).orderByKey();
             query.addListenerForSingleValueEvent(lists_array_listener);
+
+            chip_name.setClickable(false);
+            chip_date.setClickable(true);
         }
         else if (chip_date.isChecked())
         {
@@ -442,6 +422,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Query query=refLists.child(currentUser.getUid()).orderByChild("List Data/listCreationDate");
             query.addListenerForSingleValueEvent(lists_array_listener);
+
+            chip_date.setClickable(false);
+            chip_name.setClickable(true);
         }
     }
 }

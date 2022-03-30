@@ -150,6 +150,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
         chip_name=(Chip) findViewById(R.id.sort_by_name);
         chip_date=(Chip) findViewById(R.id.sort_by_date);
+        chip_name.setClickable(false);
     }
 
     public boolean is_Internet_Connected() {
@@ -353,6 +354,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         tasksDay_clicked=null;
         date="בחר תאריך יעד";
         chip_name.setChecked(true);
+        chip_name.setClickable(false);
     }
 
     public void set_tasksDay_date(View view)
@@ -456,23 +458,6 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         return true;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void sort_items(View view) {
 
         if (chip_name.isChecked())
@@ -481,6 +466,9 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
             Query query=refTasksDays.child(currentUser.getUid()).orderByKey();
             query.addListenerForSingleValueEvent(tasksDay_array_listener);
+
+            chip_name.setClickable(false);
+            chip_date.setClickable(true);
         }
         else if (chip_date.isChecked())
         {
@@ -488,6 +476,9 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
             Query query=refTasksDays.child(currentUser.getUid()).orderByChild("Tasks Day Data/tasksDayDate");
             query.addListenerForSingleValueEvent(tasksDay_array_listener);
+
+            chip_date.setClickable(false);
+            chip_name.setClickable(true);
         }
     }
 }
