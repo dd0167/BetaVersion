@@ -31,7 +31,7 @@ public class CustomTaskAdapter extends BaseAdapter{
     ArrayList<Task> task_values;
 //    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
 //    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
-    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", new Locale("he"));
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-M-dd", new Locale("he"));
     SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
 
     public CustomTaskAdapter(Context applicationContext, ArrayList<String> tasks, ArrayList<Task> task_values) {
@@ -81,8 +81,8 @@ public class CustomTaskAdapter extends BaseAdapter{
 
         title.setText(tasks.get(i));
         Glide.with(iv_task_image.getContext()).load(task_values.get(i).getTaskPictureUid()).into(iv_task_image);
-        tv_time_of_the_task.setText("שעת ביצוע: "+task_values.get(i).getTaskHour());
-        tv_task_completion_date.setText("תאריך ביצוע: "+task_values.get(i).getTaskDay());
+        tv_time_of_the_task.setText("שעת יעד: "+task_values.get(i).getTaskHour());
+        tv_task_completion_date.setText("תאריך יעד: "+task_values.get(i).getTaskDay());
         if (!task_values.get(i).getTaskNotes().isEmpty())
         {
             tv_task_notes.setText("הערות: "+task_values.get(i).getTaskNotes());
@@ -114,9 +114,9 @@ public class CustomTaskAdapter extends BaseAdapter{
             Date result_date=inputDateFormat.parse(date);
             String outputDateString = dateFormat.format(result_date);
             String[] items1 = outputDateString.split(" ");
-            String day = items1[0];
+            String day = items1[2];
             String dd = items1[1];
-            String mon = items1[2];
+            String mon = items1[0];
 
             result[0]=day;
             result[1]=dd;

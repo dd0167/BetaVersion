@@ -68,11 +68,13 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -145,6 +147,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     SimpleDateFormat dateFormat_before = new SimpleDateFormat("dd-MM-yyyy", new Locale("he"));
     SimpleDateFormat dateFormat_after = new SimpleDateFormat("yyyy-MM-dd", new Locale("he"));
 
+    Chip chip_name,chip_color,chip_creation_date,chip_target_date,chip_distance;
+
+    ValueEventListener tasks_array_listener;
+
+    String task_creationDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -215,6 +223,13 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         task_clicked=null;
         is_image_changed=false;
+
+        chip_name=(Chip) findViewById(R.id.sort_by_name);
+        chip_color=(Chip) findViewById(R.id.sort_by_color);
+        chip_creation_date=(Chip) findViewById(R.id.sort_by_creation_date);
+        chip_target_date=(Chip) findViewById(R.id.sort_by_target_date);
+        chip_distance=(Chip) findViewById(R.id.sort_by_distance);
+        chip_name.setClickable(false);
     }
 
     public void get_data_from_intent()
@@ -238,7 +253,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         try {
             Date result = dateFormat_after.parse(list_clicked_date);
-            list_clicked_date = dateFormat_before.format(result);
+            String list_clickedDate = dateFormat_before.format(result);
+            tv_list_date.setText(list_clickedDate);
         }
         catch (Exception e)
         {
@@ -246,13 +262,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
 
         tv_list_name.setText(list_clicked_name);
-        tv_list_date.setText(list_clicked_date);
         reference=FBDB.getReference(ref);
     }
 
     public void read_tasks()
     {
-        ValueEventListener tasks_array_listener = new ValueEventListener() {
+        tasks_array_listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dS) {
                 tasks_values.clear();
@@ -363,7 +378,15 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         String taskName=et_task_name.getText().toString();
         String taskAddress=et_task_address.getText().toString();
         String taskNotes=et_task_notes.getText().toString();
-        String task_creationDate=get_current_date();
+        task_creationDate=get_current_date();
+        try {
+            Date result = dateFormat_before.parse(task_creationDate);
+            task_creationDate = dateFormat_after.format(result);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         if (taskName.isEmpty())
         {
@@ -494,6 +517,13 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         date_and_time="";
         imageUri= Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.task_icon);
         is_image_changed=false;
+
+        chip_name.setChecked(true);
+        chip_name.setClickable(false);
+        chip_color.setClickable(true);
+        chip_creation_date.setClickable(true);
+        chip_target_date.setClickable(true);
+        chip_distance.setClickable(true);
     }
 
     public String get_current_date()
@@ -776,5 +806,61 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             startActivity(stma);
         }
         return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void sort_items(View view) {
+        if (chip_name.isChecked())
+        {
+            Query query=reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").orderByKey();
+            query.addListenerForSingleValueEvent(tasks_array_listener);
+
+            chip_name.setClickable(false);
+            chip_color.setClickable(true);
+            chip_creation_date.setClickable(true);
+        }
+        else if (chip_color.isChecked ())
+        {
+            Query query=reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").orderByChild("Task Data/taskColor");
+            query.addListenerForSingleValueEvent(tasks_array_listener);
+
+            chip_name.setClickable(true);
+            chip_color.setClickable(false);
+            chip_creation_date.setClickable(true);
+        }
+        else if (chip_creation_date.isChecked())
+        {
+            Query query=reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").orderByChild("Task Data/taskCreationDate");
+            query.addListenerForSingleValueEvent(tasks_array_listener);
+
+            chip_name.setClickable(true);
+            chip_color.setClickable(true);
+            chip_creation_date.setClickable(false);
+        }
     }
 }

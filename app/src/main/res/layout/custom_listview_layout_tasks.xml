@@ -35,7 +35,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -135,7 +135,7 @@
                                 android:fontFamily="@font/calibri"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="תאריך ביצוע"
+                                android:text="תאריך יעד"
                                 android:textColor="@color/black"
                                 android:textSize="12sp" />
 
@@ -147,7 +147,7 @@
                                 android:fontFamily="@font/calibri"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="שעת ביצוע"
+                                android:text="שעת יעד"
                                 android:textColor="@color/black"
                                 android:textSize="12sp" />
 

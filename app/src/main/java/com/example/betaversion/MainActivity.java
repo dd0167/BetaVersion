@@ -268,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         chip_name.setChecked(true);
         chip_name.setClickable(false);
+        chip_date.setClickable(true);
     }
 
     public String get_current_date()

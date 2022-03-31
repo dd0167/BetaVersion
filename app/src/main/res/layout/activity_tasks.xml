@@ -75,10 +75,99 @@
         android:layout_height="wrap_content"
         android:layout_weight="5" />
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sort_by_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:checked="true"
+                    android:onClick="sort_items"
+                    android:text="מיון לפי שם"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/AppTheme.GenderChip"
+                    app:checkedIcon="@drawable/checked_icon"
+                    app:chipStrokeColor="@color/light_gray"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sort_by_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:onClick="sort_items"
+                    android:text="מיון לפי צבע"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/AppTheme.GenderChip"
+                    app:checkedIcon="@drawable/checked_icon"
+                    app:chipStrokeColor="@color/light_gray"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sort_by_creation_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:onClick="sort_items"
+                    android:text="מיון לפי תאריך יצירה"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/AppTheme.GenderChip"
+                    app:checkedIcon="@drawable/checked_icon"
+                    app:chipStrokeColor="@color/light_gray"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sort_by_target_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:onClick="sort_items"
+                    android:text="מיון לפי תאריך יעד"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/AppTheme.GenderChip"
+                    app:checkedIcon="@drawable/checked_icon"
+                    app:chipStrokeColor="@color/light_gray"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sort_by_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:onClick="sort_items"
+                    android:text="מיון לפי מרחק"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/AppTheme.GenderChip"
+                    app:checkedIcon="@drawable/checked_icon"
+                    app:chipStrokeColor="@color/light_gray"
+                    app:chipStrokeWidth="1dp" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" />
+
     <ListView
         android:id="@+id/tasks_listview"
         android:layout_width="match_parent"
-        android:layout_height="450dp" />
+        android:layout_height="400dp" />
 
     <Space
         android:layout_width="match_parent"

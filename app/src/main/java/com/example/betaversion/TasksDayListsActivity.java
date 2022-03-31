@@ -355,6 +355,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         date="בחר תאריך יעד";
         chip_name.setChecked(true);
         chip_name.setClickable(false);
+        chip_date.setClickable(true);
     }
 
     public void set_tasksDay_date(View view)
