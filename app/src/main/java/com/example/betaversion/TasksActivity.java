@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -28,6 +29,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -43,7 +45,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,13 +68,20 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.CancellationTokenSource;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
@@ -106,8 +117,12 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import petrov.kristiyan.colorpicker.ColorPicker;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener ,EasyPermissions.PermissionCallbacks{
+
+    public static final int REQUEST_CODE_LOCATION_PERMISSION =0;
 
     DatabaseReference reference;
 
@@ -245,7 +260,22 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         cancellationTokenSource = new CancellationTokenSource();
-        set_currentLocation();
+
+        if (hasLocationPermissions())
+        {
+            if (isLocationEnabled())
+            {
+                set_currentLocation();
+            }
+            else
+            {
+                turnGPSOn();
+            }
+        }
+        else
+        {
+            requestPermissions();
+        }
     }
 
     public void get_data_from_intent() {
@@ -786,7 +816,32 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
 
     public void sort_items(View view) {
-        if (chip_name.isChecked()) {
+        if (chip_distance.isChecked()) {
+            if (isLocationEnabled())
+            {
+                update_task_currentLocation();
+
+                Query query = reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").orderByChild("Task Data/taskDistance").startAt(0.001);
+                query.addListenerForSingleValueEvent(tasks_array_listener);
+
+                chip_name.setClickable(true);
+                chip_color.setClickable(true);
+                chip_creation_date.setClickable(true);
+                chip_target_date.setClickable(true);
+                chip_distance.setClickable(false);
+            }
+            else
+            {
+                turnGPSOn();
+                chip_name.setChecked(true);
+                chip_name.setClickable(false);
+                chip_color.setClickable(true);
+                chip_creation_date.setClickable(true);
+                chip_target_date.setClickable(true);
+                chip_distance.setClickable(true);
+            }
+        }
+        else if (chip_name.isChecked()) {
             Query query = reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").orderByKey();
             query.addListenerForSingleValueEvent(tasks_array_listener);
 
@@ -825,18 +880,6 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             chip_creation_date.setClickable(true);
             chip_target_date.setClickable(false);
             chip_distance.setClickable(true);
-        }
-        else if (chip_distance.isChecked()) {
-            update_task_currentLocation();
-
-            Query query = reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").orderByChild("Task Data/taskDistance").startAt(0.001);
-            query.addListenerForSingleValueEvent(tasks_array_listener);
-
-            chip_name.setClickable(true);
-            chip_color.setClickable(true);
-            chip_creation_date.setClickable(true);
-            chip_target_date.setClickable(true);
-            chip_distance.setClickable(false);
         }
     }
 
@@ -936,5 +979,141 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         // calculate the result
         return(c * r);
+    }
+
+    public boolean isLocationEnabled() {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        }else{
+            locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+
+
+    }
+
+    public void turnGPSOn() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(30 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);
+
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+        builder.setAlwaysShow(true);
+
+        com.google.android.gms.tasks.Task<LocationSettingsResponse> result =
+                LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+
+
+            @Override
+            public void onComplete(com.google.android.gms.tasks.Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    // All location settings are satisfied. The client can initialize location
+                    // requests here.
+
+                } catch (ApiException exception) {
+                    switch (exception.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            // Location settings are not satisfied. But could be fixed by showing the
+                            // user a dialog.
+                            try {
+                                // Cast to a resolvable exception.
+                                ResolvableApiException resolvable = (ResolvableApiException) exception;
+                                // Show the dialog by calling startResolutionForResult(),
+                                // and check the result in onActivityResult().
+                                resolvable.startResolutionForResult(
+                                        TasksActivity.this,
+                                        101);
+                            } catch (IntentSender.SendIntentException e) {
+                                // Ignore the error.
+                            } catch (ClassCastException e) {
+                                // Ignore, should be an impossible error.
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            // Location settings are not satisfied. However, we have no way to fix the
+                            // settings so we won't show the dialog.
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    public boolean hasLocationPermissions() {
+        return EasyPermissions.hasPermissions(
+                this,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        );
+    }
+
+    public void requestPermissions() {
+        if (hasLocationPermissions())
+        {
+            return;
+        }
+        EasyPermissions.requestPermissions(
+                this,
+                "You need to accept location permissions to use this app",
+                REQUEST_CODE_LOCATION_PERMISSION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        );
+
+        EasyPermissions.requestPermissions(
+                this,
+                "You need to accept location permissions to use this app",
+                REQUEST_CODE_LOCATION_PERMISSION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        );
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        if (isLocationEnabled())
+        {
+            set_currentLocation();
+        }
+        else
+        {
+            turnGPSOn();
+        }
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this,perms))
+        {
+            AppSettingsDialog.Builder builder = new AppSettingsDialog.Builder(this);
+            builder.build().show();
+        }
+        else
+        {
+            requestPermissions();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
     }
 }

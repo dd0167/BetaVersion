@@ -80,9 +80,13 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
 
             <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
@@ -155,7 +159,14 @@
                     app:checkedIcon="@drawable/checked_icon"
                     app:chipStrokeColor="@color/light_gray"
                     app:chipStrokeWidth="1dp" />
+
             </com.google.android.material.chip.ChipGroup>
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
         </LinearLayout>
     </HorizontalScrollView>
 
