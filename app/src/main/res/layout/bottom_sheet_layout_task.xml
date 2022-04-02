@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="שם המטלה"
+                android:text="שם המטלה *"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="זמן ביצוע המטלה"
+                android:text="זמן ביצוע המטלה *"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
