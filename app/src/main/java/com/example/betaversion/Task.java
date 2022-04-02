@@ -13,10 +13,11 @@ public class Task implements Parcelable {
     private String TaskNotes; // הערות
     private String TaskColor; // צבע המטלה
     private String TaskPictureUid; // תמונת המטלה
+    private double TaskDistance; // המרחק בין המיקום הנוכחי של המשתמש לבין המטלה
 
     public Task() {}
 
-    public Task(String taskName, String taskAddress, String taskDay, String taskHour, String taskCreationDate, String taskNotes, String taskColor, String taskPictureUid) {
+    public Task(String taskName, String taskAddress, String taskDay, String taskHour, String taskCreationDate, String taskNotes, String taskColor, String taskPictureUid,double taskDistance) {
         TaskName = taskName;
         TaskAddress = taskAddress;
         TaskDay = taskDay;
@@ -25,6 +26,7 @@ public class Task implements Parcelable {
         TaskNotes = taskNotes;
         TaskColor = taskColor;
         TaskPictureUid = taskPictureUid;
+        TaskDistance=taskDistance;
     }
 
     protected Task(Parcel in) {
@@ -36,6 +38,7 @@ public class Task implements Parcelable {
         TaskNotes = in.readString();
         TaskColor = in.readString();
         TaskPictureUid = in.readString();
+        TaskDistance=in.readDouble();
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -114,6 +117,14 @@ public class Task implements Parcelable {
         TaskPictureUid = taskPictureUid;
     }
 
+    public double getTaskDistance() {
+        return TaskDistance;
+    }
+
+    public void setTaskDistance(double taskDistance) {
+        TaskDistance = taskDistance;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -129,5 +140,6 @@ public class Task implements Parcelable {
         dest.writeString(TaskNotes);
         dest.writeString(TaskColor);
         dest.writeString(TaskPictureUid);
+        dest.writeDouble(TaskDistance);
     }
 }

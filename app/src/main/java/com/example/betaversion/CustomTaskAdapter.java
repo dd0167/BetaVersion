@@ -34,6 +34,9 @@ public class CustomTaskAdapter extends BaseAdapter{
     SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-M-dd", new Locale("he"));
     SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
 
+    SimpleDateFormat dateFormat_before = new SimpleDateFormat("dd-MM-yyyy", new Locale("he"));
+    SimpleDateFormat dateFormat_after = new SimpleDateFormat("yyyy-MM-dd", new Locale("he"));
+
     public CustomTaskAdapter(Context applicationContext, ArrayList<String> tasks, ArrayList<Task> task_values) {
         this.context = applicationContext;
         this.tasks = tasks;
@@ -82,7 +85,18 @@ public class CustomTaskAdapter extends BaseAdapter{
         title.setText(tasks.get(i));
         Glide.with(iv_task_image.getContext()).load(task_values.get(i).getTaskPictureUid()).into(iv_task_image);
         tv_time_of_the_task.setText("שעת יעד: "+task_values.get(i).getTaskHour());
-        tv_task_completion_date.setText("תאריך יעד: "+task_values.get(i).getTaskDay());
+
+        String target_date=task_values.get(i).getTaskDay();
+        try {
+            Date result_date = dateFormat_after.parse(target_date);
+            target_date = dateFormat_before.format(result_date);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        tv_task_completion_date.setText("תאריך יעד: "+target_date);
+
         if (!task_values.get(i).getTaskNotes().isEmpty())
         {
             tv_task_notes.setText("הערות: "+task_values.get(i).getTaskNotes());
