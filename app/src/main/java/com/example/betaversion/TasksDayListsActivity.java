@@ -1,8 +1,11 @@
 package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
+import static com.example.betaversion.FB_Ref.refLists;
 import static com.example.betaversion.FB_Ref.refTasksDays;
 import static com.example.betaversion.FB_Ref.refTasksDays;
+import static com.example.betaversion.FB_Ref.refUsers;
+import static com.example.betaversion.FB_Ref.referenceStorage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -33,6 +36,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
@@ -43,6 +49,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -107,7 +115,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
                 int id = item.getItemId();
                 if (id==R.id.my_lists)
                 {
-                    Intent ma = new Intent(TasksDayListsActivity.this,MainActivity.class);
+                    Intent ma = new Intent(TasksDayListsActivity.this,TasksDayListsActivity.class);
                     startActivity(ma);
                     finish();
                 }
@@ -230,8 +238,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
-        String title=item.getTitle().toString();
-        if (title.equals("Log Out")) {
+        if (item.getItemId()==R.id.logOut_menu) {
             AlertDialog.Builder adb;
             adb = new AlertDialog.Builder(this);
             adb.setTitle("התנתקות");
@@ -249,6 +256,78 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
                 }
             });
             adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog ad = adb.create();
+            ad.show();
+        }
+        else if (item.getItemId()==R.id.deleteUser_menu) {
+            AlertDialog.Builder adb;
+            adb = new AlertDialog.Builder(this);
+            adb.setTitle("מחיקת חשבון");
+            adb.setMessage("אתה בטוח שברצונך למחוק את חשבונך לצמיתות? ביצוע פעולה זו תגרום לאובדן כל הנתונים הנמצאים באפליקציה");
+            adb.setIcon(R.drawable.delete_user);
+            adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                            SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putBoolean("stayConnect", false);
+                            editor.commit();
+
+                            // Delete the folder
+                            String deleteFileName1 = currentUser.getUid();
+                            StorageReference desertRef = referenceStorage.child(deleteFileName1);
+                            desertRef.listAll()
+                                    .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                                        @Override
+                                        public void onSuccess(ListResult listResult) {
+                                            for (StorageReference item : listResult.getItems()) {
+                                                // All the items under listRef.
+                                                item.delete();
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // Uh-oh, an error occurred!
+                                            Toast.makeText(TasksDayListsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                            // Delete the file
+                            String deleteFileName2 = "User Images/" + currentUser.getUid() + " image.png";
+                            StorageReference desRef = referenceStorage.child(deleteFileName2);
+                            desRef.delete().addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Toast.makeText(TasksDayListsActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            refUsers.child(currentUser.getUid()).removeValue();
+                            refTasksDays.child(currentUser.getUid()).removeValue();
+                            refLists.child(currentUser.getUid()).removeValue();
+
+                            Toast.makeText(TasksDayListsActivity.this, "מחיקת החשבון בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
+
+                            move_login();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(TasksDayListsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }).setNeutralButton("לא", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();

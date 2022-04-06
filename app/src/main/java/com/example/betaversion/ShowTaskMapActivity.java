@@ -1,6 +1,10 @@
 package com.example.betaversion;
 
 import static com.example.betaversion.FB_Ref.mAuth;
+import static com.example.betaversion.FB_Ref.refLists;
+import static com.example.betaversion.FB_Ref.refTasksDays;
+import static com.example.betaversion.FB_Ref.refUsers;
+import static com.example.betaversion.FB_Ref.referenceStorage;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 
 import androidx.annotation.NonNull;
@@ -45,9 +49,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.CancellationTokenSource;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -77,6 +86,8 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
     ProgressDialog progressDialog;
 
+    FirebaseUser currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +106,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.my_lists) {
-                    Intent ma = new Intent(ShowTaskMapActivity.this, MainActivity.class);
+                    Intent ma = new Intent(ShowTaskMapActivity.this, ShowTaskMapActivity.class);
                     startActivity(ma);
                     finish();
                 } else if (id == R.id.about) {
@@ -146,6 +157,8 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         mapView_Task.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        currentUser=mAuth.getCurrentUser();
     }
 
     //show City and Country
@@ -301,8 +314,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String title = item.getTitle().toString();
-        if (title.equals("Log Out")) {
+        if (item.getItemId()==R.id.logOut_menu) {
             AlertDialog.Builder adb;
             adb = new AlertDialog.Builder(this);
             adb.setTitle("התנתקות");
@@ -320,6 +332,78 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                 }
             });
             adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog ad = adb.create();
+            ad.show();
+        }
+        else if (item.getItemId()==R.id.deleteUser_menu) {
+            AlertDialog.Builder adb;
+            adb = new AlertDialog.Builder(this);
+            adb.setTitle("מחיקת חשבון");
+            adb.setMessage("אתה בטוח שברצונך למחוק את חשבונך לצמיתות? ביצוע פעולה זו תגרום לאובדן כל הנתונים הנמצאים באפליקציה");
+            adb.setIcon(R.drawable.delete_user);
+            adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                            SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putBoolean("stayConnect", false);
+                            editor.commit();
+
+                            // Delete the folder
+                            String deleteFileName1 = currentUser.getUid();
+                            StorageReference desertRef = referenceStorage.child(deleteFileName1);
+                            desertRef.listAll()
+                                    .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                                        @Override
+                                        public void onSuccess(ListResult listResult) {
+                                            for (StorageReference item : listResult.getItems()) {
+                                                // All the items under listRef.
+                                                item.delete();
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // Uh-oh, an error occurred!
+                                            Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                            // Delete the file
+                            String deleteFileName2 = "User Images/" + currentUser.getUid() + " image.png";
+                            StorageReference desRef = referenceStorage.child(deleteFileName2);
+                            desRef.delete().addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Toast.makeText(ShowTaskMapActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            refUsers.child(currentUser.getUid()).removeValue();
+                            refTasksDays.child(currentUser.getUid()).removeValue();
+                            refLists.child(currentUser.getUid()).removeValue();
+
+                            Toast.makeText(ShowTaskMapActivity.this, "מחיקת החשבון בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
+
+                            move_login();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }).setNeutralButton("לא", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();

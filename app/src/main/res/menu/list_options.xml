@@ -2,35 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <item
         android:id="@+id/update_list"
-        android:icon="@drawable/update_list"
-        android:title="עדכון" />
+        android:icon="@drawable/update_list_menu"
+        android:title="עדכון"
+        app:showAsAction="withText"/>
 
     <item
         android:id="@+id/delete_list"
         android:icon="@drawable/delete_list"
-        android:title="מחיקה" />
-
-
-
-<!--    <item-->
-<!--        android:id="@+id/more"-->
-<!--        android:title=""-->
-<!--        app:showAsAction="always"-->
-<!--        android:icon="@drawable/ic_baseline_more_vert_24">-->
-
-<!--        <menu>-->
-<!--            <item-->
-<!--                android:title="Update List"-->
-<!--                android:icon="@drawable/update_list"-->
-<!--                android:id="@+id/update_list"-->
-<!--                app:showAsAction="ifRoom"/>-->
-<!--            <item-->
-<!--                android:title="Delete List"-->
-<!--                android:icon="@drawable/delete_list"-->
-<!--                android:id="@+id/delete_list"-->
-<!--                app:showAsAction="ifRoom"/>-->
-<!--        </menu>-->
-<!--    </item>-->
+        android:title="מחיקה"
+        app:showAsAction="withText"/>
 </menu>

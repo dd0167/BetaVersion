@@ -3,8 +3,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/log_out_icon"
-        android:title="Log Out"
-        app:showAsAction="always"/>
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        android:title=""
+        app:showAsAction="always">
+
+        <menu>
+            <item
+                android:id="@+id/runBackground_menu"
+                android:icon="@drawable/play_button"
+                android:title="הפעלת האפליקציה ברקע"/>
+
+            <item
+                android:id="@+id/logOut_menu"
+                android:icon="@drawable/log_out_icon"
+                android:title="התנתקות"/>
+
+            <item
+                android:id="@+id/deleteUser_menu"
+                android:icon="@drawable/delete_user"
+                android:title="מחיקת חשבון"/>
+        </menu>
+    </item>
 
 </menu>
