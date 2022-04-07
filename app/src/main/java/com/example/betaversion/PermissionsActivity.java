@@ -58,7 +58,6 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         if (EasyPermissions.hasPermissions(this,Manifest.permission.READ_EXTERNAL_STORAGE))
         {
             storage_switch.setChecked(true);
-            storage_switch.setClickable(false);
         }
         else
         {
@@ -73,7 +72,6 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_FINE_LOCATION))
         {
             location_switch.setChecked(true);
-            location_switch.setClickable(false);
         }
         else EasyPermissions.requestPermissions(
                 this,
@@ -85,7 +83,6 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_BACKGROUND_LOCATION))
         {
             backgroundLocation_switch.setChecked(true);
-            backgroundLocation_switch.setClickable(false);
 
         }
         else EasyPermissions.requestPermissions(
@@ -225,24 +222,6 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         {
             AppSettingsDialog.Builder builder = new AppSettingsDialog.Builder(this);
             builder.build().show();
-        }
-    }
-
-    public void request_permission(View view) {
-        if (view.getId()==R.id.storage_switch)
-        {
-            EasyPermissions.requestPermissions(
-                    this,
-                    "אפשר גישה לאחסון המכשיר",
-                    REQUEST_CODE_PERMISSION,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            );
-        }
-        else if (view.getId()==R.id.location_switch)
-        {
-        }
-        else if (view.getId()==R.id.backgroundLocation_switch)
-        {
         }
     }
 }

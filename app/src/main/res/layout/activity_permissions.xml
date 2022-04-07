@@ -83,7 +83,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="40"
-                android:onClick="request_permission"/>
+                android:onClick="request_permission"
+                android:clickable="false"/>
 
             <Space
                 android:layout_width="match_parent"
@@ -148,7 +149,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="40"
-                android:onClick="request_permission"/>
+                android:onClick="request_permission"
+                android:clickable="false"/>
 
             <Space
                 android:layout_width="match_parent"
@@ -213,7 +215,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="40"
-                android:onClick="request_permission"/>
+                android:onClick="request_permission"
+                android:clickable="false"/>
 
             <Space
                 android:layout_width="match_parent"
