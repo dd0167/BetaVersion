@@ -68,8 +68,6 @@ import java.util.List;
 
 public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    int REQUEST_LOCATION = 88;
-
     BottomNavigationView bottomNavigationView;
 
     Intent gi;
@@ -179,71 +177,78 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
     }
 
     public void get_current_location(View view) {
-        progressDialog=ProgressDialog.show(this,"מוצא את המיקום הנוכחי","טוען...",true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (!isLocationEnabled())
+        {
+            turnGPSOn();
         }
-        com.google.android.gms.tasks.Task<Location> currentLocationTask = fusedLocationProviderClient.getCurrentLocation(
-                PRIORITY_HIGH_ACCURACY,
-                cancellationTokenSource.getToken()
-        );
-
-        currentLocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                try {
-                    gmap.clear();
-
-                    Geocoder geocoder=new Geocoder(ShowTaskMapActivity.this);
-
-                    List<Address> task_address=geocoder.getFromLocationName(task_clicked.getTaskAddress(),6);
-                    LatLng latLng_task=new LatLng(task_address.get(0).getLatitude(),task_address.get(0).getLongitude());
-
-                    double latitude = location.getLatitude();
-                    double longitude=location.getLongitude();
-
-                    LatLng latLng_current_location = new LatLng(latitude, longitude);
-
-                    show_locationData(latLng_current_location);
-
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng_current_location);
-                    markerOptions.title("המיקום שלי");
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                    //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_icon));
-                    gmap.addMarker(markerOptions);
-
-                    float zoomLevel = 17.0f; //This goes up to 21
-                    gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng_current_location, zoomLevel));
-
-                    // add task list marker
-                    List<Address> addressList=geocoder.getFromLocationName(task_clicked.getTaskAddress(),6);
-                    Address user_address=addressList.get(0);
-                    LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
-                    MarkerOptions markerOptions_task = new MarkerOptions();
-                    markerOptions_task.title(task_clicked.getTaskName());
-                    markerOptions_task.position(latLng);
-                    gmap.addMarker(markerOptions_task);
-
-                    double d = distance(latitude, latLng_task.latitude , longitude, latLng_task.longitude);
-                    String distance = String.valueOf(d);
-                    tv_distance.setText("המרחק בין המטלה לבין מיקומך הנוכחי: " + distance.substring(0, 5) +" ק\"מ");
-                    progressDialog.dismiss();
-                }
-
-                catch (IOException e) {
-                    Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
-                }
+        else
+        {
+            progressDialog=ProgressDialog.show(this,"מוצא את המיקום הנוכחי","טוען...",true);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
             }
-        });
+            com.google.android.gms.tasks.Task<Location> currentLocationTask = fusedLocationProviderClient.getCurrentLocation(
+                    PRIORITY_HIGH_ACCURACY,
+                    cancellationTokenSource.getToken()
+            );
+
+            currentLocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    try {
+                        gmap.clear();
+
+                        Geocoder geocoder=new Geocoder(ShowTaskMapActivity.this);
+
+                        List<Address> task_address=geocoder.getFromLocationName(task_clicked.getTaskAddress(),6);
+                        LatLng latLng_task=new LatLng(task_address.get(0).getLatitude(),task_address.get(0).getLongitude());
+
+                        double latitude = location.getLatitude();
+                        double longitude=location.getLongitude();
+
+                        LatLng latLng_current_location = new LatLng(latitude, longitude);
+
+                        show_locationData(latLng_current_location);
+
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latLng_current_location);
+                        markerOptions.title("המיקום שלי");
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                        //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_icon));
+                        gmap.addMarker(markerOptions);
+
+                        float zoomLevel = 17.0f; //This goes up to 21
+                        gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng_current_location, zoomLevel));
+
+                        // add task list marker
+                        List<Address> addressList=geocoder.getFromLocationName(task_clicked.getTaskAddress(),6);
+                        Address user_address=addressList.get(0);
+                        LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
+                        MarkerOptions markerOptions_task = new MarkerOptions();
+                        markerOptions_task.title(task_clicked.getTaskName());
+                        markerOptions_task.position(latLng);
+                        gmap.addMarker(markerOptions_task);
+
+                        double d = distance(latitude, latLng_task.latitude , longitude, latLng_task.longitude);
+                        String distance = String.valueOf(d);
+                        tv_distance.setText("המרחק בין המטלה לבין מיקומך הנוכחי: " + distance.substring(0, 5) +" ק\"מ");
+                        progressDialog.dismiss();
+                    }
+
+                    catch (IOException e) {
+                        Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                    }
+                }
+            });
+        }
     }
 
     public boolean isLocationEnabled() {
