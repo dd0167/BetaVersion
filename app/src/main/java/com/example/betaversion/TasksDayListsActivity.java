@@ -115,7 +115,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
                 int id = item.getItemId();
                 if (id==R.id.my_lists)
                 {
-                    Intent ma = new Intent(TasksDayListsActivity.this,TasksDayListsActivity.class);
+                    Intent ma = new Intent(TasksDayListsActivity.this,MainActivity.class);
                     startActivity(ma);
                     finish();
                 }

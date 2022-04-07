@@ -121,9 +121,7 @@ import petrov.kristiyan.colorpicker.ColorPicker;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener ,EasyPermissions.PermissionCallbacks{
-
-    public static final int REQUEST_CODE_LOCATION_PERMISSION =0;
+public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     DatabaseReference reference;
 
@@ -223,7 +221,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.my_lists) {
-                    Intent ma = new Intent(TasksActivity.this, TasksActivity.class);
+                    Intent ma = new Intent(TasksActivity.this, MainActivity.class);
                     startActivity(ma);
                     finish();
                 } else if (id == R.id.about) {
@@ -262,20 +260,14 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         cancellationTokenSource = new CancellationTokenSource();
 
-        if (hasLocationPermissions())
+
+        if (isLocationEnabled())
         {
-            if (isLocationEnabled())
-            {
-                set_currentLocation();
-            }
-            else
-            {
-                turnGPSOn();
-            }
+            set_currentLocation();
         }
         else
         {
-            requestPermissions();
+            turnGPSOn();
         }
     }
 
@@ -1128,64 +1120,5 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 }
             }
         });
-    }
-
-    public boolean hasLocationPermissions() {
-        return EasyPermissions.hasPermissions(
-                this,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        );
-    }
-
-    public void requestPermissions() {
-        if (hasLocationPermissions())
-        {
-            return;
-        }
-        EasyPermissions.requestPermissions(
-                this,
-                "You need to accept location permissions to use this app",
-                REQUEST_CODE_LOCATION_PERMISSION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        );
-
-        EasyPermissions.requestPermissions(
-                this,
-                "You need to accept location permissions to use this app",
-                REQUEST_CODE_LOCATION_PERMISSION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        );
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        if (isLocationEnabled())
-        {
-            set_currentLocation();
-        }
-        else
-        {
-            turnGPSOn();
-        }
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        if (EasyPermissions.somePermissionPermanentlyDenied(this,perms))
-        {
-            AppSettingsDialog.Builder builder = new AppSettingsDialog.Builder(this);
-            builder.build().show();
-        }
-        else
-        {
-            requestPermissions();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
     }
 }

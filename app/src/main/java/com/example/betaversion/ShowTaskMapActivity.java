@@ -23,8 +23,11 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,7 +109,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.my_lists) {
-                    Intent ma = new Intent(ShowTaskMapActivity.this, ShowTaskMapActivity.class);
+                    Intent ma = new Intent(ShowTaskMapActivity.this, MainActivity.class);
                     startActivity(ma);
                     finish();
                 } else if (id == R.id.about) {
@@ -141,10 +144,6 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         tv_task_name.setText(task_clicked.getTaskName());
         tv_task_address_map.setText("כתובת המטלה: " + task_clicked.getTaskAddress());
 
-        //location permission
-        getLocation();
-        checkPermission();
-
         tv_task_current_address = (TextView) findViewById(R.id.tv_task_current_address);
         tv_distance = (TextView) findViewById(R.id.tv_distance);
         mapView_Task = (MapView) findViewById(R.id.mapView_task);
@@ -159,6 +158,11 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         currentUser=mAuth.getCurrentUser();
+
+        if (!isLocationEnabled())
+        {
+            turnGPSOn();
+        }
     }
 
     //show City and Country
@@ -242,68 +246,81 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         });
     }
 
-    public void checkPermission() {
-        if (ActivityCompat.checkSelfPermission(ShowTaskMapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //when permission is granted
-            requestLocation();
-        } else {
-            //when permission is denied
-            ActivityCompat.requestPermissions(ShowTaskMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 23);
+    public boolean isLocationEnabled() {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        }else{
+            locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
         }
+
+
     }
 
-    public void requestLocation() {
-        LocationRequest request = LocationRequest.create();
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        request.setInterval(5000);
-        request.setFastestInterval(2000);
+    public void turnGPSOn() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(30 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);
+
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(request);
+                .addLocationRequest(locationRequest);
+
         builder.setAlwaysShow(true);
 
-        com.google.android.gms.tasks.Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getApplicationContext())
-                .checkLocationSettings(builder.build());
-        result.addOnCompleteListener(task -> {
-            try {
-                LocationSettingsResponse response = task.getResult(ApiException.class);
-                // do here your task with your location
-            } catch (ApiException e) {
-                switch (e.getStatusCode()) {
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        try {
-                            ResolvableApiException resolvableApiException = (ResolvableApiException) e;
-                            resolvableApiException.startResolutionForResult(ShowTaskMapActivity.this, REQUEST_LOCATION);
-                        } catch (IntentSender.SendIntentException sendIntentException) {
-                        }
-                        break;
+        com.google.android.gms.tasks.Task<LocationSettingsResponse> result =
+                LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
 
-                    //when device doesn't have location feature
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        break;
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+
+
+            @Override
+            public void onComplete(com.google.android.gms.tasks.Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    // All location settings are satisfied. The client can initialize location
+                    // requests here.
+
+                } catch (ApiException exception) {
+                    switch (exception.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            // Location settings are not satisfied. But could be fixed by showing the
+                            // user a dialog.
+                            try {
+                                // Cast to a resolvable exception.
+                                ResolvableApiException resolvable = (ResolvableApiException) exception;
+                                // Show the dialog by calling startResolutionForResult(),
+                                // and check the result in onActivityResult().
+                                resolvable.startResolutionForResult(
+                                        ShowTaskMapActivity.this,
+                                        101);
+                            } catch (IntentSender.SendIntentException e) {
+                                // Ignore the error.
+                            } catch (ClassCastException e) {
+                                // Ignore, should be an impossible error.
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            // Location settings are not satisfied. However, we have no way to fix the
+                            // settings so we won't show the dialog.
+                            break;
+                    }
                 }
             }
         });
-    }
-
-    public void getLocation() {
-        PermissionListener permissionListener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                //Toast.makeText(ShowTaskMapActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onPermissionDenied(List<String> deniedPermissions) {
-                //Toast.makeText(ShowTaskMapActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        TedPermission.with(this)
-                .setPermissionListener(permissionListener)
-                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-                .check();
     }
 
     @Override
