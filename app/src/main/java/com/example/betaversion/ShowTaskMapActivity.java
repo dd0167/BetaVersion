@@ -157,9 +157,9 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
         currentUser=mAuth.getCurrentUser();
 
-        if (!isLocationEnabled())
+        if (!LocationHelper.isGPSOn(this))
         {
-            turnGPSOn();
+            LocationHelper.turnGPSOn(this);
         }
     }
 
@@ -177,9 +177,9 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
     }
 
     public void get_current_location(View view) {
-        if (!isLocationEnabled())
+        if (!LocationHelper.isGPSOn(this))
         {
-            turnGPSOn();
+            LocationHelper.turnGPSOn(this);
         }
         else
         {
@@ -249,83 +249,6 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                 }
             });
         }
-    }
-
-    public boolean isLocationEnabled() {
-        int locationMode = 0;
-        String locationProviders;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            try {
-                locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-
-        }else{
-            locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            return !TextUtils.isEmpty(locationProviders);
-        }
-
-
-    }
-
-    public void turnGPSOn() {
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(30 * 1000);
-        locationRequest.setFastestInterval(5 * 1000);
-
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
-
-        builder.setAlwaysShow(true);
-
-        com.google.android.gms.tasks.Task<LocationSettingsResponse> result =
-                LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
-
-        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-
-
-            @Override
-            public void onComplete(com.google.android.gms.tasks.Task<LocationSettingsResponse> task) {
-                try {
-                    LocationSettingsResponse response = task.getResult(ApiException.class);
-                    // All location settings are satisfied. The client can initialize location
-                    // requests here.
-
-                } catch (ApiException exception) {
-                    switch (exception.getStatusCode()) {
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location settings are not satisfied. But could be fixed by showing the
-                            // user a dialog.
-                            try {
-                                // Cast to a resolvable exception.
-                                ResolvableApiException resolvable = (ResolvableApiException) exception;
-                                // Show the dialog by calling startResolutionForResult(),
-                                // and check the result in onActivityResult().
-                                resolvable.startResolutionForResult(
-                                        ShowTaskMapActivity.this,
-                                        101);
-                            } catch (IntentSender.SendIntentException e) {
-                                // Ignore the error.
-                            } catch (ClassCastException e) {
-                                // Ignore, should be an impossible error.
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have no way to fix the
-                            // settings so we won't show the dialog.
-                            break;
-                    }
-                }
-            }
-        });
     }
 
     @Override

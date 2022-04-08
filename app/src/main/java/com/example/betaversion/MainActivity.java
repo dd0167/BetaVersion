@@ -512,27 +512,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    public boolean isGPSOn() {
-        int locationMode = 0;
-        String locationProviders;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            try {
-                locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-
-        }else{
-            locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            return !TextUtils.isEmpty(locationProviders);
-        }
-    }
-
     public void check_permissions() {
         if (!PermissionsActivity.checkAllPermissions(this))
         {
@@ -540,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(pa);
             finish();
         }
-        else if (!isGPSOn())
+        else if (!LocationHelper.isGPSOn(this))
         {
             Intent pa = new Intent(this, PermissionsActivity.class);
             startActivity(pa);
