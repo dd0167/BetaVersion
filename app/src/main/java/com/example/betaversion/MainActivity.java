@@ -513,13 +513,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void check_permissions() {
-        if (!PermissionsActivity.checkAllPermissions(this))
-        {
-            Intent pa = new Intent(this, PermissionsActivity.class);
-            startActivity(pa);
-            finish();
-        }
-        else if (!LocationHelper.isGPSOn(this))
+        if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
         {
             Intent pa = new Intent(this, PermissionsActivity.class);
             startActivity(pa);
