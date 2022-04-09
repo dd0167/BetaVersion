@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -162,6 +163,8 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
         }
+
+        check_permissions();
     }
 
     @Override
@@ -269,6 +272,12 @@ public class SettingsActivity extends AppCompatActivity {
             });
             AlertDialog ad = adb.create();
             ad.show();
+        }
+        else if (item.getItemId()==R.id.runBackground_menu)
+        {
+            Toast.makeText(this, "האפליקציה פועלת ברקע", Toast.LENGTH_SHORT).show();
+            Intent serviceIntent = new Intent(this, BackgroundService.class);
+            ContextCompat.startForegroundService(this, serviceIntent);
         }
         return true;
     }
@@ -526,5 +535,14 @@ public class SettingsActivity extends AppCompatActivity {
         Intent ma = new Intent(this, MainActivity.class);
         startActivity(ma);
         finish();
+    }
+
+    public void check_permissions() {
+        if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
+        {
+            Intent pa = new Intent(this, PermissionsActivity.class);
+            startActivity(pa);
+            finish();
+        }
     }
 }

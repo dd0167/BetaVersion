@@ -260,15 +260,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         cancellationTokenSource = new CancellationTokenSource();
 
-
-        if (LocationHelper.isGPSOn(this))
-        {
-            set_currentLocation();
-        }
-        else
-        {
-            LocationHelper.turnGPSOn(this);
-        }
+        check_permissions();
     }
 
     public void get_data_from_intent() {
@@ -431,6 +423,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             AlertDialog ad = adb.create();
             ad.show();
         }
+        else if (item.getItemId()==R.id.runBackground_menu)
+        {
+            Toast.makeText(this, "האפליקציה פועלת ברקע", Toast.LENGTH_SHORT).show();
+            Intent serviceIntent = new Intent(this, BackgroundService.class);
+            ContextCompat.startForegroundService(this, serviceIntent);
+        }
         return true;
     }
 
@@ -517,7 +515,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                             public void onSuccess(Uri uri) {
                                 imageUri = uri;
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
-                                Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),0);
+                                Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1);
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                                 Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                                 change_data_to_default();
@@ -536,7 +534,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 });
             } else {
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
-                Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),0);
+                Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1);
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                 Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                 change_data_to_default();
@@ -563,7 +561,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                         @Override
                         public void onSuccess(Uri uri) {
                             imageUri = uri;
-                            Task task = new Task(taskName, correct_address(taskAddress), date, time, task_creationDate, taskNotes, task_color, imageUri.toString(),0);
+                            Task task = new Task(taskName, correct_address(taskAddress), date, time, task_creationDate, taskNotes, task_color, imageUri.toString(),-1);
                             reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                             Toast.makeText(TasksActivity.this, "יצירת המטלה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
                             change_data_to_default();
@@ -885,7 +883,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             {
                 update_task_currentLocation();
 
-                Query query = reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").orderByChild("Task Data/taskDistance").startAt(0.001);
+                Query query = reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").orderByChild("Task Data/taskDistance").startAt(0);
                 query.addListenerForSingleValueEvent(tasks_array_listener);
 
                 chip_name.setClickable(true);
@@ -1043,5 +1041,14 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         // calculate the result
         return(c * r);
+    }
+
+    public void check_permissions() {
+        if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
+        {
+            Intent pa = new Intent(this, PermissionsActivity.class);
+            startActivity(pa);
+            finish();
+        }
     }
 }

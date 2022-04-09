@@ -113,6 +113,8 @@ public class CreditsActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "אודות" + "</font>"));
+
+        check_permissions();
     }
 
     @Override
@@ -221,7 +223,22 @@ public class CreditsActivity extends AppCompatActivity {
             AlertDialog ad = adb.create();
             ad.show();
         }
+        else if (item.getItemId()==R.id.runBackground_menu)
+        {
+            Toast.makeText(this, "האפליקציה פועלת ברקע", Toast.LENGTH_SHORT).show();
+            Intent serviceIntent = new Intent(this, BackgroundService.class);
+            ContextCompat.startForegroundService(this, serviceIntent);
+        }
         return true;
+    }
+
+    public void check_permissions() {
+        if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
+        {
+            Intent pa = new Intent(this, PermissionsActivity.class);
+            startActivity(pa);
+            finish();
+        }
     }
 
     public void move_login() {

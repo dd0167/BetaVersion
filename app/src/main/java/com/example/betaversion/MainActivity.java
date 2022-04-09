@@ -9,6 +9,7 @@ import static com.example.betaversion.FB_Ref.referenceStorage;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -270,6 +271,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             });
             AlertDialog ad = adb.create();
             ad.show();
+        }
+        else if (item.getItemId()==R.id.runBackground_menu)
+        {
+            Toast.makeText(this, "האפליקציה פועלת ברקע", Toast.LENGTH_SHORT).show();
+            Intent serviceIntent = new Intent(this, BackgroundService.class);
+            ContextCompat.startForegroundService(this, serviceIntent);
         }
         return true;
     }

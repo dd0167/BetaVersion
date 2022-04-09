@@ -10,6 +10,7 @@ import static com.example.betaversion.FB_Ref.referenceStorage;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -159,6 +160,8 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         chip_name=(Chip) findViewById(R.id.sort_by_name);
         chip_date=(Chip) findViewById(R.id.sort_by_date);
         chip_name.setClickable(false);
+
+        check_permissions();
     }
 
     public boolean is_Internet_Connected() {
@@ -335,6 +338,12 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             });
             AlertDialog ad = adb.create();
             ad.show();
+        }
+        else if (item.getItemId()==R.id.runBackground_menu)
+        {
+            Toast.makeText(this, "האפליקציה פועלת ברקע", Toast.LENGTH_SHORT).show();
+            Intent serviceIntent = new Intent(this, BackgroundService.class);
+            ContextCompat.startForegroundService(this, serviceIntent);
         }
         return true;
     }
@@ -559,6 +568,15 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
             chip_date.setClickable(false);
             chip_name.setClickable(true);
+        }
+    }
+
+    public void check_permissions() {
+        if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
+        {
+            Intent pa = new Intent(this, PermissionsActivity.class);
+            startActivity(pa);
+            finish();
         }
     }
 }

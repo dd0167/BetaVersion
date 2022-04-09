@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -157,10 +158,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
         currentUser=mAuth.getCurrentUser();
 
-        if (!LocationHelper.isGPSOn(this))
-        {
-            LocationHelper.turnGPSOn(this);
-        }
+        check_permissions();
     }
 
     //show City and Country
@@ -357,6 +355,12 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
             AlertDialog ad = adb.create();
             ad.show();
         }
+        else if (item.getItemId()==R.id.runBackground_menu)
+        {
+            Toast.makeText(this, "האפליקציה פועלת ברקע", Toast.LENGTH_SHORT).show();
+            Intent serviceIntent = new Intent(this, BackgroundService.class);
+            ContextCompat.startForegroundService(this, serviceIntent);
+        }
         return true;
     }
 
@@ -509,5 +513,14 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
     public void onLowMemory() {
         super.onLowMemory();
         mapView_Task.onLowMemory();
+    }
+
+    public void check_permissions() {
+        if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
+        {
+            Intent pa = new Intent(this, PermissionsActivity.class);
+            startActivity(pa);
+            finish();
+        }
     }
 }

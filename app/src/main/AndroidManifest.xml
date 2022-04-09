@@ -74,6 +74,9 @@
             android:value="AIzaSyCq4mu1gZ6DF0wtMgOrxgfOWq4Nr2mCQbo" />
 
         <receiver android:name=".AlertReceiver" />
+
+        <service android:name=".BackgroundService"/>
+        <receiver android:name=".NotificationService"/>
     </application>
 
 </manifest>
