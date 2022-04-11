@@ -247,6 +247,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         read_tasks();
 
+        showTasksHasTheyDatePassed();
+
         task_clicked = null;
         is_image_changed = false;
 
@@ -1050,5 +1052,66 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             startActivity(pa);
             finish();
         }
+    }
+
+    public void showTasksHasTheyDatePassed()
+    {
+        reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Task task = data.child("Task Data").getValue(Task.class);
+
+                    if (isDateOfTaskHasPassed(task))
+                    {
+                        AlertDialog.Builder adb;
+                        adb = new AlertDialog.Builder(TasksActivity.this);
+                        adb.setTitle("זמן היעד של המטלה '"+task.getTaskName()+"' עבר");
+                        adb.setMessage("האם למחוק את המטלה?");
+                        adb.setIcon(R.drawable.time_icon);
+                        adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").removeValue();
+                                Toast.makeText(TasksActivity.this, "מחיקת המטלה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog ad = adb.create();
+                        ad.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(TasksActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public boolean isDateOfTaskHasPassed(Task task)
+    {
+        String task_date=task.getTaskDay();
+        String task_time=task.getTaskHour();
+        String[] date=task_date.split("-");
+        String task_date_time=date[2]+"-"+date[1]+"-"+date[0]+" "+task_time;
+
+        try {
+            if (new SimpleDateFormat("dd-MM-yyyy HH:mm", new Locale("he")).parse(task_date_time).before(new Date())) {
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        return false;
     }
 }

@@ -49,7 +49,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 public class BackgroundService extends Service {
@@ -130,7 +134,7 @@ public class BackgroundService extends Service {
 
             for (Task task: tasks)
             {
-               if (getDistance(task) <=1)
+               if (getDistance(task) <=1 && !isDateOfTaskHasPassed(task))
                {
                   show_notification(task);
                }
@@ -351,27 +355,23 @@ public class BackgroundService extends Service {
       return final_distance;
    }
 
-   // Load bitmap from image url on background thread and display image notification
-   private Bitmap getBitmapAsyncAndDoWork(String imageUrl) {
+   public boolean isDateOfTaskHasPassed(Task task)
+   {
+      String task_date=task.getTaskDay();
+      String task_time=task.getTaskHour();
+      String[] date=task_date.split("-");
+      String task_date_time=date[2]+"-"+date[1]+"-"+date[0]+" "+task_time;
 
-      final Bitmap[] bitmap = {null};
+      try {
+         if (new SimpleDateFormat("dd-MM-yyyy HH:mm", new Locale("he")).parse(task_date_time).before(new Date())) {
+            return true;
+         }
+      }
+      catch (Exception e)
+      {
+         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+      }
 
-      Glide.with(getApplicationContext())
-              .asBitmap()
-              .load(imageUrl)
-              .into(new CustomTarget<Bitmap>() {
-                 @Override
-                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-
-                    bitmap[0] = resource;
-                    // TODO Do some work: pass this bitmap
-                    // return bitmap[0]
-                 }
-
-                 @Override
-                 public void onLoadCleared(@Nullable Drawable placeholder) {
-                 }
-              });
-      return bitmap[0];
+      return false;
    }
 }
