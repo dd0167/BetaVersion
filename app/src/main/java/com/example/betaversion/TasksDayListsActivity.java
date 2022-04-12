@@ -157,6 +157,8 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
         read_tasksDays();
 
+        showDaysHasTheyDatePassed();
+
         chip_name=(Chip) findViewById(R.id.sort_by_name);
         chip_date=(Chip) findViewById(R.id.sort_by_date);
         chip_name.setClickable(false);
@@ -526,7 +528,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
             adb.setTitle("מחיקת היום המרוכז");
-            adb.setMessage("אתה בטוח שברצונך למחוק את היום המרוכז "+tasksDay_clicked.getTasksDayName()+"?");
+            adb.setMessage("אתה בטוח שברצונך למחוק את היום המרוכז '"+tasksDay_clicked.getTasksDayName()+"'?");
             adb.setIcon(R.drawable.delete_list);
             adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
@@ -578,5 +580,64 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             startActivity(pa);
             finish();
         }
+    }
+
+    public void showDaysHasTheyDatePassed()
+    {
+        refTasksDays.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot data : snapshot.getChildren()) {
+                    TasksDay tasksDay=data.child("Tasks Day Data").getValue(TasksDay.class);
+
+                    if (isDateOfDayHasPassed(tasksDay)) {
+                        AlertDialog.Builder adb;
+                        adb = new AlertDialog.Builder(TasksDayListsActivity.this);
+                        adb.setTitle("תאריך היעד של היום המרוכז '" + tasksDay.getTasksDayName() + "' עבר");
+                        adb.setMessage("האם למחוק את היום המרוכז?");
+                        adb.setIcon(R.drawable.time_icon);
+                        adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                refTasksDays.child(currentUser.getUid()).child(tasksDay.getTasksDayName()).removeValue();
+                                Toast.makeText(TasksDayListsActivity.this, "מחיקת היום המרוכז בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        adb.setNeutralButton("לא", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog ad = adb.create();
+                        ad.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(TasksDayListsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public boolean isDateOfDayHasPassed(TasksDay tasksDay)
+    {
+        String taskDay_date=tasksDay.getTasksDayDate();
+        String[] date=taskDay_date.split("-");
+        String task_date_time=date[2]+"-"+date[1]+"-"+date[0];
+
+        try {
+            if (new SimpleDateFormat("dd-MM-yyyy", new Locale("he")).parse(task_date_time).before(new Date())) {
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        return false;
     }
 }

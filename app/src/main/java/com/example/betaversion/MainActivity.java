@@ -475,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             AlertDialog.Builder adb;
             adb=new AlertDialog.Builder(this);
             adb.setTitle("מחיקת הרשימה");
-            adb.setMessage("אתה בטוח שברצונך למחוק את הרשימה "+list_clicked.getListName()+"?");
+            adb.setMessage("אתה בטוח שברצונך למחוק את הרשימה '"+list_clicked.getListName()+"'?");
             adb.setIcon(R.drawable.delete_list);
             adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override

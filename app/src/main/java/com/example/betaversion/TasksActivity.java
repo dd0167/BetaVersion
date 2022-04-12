@@ -845,7 +845,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
         adb.setTitle("מחיקת המטלה");
-        adb.setMessage("אתה בטוח שברצונך למחוק את המטלה " + task_clicked.getTaskName() + "?");
+        adb.setMessage("אתה בטוח שברצונך למחוק את המטלה '" + task_clicked.getTaskName() + "'?");
         adb.setIcon(R.drawable.delete_list);
         adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
             @Override
