@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
     Switch location_switch;
     Switch backgroundLocation_switch;
 
+    LinearLayout linearLayout_storage,linearLayout_location,linearLayout_backgroundLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,9 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         storage_switch=(Switch) findViewById(R.id.storage_switch);
         location_switch=(Switch) findViewById(R.id.location_switch);
         backgroundLocation_switch=(Switch) findViewById(R.id.backgroundLocation_switch);
+        linearLayout_storage=(LinearLayout) findViewById(R.id.linearLayout_storage);
+        linearLayout_location=(LinearLayout) findViewById(R.id.linearLayout_location);
+        linearLayout_backgroundLocation=(LinearLayout) findViewById(R.id.linearLayout_backgroundLocation);
 
         isPermissions();
     }
@@ -59,38 +65,15 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         {
             storage_switch.setChecked(true);
         }
-        else
-        {
-            EasyPermissions.requestPermissions(
-                    this,
-                    "אפשר גישה לאחסון המכשיר",
-                    REQUEST_CODE_PERMISSION,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            );
-        }
 
         if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_FINE_LOCATION))
         {
             location_switch.setChecked(true);
         }
-        else EasyPermissions.requestPermissions(
-                this,
-                "אפשר גישה למיקום המכשיר",
-                REQUEST_CODE_PERMISSION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        );
 
-        if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_BACKGROUND_LOCATION))
-        {
+        if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
             backgroundLocation_switch.setChecked(true);
-
         }
-        else EasyPermissions.requestPermissions(
-                this,
-                "אפשר גישה למיקום המכשיר ברקע",
-                REQUEST_CODE_PERMISSION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        );
 
         if (!LocationHelper.isGPSOn(this))
         {
@@ -147,6 +130,36 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         {
             AppSettingsDialog.Builder builder = new AppSettingsDialog.Builder(this);
             builder.build().show();
+        }
+    }
+
+    public void requestPermission(View view) {
+        if (view.getId()==R.id.linearLayout_storage)
+        {
+            EasyPermissions.requestPermissions(
+                    this,
+                    "אפשר גישה לאחסון המכשיר",
+                    REQUEST_CODE_PERMISSION,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            );
+        }
+        else if (view.getId()==R.id.linearLayout_location)
+        {
+            EasyPermissions.requestPermissions(
+                    this,
+                    "אפשר גישה למיקום המכשיר",
+                    REQUEST_CODE_PERMISSION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            );
+        }
+        else if (view.getId()==R.id.linearLayout_backgroundLocation)
+        {
+            EasyPermissions.requestPermissions(
+                    this,
+                    "אפשר גישה למיקום המכשיר ברקע",
+                    REQUEST_CODE_PERMISSION,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            );
         }
     }
 }

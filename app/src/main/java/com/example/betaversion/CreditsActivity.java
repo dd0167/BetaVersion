@@ -62,11 +62,7 @@ import java.util.Date;
 
 public class CreditsActivity extends AppCompatActivity {
 
-    private static final String CHANNEL_ID = "Notifications";
     BottomNavigationView bottomNavigationView;
-
-    Runnable runnable;
-    Handler handler;
 
     FirebaseUser currentUser;
 
@@ -78,7 +74,7 @@ public class CreditsActivity extends AppCompatActivity {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setBackground(null);
-        bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false);
+        bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false).setIcon(R.drawable.ic_notification);
 
         bottomNavigationView.getMenu().findItem(R.id.about).setEnabled(false);
         bottomNavigationView.setSelectedItemId(R.id.about);
@@ -113,8 +109,6 @@ public class CreditsActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "אודות" + "</font>"));
-
-        check_permissions();
     }
 
     @Override
@@ -232,15 +226,6 @@ public class CreditsActivity extends AppCompatActivity {
         return true;
     }
 
-    public void check_permissions() {
-        if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
-        {
-            Intent pa = new Intent(this, PermissionsActivity.class);
-            startActivity(pa);
-            finish();
-        }
-    }
-
     public void move_login() {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
@@ -251,149 +236,5 @@ public class CreditsActivity extends AppCompatActivity {
         Intent ma = new Intent(this, MainActivity.class);
         startActivity(ma);
         finish();
-    }
-
-    public void notification(View view) {
-        Toast.makeText(this, "notification", Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        for (int i = 0; i < 1; i++) {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.task_icon))
-                    .setContentTitle("Notification Title" + i)
-                    .setContentText("textContent" + i)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    // Set the intent that will fire when the user taps the notification
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true);
-
-
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-            int notification_amount = i;//(0=1 notification)
-
-            createNotificationChannel();
-
-            // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(notification_amount, builder.build());
-        }
-    }
-
-    public void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = CHANNEL_ID;
-            String description = "description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void start(View view) {
-        Toast.makeText(this, "start button", Toast.LENGTH_SHORT).show();
-
-
-
-//        int milliseconds=10000;
-//        handler = new Handler(Looper.getMainLooper());
-//        runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                // Do the task...
-//                //Toast.makeText(CreditsActivity.this, "hi", Toast.LENGTH_SHORT).show();
-//
-//                Calendar c = Calendar.getInstance();
-//                c.set(Calendar.HOUR_OF_DAY, c.getTime().getHours());
-//                c.set(Calendar.MINUTE, c.getTime().getMinutes());
-//                c.set(Calendar.SECOND, c.getTime().getSeconds()+5);
-//                startAlarm(c);
-//
-//                Log.e("Alarm",c.getTime().toString());
-//
-//                handler.postDelayed(this, milliseconds); // Optional, to repeat the task.
-//            }
-//        };
-//        handler.postDelayed(runnable, milliseconds);
-
-
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, c.getTime().getHours());
-        c.set(Calendar.MINUTE, c.getTime().getMinutes());
-        c.set(Calendar.SECOND, c.getTime().getSeconds()+5);
-        startAlarm(c);
-    }
-
-    public void stop(View view)
-    {
-        Toast.makeText(this, "stop button", Toast.LENGTH_SHORT).show();
-
-        cancelAlarm();
-    }
-
-
-
-
-    public void startAlarm(Calendar c) {
-//        int milliseconds=5000;
-//
-//        handler = new Handler(Looper.getMainLooper());
-//        runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                // Do the task...
-//                Toast.makeText(CreditsActivity.this, "hi", Toast.LENGTH_SHORT).show();
-//                handler.postDelayed(this, milliseconds); // Optional, to repeat the task.
-//            }
-//        };
-//        handler.postDelayed(runnable, milliseconds);
-
-
-
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
-
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-
-        Toast.makeText(this, "notification", Toast.LENGTH_SHORT).show();
-
-        //AlertReceiver.show_notification(getApplicationContext());
-    }
-
-    public void cancelAlarm() {
-        // Stop a repeating task like this.
-        //handler.removeCallbacks(runnable);
-
-
-
-
-
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
-
-        alarmManager.cancel(pendingIntent);
-
-
-        AlertReceiver.stop_hi();
     }
 }

@@ -49,7 +49,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout_storage"
+            android:onClick="requestPermission">
 
             <Space
                 android:layout_width="match_parent"
@@ -115,7 +117,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout_location"
+            android:onClick="requestPermission">
 
             <Space
                 android:layout_width="match_parent"
@@ -181,7 +185,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout_backgroundLocation"
+            android:onClick="requestPermission">
 
             <Space
                 android:layout_width="match_parent"

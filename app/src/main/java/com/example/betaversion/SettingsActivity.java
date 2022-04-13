@@ -84,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        bottomNavigationView=(BottomNavigationView) findViewById(R.id.bottomNavigationView);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setBackground(null);
         bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false);
@@ -96,27 +96,20 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if (id==R.id.my_lists)
-                {
-                    Intent ma = new Intent(SettingsActivity.this,MainActivity.class);
+                if (id == R.id.my_lists) {
+                    Intent ma = new Intent(SettingsActivity.this, MainActivity.class);
                     startActivity(ma);
                     finish();
-                }
-                else if (id==R.id.about)
-                {
+                } else if (id == R.id.about) {
                     Intent ca = new Intent(SettingsActivity.this, CreditsActivity.class);
                     startActivity(ca);
                     finish();
-                }
-                else if (id==R.id.settings)
-                {
+                } else if (id == R.id.settings) {
                     Intent sa = new Intent(SettingsActivity.this, SettingsActivity.class);
                     startActivity(sa);
                     finish();
-                }
-                else if (id==R.id.tasks_day)
-                {
-                    Intent td=new Intent(SettingsActivity.this,TasksDayListsActivity.class);
+                } else if (id == R.id.tasks_day) {
+                    Intent td = new Intent(SettingsActivity.this, TasksDayListsActivity.class);
                     startActivity(td);
                     finish();
                 }
@@ -128,18 +121,17 @@ public class SettingsActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "הגדרות" + "</font>"));
 
-        user_image_settings=(ImageView) findViewById(R.id.user_image_settings);
-        et_first_name_settings=(EditText) findViewById(R.id.et_first_name_settings);
-        et_last_name_settings=(EditText) findViewById(R.id.et_last_name_settings);
-        et_age_settings=(EditText) findViewById(R.id.et_age_settings);
-        et_home_address_settings=(EditText) findViewById(R.id.et_home_address_settings);
-        et_phone_number_settings=(EditText) findViewById(R.id.et_phone_number_settings);
-        checkBox_settings=(CheckBox) findViewById(R.id.checkBox_settings);
+        user_image_settings = (ImageView) findViewById(R.id.user_image_settings);
+        et_first_name_settings = (EditText) findViewById(R.id.et_first_name_settings);
+        et_last_name_settings = (EditText) findViewById(R.id.et_last_name_settings);
+        et_age_settings = (EditText) findViewById(R.id.et_age_settings);
+        et_home_address_settings = (EditText) findViewById(R.id.et_home_address_settings);
+        et_phone_number_settings = (EditText) findViewById(R.id.et_phone_number_settings);
+        checkBox_settings = (CheckBox) findViewById(R.id.checkBox_settings);
 
         currentUser = mAuth.getCurrentUser();
 
-        if (currentUser!=null)
-        {
+        if (currentUser != null) {
             refUsers.child(currentUser.getUid()).child("User Data").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dS) {
@@ -152,19 +144,18 @@ public class SettingsActivity extends AppCompatActivity {
                     et_age_settings.setText(getUser.getUserAge());
                     et_home_address_settings.setText(getUser.getUserHomeAddress());
                     et_phone_number_settings.setText(getUser.getUserPhoneNumber());
-                    SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
-                    boolean isChecked = settings.getBoolean("stayConnect",false);
+                    SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
+                    boolean isChecked = settings.getBoolean("stayConnect", false);
                     checkBox_settings.setChecked(isChecked);
-                    imageUri=Uri.parse(getUser.getUserPictureUid());
+                    imageUri = Uri.parse(getUser.getUserPictureUid());
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     Toast.makeText(SettingsActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
-
-        check_permissions();
     }
 
     @Override
@@ -535,14 +526,5 @@ public class SettingsActivity extends AppCompatActivity {
         Intent ma = new Intent(this, MainActivity.class);
         startActivity(ma);
         finish();
-    }
-
-    public void check_permissions() {
-        if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
-        {
-            Intent pa = new Intent(this, PermissionsActivity.class);
-            startActivity(pa);
-            finish();
-        }
     }
 }

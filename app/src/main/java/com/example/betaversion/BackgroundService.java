@@ -11,6 +11,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +22,10 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -34,7 +39,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,7 +55,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -137,6 +140,17 @@ public class BackgroundService extends Service {
                if (getDistance(task) <=1 && !isDateOfTaskHasPassed(task))
                {
                   show_notification(task);
+//                  try
+//                  {
+//
+//                     Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/notification_sound");
+//                     Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
+//                     r.play();
+//                  }
+//                  catch (Exception e)
+//                  {
+//                     e.printStackTrace();
+//                  }
                }
             }
             // לבדוק כאן את מיקום המשתמש ובהתאם לקילומטר אחד להוציא התראות
@@ -153,7 +167,11 @@ public class BackgroundService extends Service {
       Random random=new Random();
       int Unique_Integer_Number= random.nextInt();
 
+      Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/notification_sound");
+      Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
+
       NotificationChannel channel = new NotificationChannel("channelID", "Alert Notification", NotificationManager.IMPORTANCE_HIGH);
+      channel.setSound(alarmSound,r.getAudioAttributes());
       NotificationManager mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
       mManager.createNotificationChannel(channel);
 
@@ -164,6 +182,10 @@ public class BackgroundService extends Service {
 //      Bitmap icon = BitmapFactory.decodeResource(getResources(),
 //              R.drawable.task_icon);
 
+//      Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+//      // Vibrate for 500 milliseconds
+//      v.vibrate(500);
+
       Glide.with(getApplicationContext())
               .asBitmap()
               .load(task.getTaskPictureUid())
@@ -172,11 +194,13 @@ public class BackgroundService extends Service {
                  public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                     NotificationCompat.Builder notificationCompat= new NotificationCompat.Builder(getApplicationContext(), "channelID")
                             .setContentTitle(task.getTaskName()+" ("+task.getTaskAddress()+")")
-                            .setContentText("המטלה "+task.getTaskName()+" נמצאת במרחק "+getDistance(task)+" ק\"מ ממיקומך")
+                            .setContentText("המטלה '"+task.getTaskName()+"' נמצאת במרחק "+getDistance(task)+" ק\"מ ממיקומך")
                             .setSmallIcon(R.drawable.notification_icon)
                             .setLargeIcon(resource)
                             .setColor(Color.parseColor(task.getTaskColor()))
                             .setContentIntent(pendingIntent)
+                            //.setDefaults(Notification.DEFAULT_VIBRATE)
+                            //.setVibrate(new long[]{1000,1000,1000})
                             .setAutoCancel(true);
 
                     mManager.notify(Unique_Integer_Number,notificationCompat.build());
