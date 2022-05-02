@@ -144,7 +144,7 @@ public class SettingsActivity extends AppCompatActivity {
                     et_age_settings.setText(getUser.getUserAge());
                     et_home_address_settings.setText(getUser.getUserHomeAddress());
                     et_phone_number_settings.setText(getUser.getUserPhoneNumber());
-                    SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
+                    SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                     boolean isChecked = settings.getBoolean("stayConnect", false);
                     checkBox_settings.setChecked(isChecked);
                     imageUri = Uri.parse(getUser.getUserPictureUid());
@@ -176,7 +176,7 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mAuth.signOut();
-                    SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
+                    SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putBoolean("stayConnect", false);
                     editor.commit();
@@ -204,7 +204,7 @@ public class SettingsActivity extends AppCompatActivity {
                     mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-                            SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
+                            SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putBoolean("stayConnect", false);
                             editor.commit();
@@ -356,7 +356,7 @@ public class SettingsActivity extends AppCompatActivity {
             {
                 progressDialog=ProgressDialog.show(this,"מעדכן נתונים","טוען...",true);
 
-                SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+                SharedPreferences settings = getSharedPreferences("STAY_CONNECT",MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("stayConnect",checkBox_settings.isChecked());
                 editor.commit();

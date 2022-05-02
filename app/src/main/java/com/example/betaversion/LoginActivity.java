@@ -6,6 +6,7 @@ import static com.example.betaversion.FB_Ref.refUsers;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -79,10 +80,26 @@ public class LoginActivity extends AppCompatActivity {
 
         progressBar_login.setVisibility(View.INVISIBLE);
 
-        SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+        ////////////////////
+    //        SharedPreferences sharedPref = getSharedPreferences("STAY_CONNECT",Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putBoolean("stayConnect", false);
+//        editor.commit();
+//
+//        editor.clear();
+//
+//
+//
+    //        SharedPreferences sharedPref2 = getSharedPreferences("STAY_CONNECT",Context.MODE_PRIVATE);
+//        boolean isChecked = sharedPref2.getBoolean("stayConnect", false);
+        ////////////////////
+
+        SharedPreferences settings = getSharedPreferences("STAY_CONNECT",MODE_PRIVATE);
         boolean isChecked = settings.getBoolean("stayConnect",false);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (isChecked && (currentUser != null)){
+            ProgressDialog progressDialog = ProgressDialog.show(this, "מתחבר לחשבונך", "טוען...", true);
+
             refUsers.child(currentUser.getUid()).child("User Data").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dS) {
@@ -91,16 +108,23 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (getUser.getUserFirstName().isEmpty() || getUser.getUserLastName().isEmpty() || getUser.getUserAge().isEmpty() ||getUser.getUserHomeAddress().isEmpty() || getUser.getUserPhoneNumber().isEmpty())
                     {
+                        progressDialog.dismiss();
                         move_settings();
                         Toast.makeText(LoginActivity.this, "הכנס את הפרטים הנדרשים", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        progressDialog.dismiss();
+                        move_main();
                     }
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
+                    progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "שגיאה", Toast.LENGTH_SHORT).show();
                 }
             });
-            move_main();
+            //move_main();
         }
     }
 
@@ -129,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                         //Toast.makeText(LoginActivity.this, "User logged in successfully!", Toast.LENGTH_SHORT).show();
                         move_main();
 
-                        SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+                        SharedPreferences settings = getSharedPreferences("STAY_CONNECT",MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putBoolean("stayConnect",checkBox_login.isChecked());
                         editor.commit();

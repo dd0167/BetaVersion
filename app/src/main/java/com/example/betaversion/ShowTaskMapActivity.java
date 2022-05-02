@@ -267,7 +267,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mAuth.signOut();
-                    SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
+                    SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putBoolean("stayConnect", false);
                     editor.commit();
@@ -295,7 +295,7 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
                     mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-                            SharedPreferences settings = getSharedPreferences("Stay_Connect", MODE_PRIVATE);
+                            SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putBoolean("stayConnect", false);
                             editor.commit();

@@ -124,7 +124,7 @@ public class SignupActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        SharedPreferences settings = getSharedPreferences("Stay_Connect",MODE_PRIVATE);
+                        SharedPreferences settings = getSharedPreferences("STAY_CONNECT",MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putBoolean("stayConnect",checkBox_signup.isChecked());
                         editor.commit();
