@@ -1101,14 +1101,14 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").removeValue();
-                                String deleteFileName = currentUser.getUid()+"/" +task_clicked.getTaskName()+ " image.png";
+                                String deleteFileName = currentUser.getUid()+"/" +task.getTaskName()+ " image.png";
                                 if (reference.equals(refLists))
                                 {
-                                    deleteFileName = currentUser.getUid()+"/Tasks Lists Images/"+list_clicked_name+"/" +task_clicked.getTaskName()+ " image.png";
+                                    deleteFileName = currentUser.getUid()+"/Tasks Lists Images/"+list_clicked_name+"/" +task.getTaskName()+ " image.png";
                                 }
                                 else if (reference.equals(refTasksDays))
                                 {
-                                    deleteFileName = currentUser.getUid()+"/Tasks Days Images/"+list_clicked_name+"/" +task_clicked.getTaskName()+ " image.png";
+                                    deleteFileName = currentUser.getUid()+"/Tasks Days Images/"+list_clicked_name+"/" +task.getTaskName()+ " image.png";
                                 }
                                 StorageReference desRef = referenceStorage.child(deleteFileName);
                                 desRef.delete().addOnFailureListener(new OnFailureListener() {

@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -182,9 +183,9 @@ public class BackgroundService extends Service {
 //      Bitmap icon = BitmapFactory.decodeResource(getResources(),
 //              R.drawable.task_icon);
 
-//      Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//      // Vibrate for 500 milliseconds
-//      v.vibrate(500);
+      Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+      // Vibrate for 500 milliseconds
+      v.vibrate(500);
 
       Glide.with(getApplicationContext())
               .asBitmap()
@@ -200,7 +201,7 @@ public class BackgroundService extends Service {
                             .setColor(Color.parseColor(task.getTaskColor()))
                             .setContentIntent(pendingIntent)
                             //.setDefaults(Notification.DEFAULT_VIBRATE)
-                            //.setVibrate(new long[]{1000,1000,1000})
+                            .setVibrate(new long[]{1000,1000,1000})
                             .setAutoCancel(true);
 
                     mManager.notify(Unique_Integer_Number,notificationCompat.build());

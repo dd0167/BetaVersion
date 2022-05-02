@@ -64,15 +64,18 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         if (EasyPermissions.hasPermissions(this,Manifest.permission.READ_EXTERNAL_STORAGE))
         {
             storage_switch.setChecked(true);
+            linearLayout_storage.setClickable(false);
         }
 
         if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_FINE_LOCATION))
         {
             location_switch.setChecked(true);
+            linearLayout_location.setClickable(false);
         }
 
         if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
             backgroundLocation_switch.setChecked(true);
+            linearLayout_backgroundLocation.setClickable(false);
         }
 
         if (!LocationHelper.isGPSOn(this))
