@@ -108,6 +108,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -499,7 +500,15 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             } else if (reference.equals(refTasksDays)) {
                 Toast.makeText(TasksActivity.this, SELECT_TIME, Toast.LENGTH_SHORT).show();
             }
-        } else if (task_clicked != null) {
+
+        }
+
+        else if (!isHourOfTaskHasOk(date,time))
+        {
+            Toast.makeText(this, "שעה שגויה, עליך לבחור לפחות שעה אחת מעכשיו", Toast.LENGTH_SHORT).show();
+        }
+
+        else if (task_clicked != null) {
             progressDialog = ProgressDialog.show(this, "מעדכן את פרטי המטלה", "טוען...", true);
 
             String file_name = "Images";
@@ -518,8 +527,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                             @Override
                             public void onSuccess(Uri uri) {
                                 imageUri = uri;
+                                cancel_alarm(task_clicked);
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
-                                Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1);
+                                Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1,task_clicked.getTaskAlarmId());
+                                create_task_alarm(task);
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                                 Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                                 change_data_to_default();
@@ -537,8 +548,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                     }
                 });
             } else {
+                cancel_alarm(task_clicked);
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
-                Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1);
+                Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1,task_clicked.getTaskAlarmId());
+                create_task_alarm(task);
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                 Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                 change_data_to_default();
@@ -565,7 +578,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                         @Override
                         public void onSuccess(Uri uri) {
                             imageUri = uri;
-                            Task task = new Task(taskName, correct_address(taskAddress), date, time, task_creationDate, taskNotes, task_color, imageUri.toString(),-1);
+                            Task task = new Task(taskName, correct_address(taskAddress), date, time, task_creationDate, taskNotes, task_color, imageUri.toString(),-1,0);
+                            task.setTaskAlarmId(create_task_alarm(task));
                             reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                             Toast.makeText(TasksActivity.this, "יצירת המטלה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
 
@@ -855,6 +869,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                cancel_alarm(task_clicked);
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                 String deleteFileName = currentUser.getUid()+"/" +task_clicked.getTaskName()+ " image.png";
                 if (reference.equals(refLists))
@@ -1097,6 +1112,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                         adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                cancel_alarm(task);
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").removeValue();
                                 String deleteFileName = currentUser.getUid()+"/" +task.getTaskName()+ " image.png";
                                 if (reference.equals(refLists))
@@ -1156,32 +1172,65 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return false;
     }
 
-
-
-
-
-
-
-
-
-
-
-    public void cancel_alarm()
+    public boolean isHourOfTaskHasOk(String task_date, String task_time)
     {
+        String[] hour=task_time.split(":");
+        String[] date=task_date.split("-");
+        String task_date_time=date[2]+"-"+date[1]+"-"+date[0]+" "+task_time;
+
+        String currentDate =new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        String[] current_date= currentDate.split("-");
+
+        try {
+            if (!new SimpleDateFormat("dd-MM-yyyy HH:mm", new Locale("he")).parse(task_date_time).before(new Date())) {
+                if (date[2].equals(current_date[0]) && date[1].equals(current_date[1]) && date[0].equals(current_date[2]))
+                {
+                    if (Integer.parseInt(hour[0])-Integer.parseInt(String.valueOf(new Date().getHours()))>=1)
+                    {
+                        if (Integer.parseInt(hour[1])>Integer.parseInt(String.valueOf(new Date().getMinutes())))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+    public void cancel_alarm(Task task)
+    {
+        //cancel alarm
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getTaskAlarmId(), intent,  PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.cancel(pendingIntent);
     }
 
-    public void create_task_alarm(Task task)
+    public int create_task_alarm(Task task)
     {
         String[] task_date=task.getTaskDay().split("-");
         String[] task_time=task.getTaskHour().split(":");
 
         Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(task_time[0]));
+        c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(task_time[0])-1);
         c.set(Calendar.MINUTE, Integer.parseInt(task_time[1]));
         c.set(Calendar.SECOND, 0);
 
@@ -1190,12 +1239,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         c.set(Calendar.DAY_OF_MONTH,Integer.parseInt(task_date[2]));
 
         Random random=new Random();
-        int alarm_id=10;
+        int alarm_id=random.nextInt();
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(TasksActivity.this, AlarmReceiver.class);
+        Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("task",task);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(TasksActivity.this, alarm_id, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarm_id, intent,  PendingIntent.FLAG_IMMUTABLE );
 
         if (c.before(Calendar.getInstance())) {
             c.add(Calendar.DATE, 1);
@@ -1203,18 +1252,6 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
 
-
-
-
-
-
-
-
-        //cancel alarm
-        AlarmManager alarmManager2 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent2 = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, alarm_id+1, intent2,  PendingIntent.FLAG_UPDATE_CURRENT);
-
-        alarmManager2.cancel(pendingIntent2);
+        return alarm_id;
     }
 }

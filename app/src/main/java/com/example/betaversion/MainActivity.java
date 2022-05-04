@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -480,6 +482,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    refLists.child(currentUser.getUid()).child(list_clicked.getListName()).child("Tasks").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot data : snapshot.getChildren()) {
+                                Task task = data.child("Task Data").getValue(Task.class);
+                                cancel_alarm(task);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     refLists.child(currentUser.getUid()).child(list_clicked.getListName()).removeValue();
                     Toast.makeText(MainActivity.this, "מחיקת הרשימה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
                 }
@@ -526,5 +542,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(pa);
             finish();
         }
+    }
+
+    public void cancel_alarm(Task task)
+    {
+        //cancel alarm
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getTaskAlarmId(), intent,  PendingIntent.FLAG_IMMUTABLE);
+
+        alarmManager.cancel(pendingIntent);
     }
 }

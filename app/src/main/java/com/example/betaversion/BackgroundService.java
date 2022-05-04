@@ -171,7 +171,7 @@ public class BackgroundService extends Service {
       Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/notification_sound");
       Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
 
-      NotificationChannel channel = new NotificationChannel("channelID", "Alert Notification", NotificationManager.IMPORTANCE_HIGH);
+      NotificationChannel channel = new NotificationChannel("channelID", "התראות לפי מיקום", NotificationManager.IMPORTANCE_HIGH);
       channel.setSound(alarmSound,r.getAudioAttributes());
       NotificationManager mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
       mManager.createNotificationChannel(channel);
@@ -234,7 +234,7 @@ public class BackgroundService extends Service {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
          NotificationChannel serviceChannel = new NotificationChannel(
                  "CHANNEL_ID",
-                 "Background Service Channel",
+                 "הפעלה ברקע",
                  NotificationManager.IMPORTANCE_DEFAULT
          );
 

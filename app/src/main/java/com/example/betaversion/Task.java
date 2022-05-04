@@ -14,10 +14,11 @@ public class Task implements Parcelable {
     private String TaskColor; // צבע המטלה
     private String TaskPictureUid; // תמונת המטלה
     private double TaskDistance; // המרחק בין המיקום הנוכחי של המשתמש לבין המטלה
+    private int TaskAlarmId; // מזהה ההתראה של המטלה
 
     public Task() {}
 
-    public Task(String taskName, String taskAddress, String taskDay, String taskHour, String taskCreationDate, String taskNotes, String taskColor, String taskPictureUid,double taskDistance) {
+    public Task(String taskName, String taskAddress, String taskDay, String taskHour, String taskCreationDate, String taskNotes, String taskColor, String taskPictureUid,double taskDistance, int taskAlarmId) {
         TaskName = taskName;
         TaskAddress = taskAddress;
         TaskDay = taskDay;
@@ -27,6 +28,7 @@ public class Task implements Parcelable {
         TaskColor = taskColor;
         TaskPictureUid = taskPictureUid;
         TaskDistance=taskDistance;
+        TaskAlarmId=taskAlarmId;
     }
 
     protected Task(Parcel in) {
@@ -39,6 +41,7 @@ public class Task implements Parcelable {
         TaskColor = in.readString();
         TaskPictureUid = in.readString();
         TaskDistance=in.readDouble();
+        TaskAlarmId=in.readInt();
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -125,6 +128,14 @@ public class Task implements Parcelable {
         TaskDistance = taskDistance;
     }
 
+    public int getTaskAlarmId() {
+        return TaskAlarmId;
+    }
+
+    public void setTaskAlarmId(int taskAlarmId) {
+        TaskAlarmId = taskAlarmId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -141,5 +152,6 @@ public class Task implements Parcelable {
         dest.writeString(TaskColor);
         dest.writeString(TaskPictureUid);
         dest.writeDouble(TaskDistance);
+        dest.writeInt(TaskAlarmId);
     }
 }
