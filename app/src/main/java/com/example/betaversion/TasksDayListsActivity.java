@@ -642,7 +642,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
     {
         String taskDay_date=tasksDay.getTasksDayDate();
         String[] date=taskDay_date.split("-");
-        String task_date_time=date[2]+"-"+date[1]+"-"+date[0];
+        String task_date_time=Integer.parseInt(date[2])+1+"-"+date[1]+"-"+date[0];
 
         try {
             if (new SimpleDateFormat("dd-MM-yyyy", new Locale("he")).parse(task_date_time).before(new Date())) {
