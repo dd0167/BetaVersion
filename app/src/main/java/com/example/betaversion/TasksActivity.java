@@ -1195,15 +1195,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(TasksActivity.this, AlarmReceiver.class);
         intent.putExtra("task",task);
-        PendingIntent pendingIntent = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(TasksActivity.this, alarm_id, intent,  PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE );
-        }
-        else
-        {
-            Toast.makeText(this, "hi12", Toast.LENGTH_SHORT).show();
-            pendingIntent = PendingIntent.getBroadcast(TasksActivity.this, alarm_id, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
-        }
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(TasksActivity.this, alarm_id, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 
         if (c.before(Calendar.getInstance())) {
             c.add(Calendar.DATE, 1);
@@ -1221,15 +1213,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         //cancel alarm
         AlarmManager alarmManager2 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent2 = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent2 = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent2 = PendingIntent.getBroadcast(this, alarm_id+1, intent2,  PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        }
-        else
-        {
-            Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
-            pendingIntent2 = PendingIntent.getBroadcast(this, alarm_id+1, intent2,  PendingIntent.FLAG_UPDATE_CURRENT);
-        }
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, alarm_id+1, intent2,  PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager2.cancel(pendingIntent2);
     }
