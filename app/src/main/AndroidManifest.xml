@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!--
  Required only when requesting background location access on
@@ -81,6 +82,14 @@
         <service android:name=".BackgroundService"/>
         <receiver android:name=".NotificationService"/>
         <receiver android:name=".AlarmReceiver"/>
+        <receiver android:name=".AlarmBootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.REBOOT"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
+        <service android:name=".RestartAlarmsService"/>
 
     </application>
 

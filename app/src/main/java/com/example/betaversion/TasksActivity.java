@@ -530,7 +530,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                                 cancel_alarm(task_clicked);
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                                 Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1,task_clicked.getTaskAlarmId());
-                                create_task_alarm(task);
+                                task.setTaskAlarmId(create_task_alarm(task));
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                                 Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                                 change_data_to_default();
@@ -551,7 +551,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                 cancel_alarm(task_clicked);
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                 Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1,task_clicked.getTaskAlarmId());
-                create_task_alarm(task);
+                task.setTaskAlarmId(create_task_alarm(task));
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                 Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                 change_data_to_default();
@@ -1205,14 +1205,6 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
         return false;
     }
-
-
-
-
-
-
-
-
 
     public void cancel_alarm(Task task)
     {
