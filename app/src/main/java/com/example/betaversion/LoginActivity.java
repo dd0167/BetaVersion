@@ -151,6 +151,9 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         //Toast.makeText(LoginActivity.this, "User logged in successfully!", Toast.LENGTH_SHORT).show();
+
+                        AlarmHelper.create_all_alarms(getApplicationContext());
+
                         move_main();
 
                         SharedPreferences settings = getSharedPreferences("STAY_CONNECT",MODE_PRIVATE);

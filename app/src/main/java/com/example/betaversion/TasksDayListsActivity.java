@@ -244,7 +244,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
     }
 
     @Override
-    public boolean onOptionsItemSelected (MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId()==R.id.logOut_menu) {
             AlertDialog.Builder adb;
             adb = new AlertDialog.Builder(this);
@@ -254,6 +254,9 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
+                    AlarmHelper.cancel_all_alarms(getApplicationContext());
+
                     mAuth.signOut();
                     SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
@@ -283,13 +286,16 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
                     mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+
+                            AlarmHelper.cancel_all_alarms(getApplicationContext());
+
                             SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putBoolean("stayConnect", false);
                             editor.commit();
 
                             // Delete the folder
-                            String deleteFileName1 = currentUser.getUid();
+                            String deleteFileName1 = currentUser.getUid()+"/";
                             StorageReference desertRef = referenceStorage.child(deleteFileName1);
                             desertRef.listAll()
                                     .addOnSuccessListener(new OnSuccessListener<ListResult>() {

@@ -339,6 +339,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
+                    AlarmHelper.cancel_all_alarms(getApplicationContext());
+
                     mAuth.signOut();
                     SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
@@ -368,6 +371,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                     mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+
+                            AlarmHelper.cancel_all_alarms(getApplicationContext());
+
                             SharedPreferences settings = getSharedPreferences("STAY_CONNECT", MODE_PRIVATE);
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putBoolean("stayConnect", false);
@@ -1185,7 +1191,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             if (!new SimpleDateFormat("dd-MM-yyyy HH:mm", new Locale("he")).parse(task_date_time).before(new Date())) {
                 if (date[2].equals(current_date[0]) && date[1].equals(current_date[1]) && date[0].equals(current_date[2]))
                 {
-                    if (Integer.parseInt(hour[0])-Integer.parseInt(String.valueOf(new Date().getHours()))>=1)
+                    if (Integer.parseInt(hour[0])-Integer.parseInt(String.valueOf(new Date().getHours()))>1)
+                    {
+                        return true;
+                    }
+                    else if (Integer.parseInt(hour[0])-Integer.parseInt(String.valueOf(new Date().getHours()))==1)
                     {
                         if (Integer.parseInt(hour[1])>Integer.parseInt(String.valueOf(new Date().getMinutes())))
                         {
