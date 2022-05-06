@@ -51,7 +51,6 @@ public class SignupActivity extends AppCompatActivity {
 
     EditText et_email_signup;
     EditText et_password_signup;
-    ProgressBar progressBar_signup;
     CheckBox checkBox_signup;
     Uri imageUri;
     ImageView user_image;
@@ -66,7 +65,6 @@ public class SignupActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        progressBar_signup=(ProgressBar) findViewById(R.id.progressBar_signup);
         et_email_signup=(EditText) findViewById(R.id.et_email_signup);
         et_password_signup=(EditText) findViewById(R.id.et_password_signup);
         checkBox_signup=(CheckBox) findViewById(R.id.checkBox_signup);
@@ -85,8 +83,6 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
-
-        progressBar_signup.setVisibility(View.INVISIBLE);
     }
 
     public boolean is_Internet_Connected() {
@@ -103,18 +99,15 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void sign_up(View view) {
-        progressBar_signup.setVisibility(View.VISIBLE);
         String email=et_email_signup.getText().toString();
         String password=et_password_signup.getText().toString();
         if (email.isEmpty())
         {
-            progressBar_signup.setVisibility(View.INVISIBLE);
             et_email_signup.setError("הכנס אימייל!");
             et_email_signup.requestFocus();
         }
         else if (password.isEmpty())
         {
-            progressBar_signup.setVisibility(View.INVISIBLE);
             et_password_signup.setError("הכנס סיסמה!");
             et_password_signup.requestFocus();
         }
@@ -141,7 +134,6 @@ public class SignupActivity extends AppCompatActivity {
                     }else{
                         Toast.makeText(SignupActivity.this, "Registration Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
-                    progressBar_signup.setVisibility(View.INVISIBLE);
                 }
             });
         }

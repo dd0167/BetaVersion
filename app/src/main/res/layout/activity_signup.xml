@@ -12,6 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="20" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +54,12 @@
         android:fontFamily="@font/calibri"
         android:gravity="center"
         android:hint="הקלד טקסט כאן"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:drawableEnd="@drawable/email_icon"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:background="@drawable/edittext_design"
+        android:layout_marginHorizontal="30dp"/>
 
     <Space
         android:layout_width="match_parent"
@@ -79,7 +89,12 @@
         android:fontFamily="@font/calibri"
         android:gravity="center"
         android:hint="הקלד טקסט כאן"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:drawableEnd="@drawable/password_icon"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:background="@drawable/edittext_design"
+        android:layout_marginHorizontal="30dp"/>
 
     <Switch
         android:id="@+id/switch_signup"
@@ -128,25 +143,24 @@
         android:layout_height="wrap_content"
         android:layout_weight="20" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:fontFamily="@font/calibri"
-        android:onClick="sign_up"
-        android:text="הירשם"
-        android:textColor="#000000" />
+    <androidx.cardview.widget.CardView
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        app:cardCornerRadius="30dp">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="20" />
-
-    <ProgressBar
-        android:id="@+id/progressBar_signup"
-        style="@android:style/Widget.DeviceDefault.ProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:fontFamily="@font/calibri"
+            android:onClick="sign_up"
+            android:text="הירשם"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:layout_gravity="center"/>
+    </androidx.cardview.widget.CardView>
 
     <Space
         android:layout_width="match_parent"
@@ -199,6 +213,6 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="50" />
+        android:layout_weight="20" />
 
 </LinearLayout>

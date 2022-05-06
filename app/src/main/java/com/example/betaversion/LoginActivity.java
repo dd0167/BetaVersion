@@ -43,7 +43,6 @@ import java.io.OutputStreamWriter;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ProgressBar progressBar_login;
     EditText et_email_login;
     EditText et_password_login;
     CheckBox checkBox_login;
@@ -58,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        progressBar_login=(ProgressBar) findViewById(R.id.progressBar_login);
         et_email_login=(EditText) findViewById(R.id.et_email_login);
         et_password_login=(EditText) findViewById(R.id.et_password_login);
         checkBox_login=(CheckBox) findViewById(R.id.checkBox_login);
@@ -77,8 +75,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
-        progressBar_login.setVisibility(View.INVISIBLE);
 
         ////////////////////
     //        SharedPreferences sharedPref = getSharedPreferences("STAY_CONNECT",Context.MODE_PRIVATE);
@@ -129,18 +125,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void sign_in(View view) {
-        progressBar_login.setVisibility(View.VISIBLE);
         String email=et_email_login.getText().toString();
         String password=et_password_login.getText().toString();
         if (email.isEmpty())
         {
-            progressBar_login.setVisibility(View.INVISIBLE);
             et_email_login.setError("הכנס אימייל!");
             et_email_login.requestFocus();
         }
         else if (password.isEmpty())
         {
-            progressBar_login.setVisibility(View.INVISIBLE);
             et_password_login.setError("הכנס סיסמה!");
             et_password_login.requestFocus();
         }
@@ -166,7 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                     }else{
                         Toast.makeText(LoginActivity.this, "Login Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
-                    progressBar_login.setVisibility(View.INVISIBLE);
                 }
             });
         }
