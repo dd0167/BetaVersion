@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/my_lists"
-        android:icon="@drawable/list_icon"
+        android:icon="@drawable/my_lists_icon"
         android:title="הרשימות שלי"
         app:showAsAction="always" />
 
@@ -16,7 +16,6 @@
 
     <item
         android:id="@+id/empty"
-        android:title=""
         app:showAsAction="always" />
 
     <item

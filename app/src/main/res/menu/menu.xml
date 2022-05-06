@@ -2,9 +2,13 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:icon="@drawable/help_icon"
+        android:title="עזרה"
+        app:showAsAction="always"/>
+
     <item
-        android:icon="@drawable/ic_baseline_more_vert_24"
-        android:title=""
+        android:icon="@drawable/more_icon"
+        android:title="תפריט"
         app:showAsAction="always">
 
         <menu>

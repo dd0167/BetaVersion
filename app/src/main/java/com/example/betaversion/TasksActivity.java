@@ -440,6 +440,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             Intent serviceIntent = new Intent(this, BackgroundService.class);
             ContextCompat.startForegroundService(this, serviceIntent);
         }
+        else if (item.getTitle().equals("עזרה"))
+        {
+            Intent ha = new Intent(this, HelpActivity.class);
+            startActivity(ha);
+            finish();
+        }
         return true;
     }
 
@@ -871,7 +877,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         adb = new AlertDialog.Builder(this);
         adb.setTitle("מחיקת המטלה");
         adb.setMessage("אתה בטוח שברצונך למחוק את המטלה '" + task_clicked.getTaskName() + "'?");
-        adb.setIcon(R.drawable.delete_list);
+        adb.setIcon(R.drawable.delete_task);
         adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

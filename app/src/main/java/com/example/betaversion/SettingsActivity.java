@@ -276,6 +276,12 @@ public class SettingsActivity extends AppCompatActivity {
             Intent serviceIntent = new Intent(this, BackgroundService.class);
             ContextCompat.startForegroundService(this, serviceIntent);
         }
+        else if (item.getTitle().equals("עזרה"))
+        {
+            Intent ha = new Intent(this, HelpActivity.class);
+            startActivity(ha);
+            finish();
+        }
         return true;
     }
 

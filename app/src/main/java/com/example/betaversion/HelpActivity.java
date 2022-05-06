@@ -9,94 +9,70 @@ import static com.example.betaversion.FB_Ref.referenceStorage;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.app.ActivityManager;
-import android.app.AlarmManager;
-import android.app.DownloadManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.Calendar;
-import java.util.Date;
-
-public class CreditsActivity extends AppCompatActivity {
+public class HelpActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
-
     FirebaseUser currentUser;
+
+    BottomSheetDialog bottomSheetDialog_help;
+    ImageView cancel_bottom_sheet_dialog_help;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_credits);
+        setContentView(R.layout.activity_help);
+
+        bottomSheetDialog_help=(BottomSheetDialog) new BottomSheetDialog(HelpActivity.this);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setBackground(null);
         bottomNavigationView.getMenu().findItem(R.id.empty).setEnabled(false).setIcon(R.drawable.ic_notification);
-
-        bottomNavigationView.getMenu().findItem(R.id.about).setEnabled(false);
-        bottomNavigationView.setSelectedItemId(R.id.about);
+        bottomNavigationView.setSelectedItemId(R.id.empty);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.my_lists) {
-                    Intent ma = new Intent(CreditsActivity.this, MainActivity.class);
+                    Intent ma = new Intent(HelpActivity.this, MainActivity.class);
                     startActivity(ma);
                     finish();
                 } else if (id == R.id.about) {
-                    Intent ca = new Intent(CreditsActivity.this, CreditsActivity.class);
+                    Intent ca = new Intent(HelpActivity.this, CreditsActivity.class);
                     startActivity(ca);
                     finish();
                 } else if (id == R.id.settings) {
-                    Intent sa = new Intent(CreditsActivity.this, SettingsActivity.class);
+                    Intent sa = new Intent(HelpActivity.this, SettingsActivity.class);
                     startActivity(sa);
                     finish();
                 } else if (id == R.id.tasks_day) {
-                    Intent td = new Intent(CreditsActivity.this, TasksDayListsActivity.class);
+                    Intent td = new Intent(HelpActivity.this, TasksDayListsActivity.class);
                     startActivity(td);
                     finish();
                 }
@@ -108,7 +84,7 @@ public class CreditsActivity extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "אודות" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "עזרה" + "</font>"));
     }
 
     @Override
@@ -185,7 +161,7 @@ public class CreditsActivity extends AppCompatActivity {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             // Uh-oh, an error occurred!
-                                            Toast.makeText(CreditsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(HelpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
 
@@ -195,7 +171,7 @@ public class CreditsActivity extends AppCompatActivity {
                             desRef.delete().addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
-                                    Toast.makeText(CreditsActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HelpActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -203,14 +179,14 @@ public class CreditsActivity extends AppCompatActivity {
                             refTasksDays.child(currentUser.getUid()).removeValue();
                             refLists.child(currentUser.getUid()).removeValue();
 
-                            Toast.makeText(CreditsActivity.this, "מחיקת החשבון בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HelpActivity.this, "מחיקת החשבון בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
 
                             move_login();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(CreditsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HelpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -242,5 +218,77 @@ public class CreditsActivity extends AppCompatActivity {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
         finish();
+    }
+
+    public void show_bottomSheetDialog()
+    {
+        bottomSheetDialog_help=new BottomSheetDialog(this,R.style.BottomSheetTheme);
+
+        bottomSheetDialog_help.setContentView(R.layout.bottom_sheet_layout_list);
+        bottomSheetDialog_help.show();
+
+        cancel_bottom_sheet_dialog_help=(ImageView) bottomSheetDialog_help.findViewById(R.id.cancel_bottom_sheet_dialog_help);
+        cancel_bottom_sheet_dialog_help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog_help.cancel();
+            }
+        });
+    }
+
+    public void show_explanation(View view)
+    {
+        show_bottomSheetDialog();
+        ImageView iv_help_layout=bottomSheetDialog_help.findViewById(R.id.iv_help_layout);
+        TextView tv_help=bottomSheetDialog_help.findViewById(R.id.tv_help);
+
+        if (view.getId()==R.id.cv_myLists)
+        {
+            iv_help_layout.setImageResource(R.drawable.my_lists_icon);
+        }
+        else if (view.getId()==R.id.cv_myTasksDays)
+        {
+            iv_help_layout.setImageResource(R.drawable.tasks_day);
+        }
+        else if (view.getId()==R.id.cv_about)
+        {
+            iv_help_layout.setImageResource(R.drawable.about_icon);
+        }
+        else if (view.getId()==R.id.cv_addUser)
+        {
+            iv_help_layout.setImageResource(R.drawable.add_user);
+        }
+        else if (view.getId()==R.id.cv_settings)
+        {
+            iv_help_layout.setImageResource(R.drawable.settings_icon);
+        }
+        else if (view.getId()==R.id.cv_help)
+        {
+            iv_help_layout.setImageResource(R.drawable.help_icon);
+        }
+        else if (view.getId()==R.id.cv_addImage)
+        {
+            iv_help_layout.setImageResource(R.drawable.add_image_icon);
+        }
+        else if (view.getId()==R.id.cv_selectColor)
+        {
+            iv_help_layout.setImageResource(R.drawable.colors_icon);
+        }
+        else if (view.getId()==R.id.cv_add)
+        {
+            iv_help_layout.setImageResource(R.drawable.ic_add);
+        }
+        else if (view.getId()==R.id.cv_playBackground)
+        {
+            iv_help_layout.setImageResource(R.drawable.play_icon);
+        }
+        else if (view.getId()==R.id.cv_findLocation)
+        {
+            iv_help_layout.setImageResource(R.drawable.show_address_in_map);
+        }
+        else if (view.getId()==R.id.cv_userImage)
+        {
+            iv_help_layout.setImageResource(R.drawable.user_icon);
+        }
     }
 }
