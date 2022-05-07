@@ -84,7 +84,7 @@ public class HelpActivity extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //Disable Screen Rotation
 
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "עזרה" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">" + "מדריך למשתמש" + "</font>"));
     }
 
     @Override
@@ -224,7 +224,7 @@ public class HelpActivity extends AppCompatActivity {
     {
         bottomSheetDialog_help=new BottomSheetDialog(this,R.style.BottomSheetTheme);
 
-        bottomSheetDialog_help.setContentView(R.layout.bottom_sheet_layout_list);
+        bottomSheetDialog_help.setContentView(R.layout.bottom_sheet_layout_help);
         bottomSheetDialog_help.show();
 
         cancel_bottom_sheet_dialog_help=(ImageView) bottomSheetDialog_help.findViewById(R.id.cancel_bottom_sheet_dialog_help);
@@ -241,54 +241,94 @@ public class HelpActivity extends AppCompatActivity {
         show_bottomSheetDialog();
         ImageView iv_help_layout=bottomSheetDialog_help.findViewById(R.id.iv_help_layout);
         TextView tv_help=bottomSheetDialog_help.findViewById(R.id.tv_help);
+        TextView tv_help_title=bottomSheetDialog_help.findViewById(R.id.tv_help_title);
 
         if (view.getId()==R.id.cv_myLists)
         {
             iv_help_layout.setImageResource(R.drawable.my_lists_icon);
+            tv_help_title.setText("הרשימות שלי");
+            tv_help.setText("בלחיצה על אייקון זה, תועבר למסך 'הרשימות שלי'.\n" +
+                    "במסך זה, תוכל ליצור ולערוך רשימות שבתוכן נמצאות מטלות.\n");
         }
         else if (view.getId()==R.id.cv_myTasksDays)
         {
             iv_help_layout.setImageResource(R.drawable.tasks_day);
+            tv_help_title.setText("הימים המרוכזים שלי");
+            tv_help.setText("בלחיצה על אייקון זה, תועבר למסך 'הימים המרוכזים שלי'.\n" +
+                    "במסך זה, תוכל ליצור ולערוך רשימות המוגדרות בתור יום מרוכז שבתוכו נמצאות מטלות.\n");
         }
         else if (view.getId()==R.id.cv_about)
         {
             iv_help_layout.setImageResource(R.drawable.about_icon);
+            tv_help_title.setText("אודות");
+            tv_help.setText("בלחיצה על אייקון זה, תועבר למסך 'אודות'.\n" +
+                    "במסך זה, תוכל לראות את שם ולוגו האפליקציה, את השם של מי שפיתח אותה ודרכים ליצירת קשר עם מפתח האפליקציה.\n");
         }
         else if (view.getId()==R.id.cv_addUser)
         {
             iv_help_layout.setImageResource(R.drawable.add_user);
+            tv_help_title.setText("עדכון נתוני המשתמש");
+            tv_help.setText("אייקון זה נמצא במסך 'הגדרות'.\n" +
+                    "בלחיצה על אייקון זה, תוכל לעדכן את כל נתוני המשתמש אשר הוזנו באותו המסך.\n");
         }
         else if (view.getId()==R.id.cv_settings)
         {
             iv_help_layout.setImageResource(R.drawable.settings_icon);
+            tv_help_title.setText("הגדרות");
+            tv_help.setText("בלחיצה על אייקון זה, תועבר למסך 'הגדרות'.\n" +
+                    "במסך זה, תוכל לעדכן את נתוני המשתמש כגון: שם מלא, גיל, כתובת בית ועוד. בנוסף, תוכל להוסיף תמונת פרופיל.\n");
         }
         else if (view.getId()==R.id.cv_help)
         {
             iv_help_layout.setImageResource(R.drawable.help_icon);
+            tv_help_title.setText("מדריך למשתמש");
+            tv_help.setText("בלחיצה על אייקון זה, תועבר למסך 'מדריך למשתמש'. זה המסך בו אתה נמצא עכשיו.\n" +
+                    "במסך זה, תוכל לראות את כל אייקוני האפליקציה, לראות מה אומר כל אייקון ומה היא מטרתו באפליקציה.\n");
         }
         else if (view.getId()==R.id.cv_addImage)
         {
             iv_help_layout.setImageResource(R.drawable.add_image_icon);
+            tv_help_title.setText("הוספת תמונה");
+            tv_help.setText("אייקון זה נמצא במסך 'המטלות שלי'.\n" +
+                    "בלחיצה על אייקון זה, תוכל להוסיף תמונה למטלה. תוכל לבחור להוסיף תמונה מהגלריה או להשתמש בתמונת ברירת המחדל.\n");
         }
         else if (view.getId()==R.id.cv_selectColor)
         {
             iv_help_layout.setImageResource(R.drawable.colors_icon);
+            tv_help_title.setText("בחירת צבע");
+            tv_help.setText("אייקון זה נמצא במסך 'המטלות שלי'.\n" +
+                    "בלחיצה על אייקון זה, תוכל להוסיף צבע למטלה. תוכל לבחור להוסיף צבע שיופיע כאשר רואים את כל המטלות. צבע זה יופיע גם בהתראות המתקבלות הקשורות לאותה מטלה.\n");
         }
         else if (view.getId()==R.id.cv_add)
         {
             iv_help_layout.setImageResource(R.drawable.ic_add);
+            tv_help_title.setText("הוספה/יצירה");
+            tv_help.setText("אייקון זה נמצא בכמה מסכים ומטרתו דומה בכל מסך.\n" +
+                    "בלחיצה על אייקון זה, ייפתח לך מסך קטן הנועד להזין נתונים.\n" +
+                    "תוכל ליצור רשימות, ימים מרוכזים ומטלות. \n");
+
         }
         else if (view.getId()==R.id.cv_playBackground)
         {
             iv_help_layout.setImageResource(R.drawable.play_icon);
+            tv_help_title.setText("הפעלה ברקע");
+            tv_help.setText("אייקון זה נמצא בכל המסכים שבאפליקציה.\n" +
+                    "בלחיצה על אייקון זה, האפליקציה תופעל ברקע.\n" +
+                    "בכל רבע שעה תתקבל התראה על המטלות אשר תאריך ביצוען עוד לא עבר ושהן במרחק של פחות מקילומטר ממיקומך הנוכחי.\n");
         }
         else if (view.getId()==R.id.cv_findLocation)
         {
             iv_help_layout.setImageResource(R.drawable.show_address_in_map);
+            tv_help_title.setText("מציאת המיקום הנוכחי");
+            tv_help.setText("אייקון זה נמצא במסך 'הצגת המטלה על המפה'.\n" +
+                    "בלחיצה על אייקון זה, תוכל לראות את מיקומך הנוכחי על המפה ואת המרחק בקילומטרים בינך לבין המטלה.\n");
         }
         else if (view.getId()==R.id.cv_userImage)
         {
             iv_help_layout.setImageResource(R.drawable.user_icon);
+            tv_help_title.setText("תמונת פרופיל המשתמש");
+            tv_help.setText("אייקון זה נמצא במסך 'הגדרות'.\n" +
+                    "בלחיצה על אייקון זה, תוכל להוסיף תמונת פרופיל למשתמש. תמונה זו היא תמונת ברירת המחדל, ואם לא תשנה אותה, תמונה זו תופיע בתור תמונת הפרופיל.\n");
         }
     }
 }

@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/abraham"
         android:gravity="center"
-        android:text="עזרה"
+        android:text="מדריך למשתמש"
         android:textColor="@color/black"
         android:textSize="50sp" />
 
@@ -166,7 +166,7 @@
                         android:layout_marginTop="65dp"
                         android:fontFamily="@font/calibri"
                         android:gravity="center"
-                        android:text="הוספת/עדכון המשתמש"
+                        android:text="עדכון נתוני המשתמש"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
                 </androidx.cardview.widget.CardView>
@@ -220,7 +220,7 @@
                         android:layout_marginTop="65dp"
                         android:fontFamily="@font/calibri"
                         android:gravity="center"
-                        android:text="עזרה"
+                        android:text="מדריך למשתמש"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
                 </androidx.cardview.widget.CardView>

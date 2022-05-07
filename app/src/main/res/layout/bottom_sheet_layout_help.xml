@@ -40,6 +40,7 @@
         android:layout_height="30dp" />
 
     <TextView
+        android:id="@+id/tv_help_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/calibri"
@@ -61,6 +62,6 @@
         android:gravity="center"
         android:text="הסבר"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>
