@@ -101,22 +101,23 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
 
     public static boolean checkAllPermissions(Context context)
     {
+        boolean result=true;
         if (!EasyPermissions.hasPermissions(context, Manifest.permission.READ_EXTERNAL_STORAGE))
         {
             Toast.makeText(context, "אפשר גישה לאחסון המכשיר", Toast.LENGTH_SHORT).show();
-            return false;
+            result=false;
         }
-        else if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_FINE_LOCATION))
+        if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_FINE_LOCATION))
         {
             Toast.makeText(context, "אפשר גישה למיקום המכשיר", Toast.LENGTH_SHORT).show();
-            return false;
+            result=false;
         }
-        else if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION))
+        if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION))
         {
             Toast.makeText(context, "אפשר גישה למיקום המכשיר ברקע", Toast.LENGTH_SHORT).show();
-            return false;
+            result=false;
         }
-        return true;
+        return result;
     }
 
     @Override
