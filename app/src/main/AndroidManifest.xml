@@ -93,7 +93,6 @@
             </intent-filter>
         </receiver>
         <service android:name=".RestartAlarmsService" />
-        <receiver android:name=".NotificationServiceDelete"/>
 
     </application>
 

@@ -180,10 +180,6 @@ public class BackgroundService extends Service {
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
       PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-      // adding action for broadcast
-      Intent broadcastIntent = new Intent(getApplicationContext(), NotificationServiceDelete.class);
-      PendingIntent broadcastPendingIntent1=PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 //      Bitmap icon = BitmapFactory.decodeResource(getResources(),
 //              R.drawable.task_icon);
 
@@ -206,7 +202,7 @@ public class BackgroundService extends Service {
                             .setContentIntent(pendingIntent)
                             //.setDefaults(Notification.DEFAULT_VIBRATE)
                             .setVibrate(new long[]{1000,1000,1000})
-                            .addAction(R.drawable.notification_icon,"מחק מטלה",broadcastPendingIntent1)
+                            .setSound(alarmSound)
                             .setAutoCancel(true);
 
                     mManager.notify(Unique_Integer_Number,notificationCompat.build());
