@@ -22,6 +22,9 @@ import com.bumptech.glide.request.transition.Transition;
 
 import java.util.Random;
 
+/**
+ *הפעלת האפליקציה ברקע על מנת ליצור את כל התזכורות הנדרשות.
+ */
 public class AlarmReceiver extends BroadcastReceiver {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -32,6 +35,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         show_notification(context,task);
     }
 
+    /**
+     * יצירת תזכורת (התראה).
+     *
+     * @param context the context
+     * @param task    the task
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void show_notification(Context context, Task task)
     {

@@ -60,19 +60,25 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+/**
+ * הפעלת האפליקציה ברקע על מנת ליצור את כל ההתראות הנדרשות.
+ */
 public class BackgroundService extends Service {
 
    FirebaseUser currentUser;
 
    public static Runnable runnable;
    public static Handler handler;
-
    public static FusedLocationProviderClient fusedLocationProviderClient;
    public static CancellationTokenSource cancellationTokenSource;
-   public static String current_latitude, current_longitude;
+
+   public static String current_latitude,current_longitude;
 
    public static ArrayList<Task> tasks=new ArrayList<Task>();
 
+   /**
+    * פרק הזמן בין כל התראה.
+    */
    int milliseconds=10000; // 1000 millisecond = 1 second
 
    @Override
@@ -123,6 +129,9 @@ public class BackgroundService extends Service {
       return START_NOT_STICKY;
    }
 
+   /**
+    * עבור כל מטלה, אם המטלה במרחק של פחות מקילומטר וגם זמן הביצוע שלה לא עבר, תיווצר התראה.
+    */
    public void run()
    {
       runnable = new Runnable() {
@@ -146,6 +155,11 @@ public class BackgroundService extends Service {
       handler.postDelayed(runnable, milliseconds);
    }
 
+   /**
+    * יצירת התראה.
+    *
+    * @param task the task
+    */
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void show_notification(Task task)
    {
@@ -194,6 +208,9 @@ public class BackgroundService extends Service {
               });
    }
 
+   /**
+    * הפסקת הריצה ברקע.
+    */
    public static void stop_handler()
    {
       handler.removeCallbacks(runnable);
@@ -224,6 +241,9 @@ public class BackgroundService extends Service {
       }
    }
 
+   /**
+    * חיפוש המיקום הנוכחי של המשתמש.
+    */
    public void set_current_location()
    {
       if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -254,6 +274,9 @@ public class BackgroundService extends Service {
       });
    }
 
+   /**
+    *  קריאת הרשימות מ-Firebase Realtime Database.
+    */
    public void read_lists()
    {
       refLists.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -272,6 +295,9 @@ public class BackgroundService extends Service {
       });
    }
 
+   /**
+    *  קריאת הימים המרוכזים מ-Firebase Realtime Database.
+    */
    public void read_tasksDays()
    {
       refTasksDays.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -290,6 +316,12 @@ public class BackgroundService extends Service {
       });
    }
 
+   /**
+    *  קריאת המטלות מ-Firebase Realtime Database.
+    *
+    * @param reference the reference
+    * @param name      the name of List/DayList
+    */
    public void read_tasks(DatabaseReference reference, String name)
    {
       reference.child(currentUser.getUid()).child(name).child("Tasks").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -311,6 +343,15 @@ public class BackgroundService extends Service {
       });
    }
 
+   /**
+    * חישוב המרחק בין מיקום המטלה למיקום הנוכחי של המשתמש.
+    *
+    * @param lat1 the lat 1
+    * @param lat2 the lat 2
+    * @param lon1 the lon 1
+    * @param lon2 the lon 2
+    * @return the double
+    */
    public static double distance(double lat1, double lat2, double lon1, double lon2)
    {
       // The math module contains a function
@@ -338,6 +379,12 @@ public class BackgroundService extends Service {
       return(c * r);
    }
 
+   /**
+    *קבלת המרחק בין מיקום המטלה למיקום הנוכחי של המשתמש.
+    *
+    * @param task the task
+    * @return the distance
+    */
    public double getDistance(Task task)
    {
       Geocoder geocoder=new Geocoder(getApplicationContext());
@@ -360,6 +407,12 @@ public class BackgroundService extends Service {
       return final_distance;
    }
 
+   /**
+    *  בדיקה האם השעה שנבחרה לביצוע המטלה עוד לא עברה (תקינות קלט).
+    *
+    * @param task the task
+    * @return the boolean
+    */
    public boolean isDateOfTaskHasPassed(Task task)
    {
       String task_date=task.getTaskDay();

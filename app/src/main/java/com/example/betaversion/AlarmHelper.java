@@ -24,11 +24,26 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+/**
+ * מחלקת עזר לתזכורות.
+ */
+
 public class AlarmHelper {
 
     public static FirebaseUser currentUser;
+
+    /**
+     * שם הפעולה הדרושה (מחיקת/יצירת התראות).
+     */
     public static String action;
 
+
+
+    /**
+     * הסרת כל התזכורות.
+     *
+     * @param context the context
+     */
     public static void cancel_all_alarms(Context context)
     {
         currentUser = mAuth.getCurrentUser();
@@ -37,6 +52,11 @@ public class AlarmHelper {
         read_tasksDays(context);
     }
 
+    /**
+     * יצירת כל התזכורות הנדרשות.
+     *
+     * @param context the context
+     */
     public static void create_all_alarms(Context context)
     {
         currentUser = mAuth.getCurrentUser();
@@ -45,6 +65,12 @@ public class AlarmHelper {
         read_tasksDays(context);
     }
 
+    /**
+     * הסרת תזכורת.
+     *
+     * @param task    the task
+     * @param context the context
+     */
     public static void cancel_alarm(Task task,Context context)
     {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -54,6 +80,13 @@ public class AlarmHelper {
         alarmManager.cancel(pendingIntent);
     }
 
+    /**
+     * יצירת תזכורת.
+     *
+     * @param task    the task
+     * @param context the context
+     * @return the id of alarm
+     */
     public static int create_task_alarm(Task task, Context context)
     {
         String[] task_date=task.getTaskDay().split("-");
@@ -85,6 +118,11 @@ public class AlarmHelper {
         return alarm_id;
     }
 
+    /**
+     * קריאת הרשימות מ-Firebase Realtime Database.
+     *
+     * @param context the context
+     */
     public static void read_lists(Context context)
     {
         refLists.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -103,6 +141,11 @@ public class AlarmHelper {
         });
     }
 
+    /**
+     * קריאת הימים המרוכזים מ-Firebase Realtime Database.
+     *
+     * @param context the context
+     */
     public static void read_tasksDays(Context context)
     {
         refTasksDays.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -121,6 +164,13 @@ public class AlarmHelper {
         });
     }
 
+    /**
+     * קריאת המטלות מ-Firebase Realtime Database.
+     *
+     * @param reference the reference
+     * @param name      the name of List/DayList
+     * @param context   the context
+     */
     public static void read_tasks(DatabaseReference reference, String name, Context context)
     {
         reference.child(currentUser.getUid()).child(name).child("Tasks").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -151,6 +201,14 @@ public class AlarmHelper {
         });
     }
 
+    /**
+     * בדיקה האם השעה שנבחרה לביצוע המטלה עוד לא עברה (תקינות קלט).
+     *
+     * @param task_date the date of task
+     * @param task_time the time of task
+     * @param context   the context
+     * @return the boolean
+     */
     public static boolean isHourOfTaskHasOk(String task_date, String task_time, Context context)
     {
         String[] hour=task_time.split(":");
