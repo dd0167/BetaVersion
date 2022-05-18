@@ -67,15 +67,19 @@ import com.gun0912.tedpermission.TedPermission;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * מסך "הצגת המטלה על המפה".
+ */
 public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     BottomNavigationView bottomNavigationView;
 
     Intent gi;
+
     Task task_clicked;
 
-    TextView tv_task_name, tv_task_address_map;
-    TextView tv_task_current_address, tv_distance;
+    TextView tv_task_name,tv_task_address_map;
+    TextView tv_task_current_address,tv_distance;
 
     MapView mapView_Task;
     GoogleMap gmap;
@@ -161,7 +165,11 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         check_permissions();
     }
 
-    //show City and Country
+    /**
+     * הצגת המיקום הנוכחי.
+     *
+     * @param latLng the lat lng
+     */
     public void show_locationData(LatLng latLng) {
         Geocoder geocoder = new Geocoder(ShowTaskMapActivity.this);
 
@@ -174,6 +182,11 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    /**
+     * חיפוש המיקום המוכחי והצגתו על המפה.
+     *
+     * @param view the view
+     */
     public void get_current_location(View view) {
         if (!LocationHelper.isGPSOn(this))
         {
@@ -376,6 +389,9 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         return true;
     }
 
+    /**
+     * מעבר למסך ההתחברות.
+     */
     public void move_login() {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
@@ -443,6 +459,15 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    /**
+     * חישוב המרחק בין מיקום המטלה למיקום הנוכחי של המשתמש.
+     *
+     * @param lat1 the lat 1
+     * @param lat2 the lat 2
+     * @param lon1 the lon 1
+     * @param lon2 the lon 2
+     * @return the double
+     */
     public static double distance(double lat1, double lat2, double lon1, double lon2)
     {
         // The math module contains a function
@@ -515,6 +540,9 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
         mapView_Task.onLowMemory();
     }
 
+    /**
+     * בדיקת הרשאות המשתמש.
+     */
     public void check_permissions() {
         if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
         {

@@ -15,8 +15,13 @@ import java.util.Date;
 import java.util.Locale;
 
 
+/**
+ * The type Custom tasks day list adapter.
+ */
 public class CustomTasksDayListAdapter extends BaseAdapter{
+
     Context context;
+
     ArrayList<String> lists;
     LayoutInflater inflter;
     ArrayList<TasksDay> list_values;
@@ -24,6 +29,13 @@ public class CustomTasksDayListAdapter extends BaseAdapter{
     SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-M-dd", new Locale("he"));
     SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
 
+    /**
+     * Instantiates a new Custom tasks day list adapter.
+     *
+     * @param applicationContext the application context
+     * @param lists              the lists
+     * @param list_values        the list values
+     */
     public CustomTasksDayListAdapter(Context applicationContext, ArrayList<String> lists, ArrayList<TasksDay> list_values) {
         this.context = applicationContext;
         this.lists = lists;
@@ -65,7 +77,13 @@ public class CustomTasksDayListAdapter extends BaseAdapter{
         return view;
     }
 
-    // convert date from dd-MM-yyyy to english
+    /**
+     * שינוי פורמט התאריך.
+     *
+     * @param date the date
+     * @return the string [ ]
+     */
+// convert date from dd-MM-yyyy to english
     public String[] convert_date(String date)
     {
         String[] result=new String[3];

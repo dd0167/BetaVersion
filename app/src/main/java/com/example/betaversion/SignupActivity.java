@@ -47,13 +47,19 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+/**
+ * מסך "הרשמה".
+ */
 public class SignupActivity extends AppCompatActivity {
 
     EditText et_email_signup;
     EditText et_password_signup;
+
     CheckBox checkBox_signup;
+
     Uri imageUri;
     ImageView user_image;
+
     Switch switch_signup;
 
     @Override
@@ -85,6 +91,11 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * כפתור ההרשמה.
+     *
+     * @param view the view
+     */
     public void sign_up(View view) {
         String email=et_email_signup.getText().toString();
         String password=et_password_signup.getText().toString();
@@ -125,6 +136,9 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * מעבר למסך ההגדרות.
+     */
     public void move_settings()
     {
         Intent sa = new Intent(this, SettingsActivity.class);
@@ -143,6 +157,11 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * מעבר למסך ההתחברות.
+     *
+     * @param view the view
+     */
     public void sign_in(View view) {
         Intent sin = new Intent(this, LoginActivity.class);
         startActivity(sin);

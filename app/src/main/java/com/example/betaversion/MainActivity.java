@@ -67,6 +67,9 @@ import java.util.Locale;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
+/**
+ * מסך "הרשימות שלי".
+ */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener,PopupMenu.OnMenuItemClickListener {
 
     FirebaseUser currentUser;
@@ -78,12 +81,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     ArrayList<String> lists_array = new ArrayList<String>();
     ArrayList<List> lists_values = new ArrayList<List>();
+
     String list_name;
     ListView lists_listview;
     TextView tv_lists_amount;
 
     BottomSheetDialog bottomSheetDialog_list;
-
     ImageView cancel_bottom_sheet_dialog_list;
 
     Chip chip_name;
@@ -160,6 +163,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         check_permissions();
     }
 
+    /**
+     * מעבר למסך הרשימות.
+     */
     public void move_login()
     {
         Intent la = new Intent(this, LoginActivity.class);
@@ -294,12 +300,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+    /**
+     * יצירת רשימה.
+     *
+     * @param view the view
+     */
     public void create_list(View view) {
 
         list_clicked=null;
         show_bottomSheetDialog();
     }
 
+    /**
+     * פתיחת מסך הקלט.
+     */
     public void show_bottomSheetDialog()
     {
         bottomSheetDialog_list=new BottomSheetDialog(this,R.style.BottomSheetTheme);
@@ -317,6 +331,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
+    /**
+     * הוספת הרשימה.
+     *
+     * @param view the view
+     */
     public void add_list (View view){
 
         EditText et_list_name=(EditText) bottomSheetDialog_list.findViewById(R.id.et_list_name);
@@ -374,11 +393,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         chip_date.setClickable(true);
     }
 
+    /**
+     * קבלת התאריך הנוכחי.
+     *
+     * @return the current date
+     */
     public String get_current_date()
     {
         return new SimpleDateFormat("yyyy-MM-dd",new Locale("he")).format(new Date());
     }
 
+    /**
+     *   קריאת הרשימות מ-Firebase Realtime Database.
+     */
     public void read_lists()
     {
         if (!is_Internet_Connected())
@@ -432,6 +459,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * בודק האם יש אינטרנט.
+     *
+     * @return the boolean
+     */
     public boolean is_Internet_Connected() {
         boolean connected = false;
         try {
@@ -462,6 +494,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+    /**
+     * הצגת תפריט לרשימה.
+     *
+     * @param v the v
+     */
     public void showPopup(View v)
     {
         PopupMenu popupMenu=new PopupMenu(this, v);
@@ -498,7 +535,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot data : snapshot.getChildren()) {
                                 Task task = data.child("Task Data").getValue(Task.class);
-                                cancel_alarm(task);
+                                AlarmHelper.cancel_alarm(task,MainActivity.this);
                             }
                         }
 
@@ -523,6 +560,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+    /**
+     * מיון הרשימות.
+     *
+     * @param view the view
+     */
     public void sort_items(View view) {
         if (chip_name.isChecked())
         {
@@ -542,6 +584,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * בדיקת הרשאות המשתמש.
+     */
     public void check_permissions() {
         if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
         {
@@ -549,15 +594,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(pa);
             finish();
         }
-    }
-
-    public void cancel_alarm(Task task)
-    {
-        //cancel alarm
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getTaskAlarmId(), intent,  PendingIntent.FLAG_IMMUTABLE);
-
-        alarmManager.cancel(pendingIntent);
     }
 }

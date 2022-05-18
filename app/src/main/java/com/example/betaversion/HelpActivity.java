@@ -34,9 +34,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
+/**
+ * מסך "מדריך למשתמש".
+ */
 public class HelpActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
+
     FirebaseUser currentUser;
 
     BottomSheetDialog bottomSheetDialog_help;
@@ -214,12 +218,18 @@ public class HelpActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * מעבר למסך ההרשמה.
+     */
     public void move_login() {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
         finish();
     }
 
+    /**
+     * פתיחת מסך ההסברים.
+     */
     public void show_bottomSheetDialog()
     {
         bottomSheetDialog_help=new BottomSheetDialog(this,R.style.BottomSheetTheme);
@@ -236,6 +246,11 @@ public class HelpActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * הצגת ההסברים.
+     *
+     * @param view the view
+     */
     public void show_explanation(View view)
     {
         show_bottomSheetDialog();

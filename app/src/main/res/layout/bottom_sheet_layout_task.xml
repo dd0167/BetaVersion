@@ -77,6 +77,29 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/calibri"
                 android:gravity="center"
+                android:text="פירוט  המטלה"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_task_notes"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:fontFamily="@font/calibri"
+                android:gravity="center"
+                android:hint="הקלד טקסט כאן" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/calibri"
+                android:gravity="center"
                 android:text="כתובת המטלה"
                 android:textColor="@color/black"
                 android:textSize="24sp"
@@ -121,28 +144,6 @@
                 android:textColor="@color/gray"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/calibri"
-                android:gravity="center"
-                android:text="הערות למטלה"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/et_task_notes"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:fontFamily="@font/calibri"
-                android:gravity="center"
-                android:hint="הקלד טקסט כאן" />
         </LinearLayout>
     </ScrollView>
 

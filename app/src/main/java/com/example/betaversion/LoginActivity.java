@@ -27,10 +27,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * מסך "כניסה".
+ */
 public class LoginActivity extends AppCompatActivity {
 
     EditText et_email_login;
     EditText et_password_login;
+
     CheckBox checkBox_login;
     Switch switch_login;
 
@@ -95,6 +99,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * כפתור הכניסה.
+     *
+     * @param view the view
+     */
     public void sign_in(View view) {
         String email=et_email_login.getText().toString();
         String password=et_password_login.getText().toString();
@@ -134,12 +143,20 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * מעבר למסך ההרשמה.
+     *
+     * @param view the view
+     */
     public void sign_up(View view) {
         Intent sup = new Intent(this, SignupActivity.class);
         startActivity(sup);
         finish();
     }
 
+    /**
+     * מעבר למסך הרשימות.
+     */
     public void move_main()
     {
         Intent ma = new Intent(this, MainActivity.class);
@@ -147,6 +164,9 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * מעבר למסך ההגדרות.
+     */
     public void move_settings()
     {
         Intent sa = new Intent(this, SettingsActivity.class);

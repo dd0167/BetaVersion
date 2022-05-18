@@ -62,6 +62,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * מסך "הימים המרוכזים שלי".
+ */
 public class TasksDayListsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, PopupMenu.OnMenuItemClickListener{
 
     BottomNavigationView bottomNavigationView;
@@ -73,13 +76,14 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
     ArrayList<String> tasksDay_array = new ArrayList<String>();
     ArrayList<TasksDay> tasksDay_values = new ArrayList<TasksDay>();
+
     String tasksDay_name;
+
     ListView tasksDay_listview;
     TextView tv_tasksDay_amount;
 
     BottomSheetDialog bottomSheetDialog_tasksDay;
 
-    //Date
     Calendar calendar=Calendar.getInstance();
     int year;
     int month;
@@ -168,6 +172,11 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         check_permissions();
     }
 
+    /**
+     * בודק האם יש אינטרנט.
+     *
+     * @return the boolean
+     */
     public boolean is_Internet_Connected() {
         boolean connected = false;
         try {
@@ -181,6 +190,9 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         return connected;
     }
 
+    /**
+     * קריאת הימים המרוכזים מ-Firebase Realtime Database.
+     */
     public void read_tasksDays() {
         if (!is_Internet_Connected())
         {
@@ -360,6 +372,9 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         return true;
     }
 
+    /**
+     * מעבר למסך הכניסה.
+     */
     public void move_login()
     {
         Intent la = new Intent(this, LoginActivity.class);
@@ -367,11 +382,19 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         finish();
     }
 
+    /**
+     * יצירת יום מרוכז.
+     *
+     * @param view the view
+     */
     public void create_tasks_day(View view) {
         tasksDay_clicked=null;
         show_bottomSheetDialog();
     }
 
+    /**
+     * פתיחת מסך הקלט.
+     */
     public void show_bottomSheetDialog()
     {
         bottomSheetDialog_tasksDay=new BottomSheetDialog(this,R.style.BottomSheetTheme);
@@ -389,6 +412,11 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         });
     }
 
+    /**
+     * הוספת היום המרוכז.
+     *
+     * @param view the view
+     */
     public void add_tasksDay (View view){
 
         EditText et_tasksDay_name=(EditText) bottomSheetDialog_tasksDay.findViewById(R.id.et_tasksDay_name);
@@ -458,6 +486,11 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         chip_date.setClickable(true);
     }
 
+    /**
+     * בחיר תאריך יעד ליום המרוכז.
+     *
+     * @param view the view
+     */
     public void set_tasksDay_date(View view)
     {
         TextView tv_tasksDay_date=(TextView) bottomSheetDialog_tasksDay.findViewById(R.id.tv_tasksDay_date);
@@ -485,6 +518,11 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         datePickerDialog.show();
     }
 
+    /**
+     * הצגת תפריט ליום המרוכז.
+     *
+     * @param v the v
+     */
     public void showPopup(View v)
     {
         PopupMenu popupMenu=new PopupMenu(this, v);
@@ -548,7 +586,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot data : snapshot.getChildren()) {
                                 Task task = data.child("Task Data").getValue(Task.class);
-                                cancel_alarm(task);
+                                AlarmHelper.cancel_alarm(task,TasksDayListsActivity.this);
                             }
                         }
 
@@ -573,6 +611,11 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         return true;
     }
 
+    /**
+     * מיון הימים המרוכזים.
+     *
+     * @param view the view
+     */
     public void sort_items(View view) {
 
         if (chip_name.isChecked())
@@ -593,6 +636,9 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
     }
 
+    /**
+     * בדיקת הרשאות המשתמש.
+     */
     public void check_permissions() {
         if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
         {
@@ -602,6 +648,9 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
     }
 
+    /**
+     * הצגת הימים המרוכזים שתאריך היעד שלהם חלף.
+     */
     public void showDaysHasTheyDatePassed()
     {
         refTasksDays.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -642,6 +691,12 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         });
     }
 
+    /**
+     * בודק האם התאריך חלף.
+     *
+     * @param tasksDay the tasks day
+     * @return the boolean
+     */
     public boolean isDateOfDayHasPassed(TasksDay tasksDay)
     {
         String taskDay_date=tasksDay.getTasksDayDate();
@@ -659,15 +714,5 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
 
         return false;
-    }
-
-    public void cancel_alarm(Task task)
-    {
-        //cancel alarm
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getTaskAlarmId(), intent,  PendingIntent.FLAG_IMMUTABLE);
-
-        alarmManager.cancel(pendingIntent);
     }
 }

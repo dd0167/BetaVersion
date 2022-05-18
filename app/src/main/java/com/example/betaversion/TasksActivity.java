@@ -124,6 +124,9 @@ import petrov.kristiyan.colorpicker.ColorPicker;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
+/**
+ * מסך "המטלות שלי".
+ */
 public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     DatabaseReference reference;
@@ -134,6 +137,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     String list_clicked_name;
     String list_clicked_date;
+
     Intent gi;
 
     com.example.betaversion.List list_clicked;
@@ -142,7 +146,6 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     TextView tv_list_name;
     TextView tv_list_date;
     TextView tv_tasks_amount;
-
     ListView tasks_listview;
 
     ArrayList<String> tasks_array = new ArrayList<String>();
@@ -150,15 +153,13 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     BottomSheetDialog bottomSheetDialog_task;
 
-    //Date and Time
     Calendar calendar = Calendar.getInstance();
     int year;
     int month;
     int day;
 
-    String date, time, date_and_time = "", task_color = "#808080"; //task_color=white
+    String date,time,date_and_time = "",task_color = "#808080"; //task_color=white
 
-    //image
     Uri imageUri;
     int PICK_IMAGE = 2;
 
@@ -178,16 +179,17 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
     SimpleDateFormat dateFormat_before = new SimpleDateFormat("dd-MM-yyyy", new Locale("he"));
     SimpleDateFormat dateFormat_after = new SimpleDateFormat("yyyy-MM-dd", new Locale("he"));
 
-    Chip chip_name, chip_color, chip_creation_date, chip_target_date, chip_distance;
+    Chip chip_name,chip_color,chip_creation_date,chip_target_date,chip_distance;
 
     ValueEventListener tasks_array_listener;
 
     String task_creationDate;
+
     SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-M-dd", new Locale("he"));
 
     FusedLocationProviderClient fusedLocationProviderClient;
     CancellationTokenSource cancellationTokenSource;
-    double current_latitude=0,current_longitude=0;
+    double current_latitude=0, current_longitude=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,6 +270,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         check_permissions();
     }
 
+    /**
+     * Gets data from intent.
+     */
     public void get_data_from_intent() {
         gi = getIntent();
         String ref = gi.getStringExtra("reference");
@@ -295,6 +300,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         reference = FBDB.getReference(ref);
     }
 
+    /**
+     * קריאת המטלות מ-Firebase Realtime Database.
+     */
     public void read_tasks() {
         tasks_array_listener = new ValueEventListener() {
             @Override
@@ -449,17 +457,28 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return true;
     }
 
+    /**
+     * מעבר למסך הכניסה.
+     */
     public void move_login() {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);
         finish();
     }
 
+    /**
+     * יצירת מטלה.
+     *
+     * @param view the view
+     */
     public void create_task(View view) {
         change_data_to_default();
         show_bottomSheetDialog();
     }
 
+    /**
+     * הצגת מסך הקלט.
+     */
     public void show_bottomSheetDialog() {
         bottomSheetDialog_task = new BottomSheetDialog(this, R.style.BottomSheetTheme);
 
@@ -483,6 +502,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         });
     }
 
+    /**
+     * הוספת המטלה.
+     *
+     * @param view the view
+     */
     public void add_task(View view) {
         EditText et_task_name = (EditText) bottomSheetDialog_task.findViewById(R.id.et_task_name);
         EditText et_task_address = (EditText) bottomSheetDialog_task.findViewById(R.id.et_task_address);
@@ -539,10 +563,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                             @Override
                             public void onSuccess(Uri uri) {
                                 imageUri = uri;
-                                cancel_alarm(task_clicked);
+                                AlarmHelper.cancel_alarm(task_clicked,TasksActivity.this);
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                                 Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1,task_clicked.getTaskAlarmId());
-                                task.setTaskAlarmId(create_task_alarm(task));
+                                task.setTaskAlarmId(AlarmHelper.create_task_alarm(task,TasksActivity.this));
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                                 Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                                 change_data_to_default();
@@ -560,10 +584,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                     }
                 });
             } else {
-                cancel_alarm(task_clicked);
+                AlarmHelper.cancel_alarm(task_clicked,TasksActivity.this);
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                 Task task = new Task(taskName, correct_address(taskAddress), date, time, task_clicked.getTaskCreationDate(), taskNotes, task_color, imageUri.toString(),-1,task_clicked.getTaskAlarmId());
-                task.setTaskAlarmId(create_task_alarm(task));
+                task.setTaskAlarmId(AlarmHelper.create_task_alarm(task,TasksActivity.this));
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                 Toast.makeText(TasksActivity.this, "עדכון המטלה בוצע בהצלחה", Toast.LENGTH_SHORT).show();
                 change_data_to_default();
@@ -591,7 +615,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                         public void onSuccess(Uri uri) {
                             imageUri = uri;
                             Task task = new Task(taskName, correct_address(taskAddress), date, time, task_creationDate, taskNotes, task_color, imageUri.toString(),-1,0);
-                            task.setTaskAlarmId(create_task_alarm(task));
+                            task.setTaskAlarmId(AlarmHelper.create_task_alarm(task,TasksActivity.this));
                             reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").setValue(task);
                             Toast.makeText(TasksActivity.this, "יצירת המטלה בוצעה בהצלחה", Toast.LENGTH_SHORT).show();
 
@@ -614,6 +638,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
     }
 
+    /**
+     * שינוי המשתנים לערך ברירת המחדל.
+     */
     public void change_data_to_default() {
         task_clicked = null;
         bottomSheetDialog_task.cancel();
@@ -630,10 +657,20 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         chip_distance.setClickable(true);
     }
 
+    /**
+     * קבלת התאריך הנוכחי.
+     *
+     * @return the current date
+     */
     public String get_current_date() {
         return new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
     }
 
+    /**
+     * קליטת תאריך ושעה עבור זמן ביצוע המטלה.
+     *
+     * @param view the view
+     */
     public void set_date_and_time(View view) {
         if (reference.equals(refLists)) {
             select_date();
@@ -642,6 +679,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
     }
 
+    /**
+     *קליטת תאריך יעד.
+     */
     public void select_date() {
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
@@ -667,6 +707,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         datePickerDialog.show();
     }
 
+    /**
+     * קליטת שעת יעד.
+     */
     public void select_time() {
         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -696,6 +739,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         timePickerDialog.show();
     }
 
+    /**
+     * הוספת תמונה למטלה.
+     *
+     * @param view the view
+     */
     public void add_image(View view) {
         ImageView task_image = (ImageView) bottomSheetDialog_task.findViewById(R.id.task_image);
 
@@ -732,6 +780,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         ad.show();
     }
 
+    /**
+     * בןדק האם הכתובת אינה שגויה.
+     *
+     * @param address the address
+     * @return the string
+     */
     public String correct_address(String address) {
         Geocoder geocoder = new Geocoder(TasksActivity.this);
         try {
@@ -776,6 +830,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
     }
 
+    /**
+     * קליטת צבע המטלה.
+     *
+     * @param view the view
+     */
     public void task_color(View view) {
         default_color = Color.parseColor("#808080");
         if (task_clicked != null) {
@@ -810,6 +869,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }).show();
     }
 
+    /**
+     * הצגת תפריט למטלה.
+     *
+     * @param v the v
+     */
     public void showPopup(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
         popupMenu.setOnMenuItemClickListener(this);
@@ -869,6 +933,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return true;
     }
 
+    /**
+     * מחיקת מטלה.
+     */
     public void delete_task() {
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
@@ -878,7 +945,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                cancel_alarm(task_clicked);
+                AlarmHelper.cancel_alarm(task_clicked,TasksActivity.this);
                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task_clicked.getTaskName()).child("Task Data").removeValue();
                 String deleteFileName = currentUser.getUid()+"/" +task_clicked.getTaskName()+ " image.png";
                 if (reference.equals(refLists))
@@ -923,6 +990,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return false;
     }
 
+    /**
+     * מיון המטלות.
+     *
+     * @param view the view
+     */
     public void sort_items(View view) {
         if (chip_distance.isChecked()) {
             if (LocationHelper.isGPSOn(this))
@@ -991,6 +1063,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
     }
 
+    /**
+     * עדכון המיקום הנוכחי ושם אותו בעצם המטלה.
+     */
     public void update_task_currentLocation()
     {
         set_currentLocation();
@@ -1027,6 +1102,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         progressDialog.dismiss();
     }
 
+    /**
+     * חיפוש המיקום הנוכחי.
+     */
     public void set_currentLocation()
     {
         progressDialog=ProgressDialog.show(this,"מוצא את המיקום הנוכחי","טוען...",true);
@@ -1061,6 +1139,15 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         progressDialog.dismiss();
     }
 
+    /**
+     *  חישוב המרחק בין מיקום המטלה למיקום הנוכחי של המשתמש.
+     *
+     * @param lat1 the lat 1
+     * @param lat2 the lat 2
+     * @param lon1 the lon 1
+     * @param lon2 the lon 2
+     * @return the double
+     */
     public static double distance(double lat1, double lat2, double lon1, double lon2)
     {
         // The math module contains a function
@@ -1088,6 +1175,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return(c * r);
     }
 
+    /**
+     * בדיקת הרשאות מהמשתמש.
+     */
     public void check_permissions() {
         if (!PermissionsActivity.checkAllPermissions(this) || !LocationHelper.isGPSOn(this))
         {
@@ -1101,6 +1191,9 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         }
     }
 
+    /**
+     * הצגת המטלות שתאריך היעד שלהם עבר.
+     */
     public void showTasksHasTheyDatePassed()
     {
         reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1119,7 +1212,7 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
                         adb.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                cancel_alarm(task);
+                                AlarmHelper.cancel_alarm(task,TasksActivity.this);
                                 reference.child(currentUser.getUid()).child(list_clicked_name).child("Tasks").child(task.getTaskName()).child("Task Data").removeValue();
                                 String deleteFileName = currentUser.getUid()+"/" +task.getTaskName()+ " image.png";
                                 if (reference.equals(refLists))
@@ -1159,6 +1252,12 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         });
     }
 
+    /**
+     * בודק האם תאריך היעד עבר.
+     *
+     * @param task the task
+     * @return the boolean
+     */
     public boolean isDateOfTaskHasPassed(Task task)
     {
         String task_date=task.getTaskDay();
@@ -1179,6 +1278,13 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return false;
     }
 
+    /**
+     * בודק האם שעת היעד למטלה לא עברה (תקינות קלט).
+     *
+     * @param task_date the task date
+     * @param task_time the task time
+     * @return the boolean
+     */
     public boolean isHourOfTaskHasOk(String task_date, String task_time)
     {
         String[] hour=task_time.split(":");
@@ -1215,46 +1321,5 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return false;
-    }
-
-    public void cancel_alarm(Task task)
-    {
-        //cancel alarm
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getTaskAlarmId(), intent,  PendingIntent.FLAG_IMMUTABLE);
-
-        alarmManager.cancel(pendingIntent);
-    }
-
-    public int create_task_alarm(Task task)
-    {
-        String[] task_date=task.getTaskDay().split("-");
-        String[] task_time=task.getTaskHour().split(":");
-
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(task_time[0])-1);
-        c.set(Calendar.MINUTE, Integer.parseInt(task_time[1]));
-        c.set(Calendar.SECOND, 0);
-
-        c.set(Calendar.YEAR, Integer.parseInt(task_date[0]));
-        c.set(Calendar.MONTH,Integer.parseInt(task_date[1])-1);
-        c.set(Calendar.DAY_OF_MONTH,Integer.parseInt(task_date[2]));
-
-        Random random=new Random();
-        int alarm_id=random.nextInt();
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.putExtra("task",task);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarm_id, intent,  PendingIntent.FLAG_IMMUTABLE );
-
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-
-        return alarm_id;
     }
 }

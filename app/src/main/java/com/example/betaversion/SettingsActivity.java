@@ -61,18 +61,25 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * מסך "הגדרות".
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
 
     ImageView user_image_settings;
+
     EditText et_first_name_settings;
     EditText et_last_name_settings;
     EditText et_age_settings;
     EditText et_home_address_settings;
     EditText et_phone_number_settings;
+
     CheckBox checkBox_settings;
+
     FirebaseUser currentUser;
+
     Uri imageUri;
     boolean is_changed;
     int PICK_IMAGE=2;
@@ -285,6 +292,9 @@ public class SettingsActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * מעבר למסך הרשימות.
+     */
     public void move_login()
     {
         Intent la = new Intent(this, LoginActivity.class);
@@ -292,6 +302,11 @@ public class SettingsActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * עדכון נתוני המטלה.
+     *
+     * @param view the view
+     */
     public void update(View view) {
         if (!is_Internet_Connected()) {
             AlertDialog.Builder adb;
@@ -425,6 +440,12 @@ public class SettingsActivity extends AppCompatActivity {
         et_phone_number_settings.clearFocus();
     }
 
+    /**
+     * בודק האם הכתובת אינה שגויה.
+     *
+     * @param address the address
+     * @return the string
+     */
     public String correct_address(String address)
     {
         Geocoder geocoder=new Geocoder(SettingsActivity.this);
@@ -439,6 +460,11 @@ public class SettingsActivity extends AppCompatActivity {
         return "";
     }
 
+    /**
+     * שינוי תמונת הפרופיל.
+     *
+     * @param view the view
+     */
     public void change_image(View view) {
         String[] items={"בחר תמונה מהגלריה","בחר את תמונת ברירת המחדל"};
 
@@ -510,6 +536,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * בודק האם יש אינטרנט.
+     *
+     * @return the boolean
+     */
     public boolean is_Internet_Connected() {
         boolean connected = false;
         try {
@@ -523,6 +554,9 @@ public class SettingsActivity extends AppCompatActivity {
         return connected;
     }
 
+    /**
+     * מעבר למסך הרשימות.
+     */
     public void move_main()
     {
         Intent ma = new Intent(this, MainActivity.class);

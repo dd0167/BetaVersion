@@ -60,6 +60,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * מסך "קרדיטים".
+ */
 public class CreditsActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
@@ -238,6 +241,9 @@ public class CreditsActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * מעבר למסך ההתחברות.
+     */
     public void move_login() {
         Intent la = new Intent(this, LoginActivity.class);
         startActivity(la);

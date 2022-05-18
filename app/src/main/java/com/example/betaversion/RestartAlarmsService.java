@@ -7,6 +7,9 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+/**
+ * יצירת כל התזכורות כשהטלפון הופעל מחדש.
+ */
 public class RestartAlarmsService extends Service {
 
    @Nullable

@@ -24,18 +24,30 @@ import java.util.Date;
 import java.util.Locale;
 
 
+/**
+ * The type Custom task adapter.
+ */
 public class CustomTaskAdapter extends BaseAdapter{
+
     Context context;
+
     ArrayList<String> tasks;
+
     LayoutInflater inflter;
     ArrayList<Task> task_values;
 
     SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-M-dd", new Locale("he"));
     SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
-
     SimpleDateFormat dateFormat_before = new SimpleDateFormat("dd-MM-yyyy", new Locale("he"));
     SimpleDateFormat dateFormat_after = new SimpleDateFormat("yyyy-MM-dd", new Locale("he"));
 
+    /**
+     * Instantiates a new Custom task adapter.
+     *
+     * @param applicationContext the application context
+     * @param tasks              the tasks
+     * @param task_values        the task values
+     */
     public CustomTaskAdapter(Context applicationContext, ArrayList<String> tasks, ArrayList<Task> task_values) {
         this.context = applicationContext;
         this.tasks = tasks;
@@ -116,7 +128,13 @@ public class CustomTaskAdapter extends BaseAdapter{
         return view;
     }
 
-    // convert date from dd-MM-yyyy to english
+    /**
+     * שינוי פורמט התאריך.
+     *
+     * @param date the date
+     * @return the string [ ]
+     */
+// convert date from dd-MM-yyyy to english
     public String[] convert_date(String date)
     {
         String[] result=new String[3];

@@ -12,11 +12,15 @@ import android.widget.ProgressBar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * מסך הכניסה לאפליקציה.
+ */
 public class SplashActivity extends AppCompatActivity {
 
     private static final long SPLASH_DISPLAY_LENGTH = 1000;
 
     ProgressBar progressBar_splash;
+
     int counter=0;
 
     @Override

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+/**
+ * מפסיק את פעולת האפליקציה ברקע בלחיצה על "עצור" בהתראה הראשית.
+ */
 public class NotificationService extends BroadcastReceiver {
 
    @Override

@@ -16,8 +16,17 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 
+/**
+ * מחלקת עזר למיקום.
+ */
 public class LocationHelper {
 
+    /**
+     * בודק האם מיקום המכשיר דלוק.
+     *
+     * @param context the context
+     * @return the boolean
+     */
     public static boolean isGPSOn(Context context) {
         int locationMode = 0;
         String locationProviders;
@@ -39,6 +48,11 @@ public class LocationHelper {
         }
     }
 
+    /**
+     * מבקש מהמשתמש להפעיל את מיקום המכשיר.
+     *
+     * @param context the context
+     */
     public static void turnGPSOn(Context context) {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);

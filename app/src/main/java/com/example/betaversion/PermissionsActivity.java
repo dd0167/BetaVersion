@@ -32,14 +32,18 @@ import java.util.List;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
+/**
+ * מסך "הרשאות".
+ */
 public class PermissionsActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
 
     private static final int REQUEST_CODE_PERMISSION = 0;
+
     Switch storage_switch;
     Switch location_switch;
     Switch backgroundLocation_switch;
 
-    LinearLayout linearLayout_storage,linearLayout_location,linearLayout_backgroundLocation;
+    LinearLayout linearLayout_storage, linearLayout_location, linearLayout_backgroundLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,9 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         isPermissions();
     }
 
+    /**
+     * הצגת ההרשאות שאושרו על ידי המשתמש.
+     */
     public void isPermissions() {
         if (EasyPermissions.hasPermissions(this,Manifest.permission.READ_EXTERNAL_STORAGE))
         {
@@ -85,6 +92,11 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         }
     }
 
+    /**
+     * כפתור "המשך" העובר למסך הרשימות.
+     *
+     * @param view the view
+     */
     public void continue_to_app(View view) {
         if (!LocationHelper.isGPSOn(this) || !checkAllPermissions(this))
         {
@@ -99,6 +111,12 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         }
     }
 
+    /**
+     * בדיקה האם כל ההרשאות אושרו על ידי המשתמש.
+     *
+     * @param context the context
+     * @return the boolean
+     */
     public static boolean checkAllPermissions(Context context)
     {
         boolean result=true;
@@ -137,6 +155,11 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         }
     }
 
+    /**
+     * בקשת הרשאות מהמשתמש.
+     *
+     * @param view the view
+     */
     public void requestPermission(View view) {
         if (view.getId()==R.id.linearLayout_storage)
         {
