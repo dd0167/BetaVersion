@@ -651,7 +651,6 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month = month + 1;
-                //date=dayOfMonth+"-"+month+"-"+year;
 
                 date = year + "-" + month + "-" + dayOfMonth;
                 try {
@@ -738,12 +737,10 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         try {
             List<Address> addressList = geocoder.getFromLocationName(address, 6);
             Address user_address = addressList.get(0);
-            LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
-            //Toast.makeText(TasksActivity.this, "Address: "+user_address.getAddressLine(0), Toast.LENGTH_SHORT).show();
-            //Toast.makeText(TasksActivity.this, "Lat: "+latLng.latitude+", "+"Lng: "+latLng.longitude, Toast.LENGTH_SHORT).show();
             return user_address.getAddressLine(0);
+
         } catch (Exception e) {
-            //Toast.makeText(TasksActivity.this, "Error Address!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(TasksActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return "";
     }
@@ -926,7 +923,6 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         return false;
     }
 
-
     public void sort_items(View view) {
         if (chip_distance.isChecked()) {
             if (LocationHelper.isGPSOn(this))
@@ -1067,7 +1063,6 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
     public static double distance(double lat1, double lat2, double lon1, double lon2)
     {
-
         // The math module contains a function
         // named toRadians which converts from
         // degrees to radians.

@@ -223,10 +223,6 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
                             tasksDay_array,tasksDay_values);
                     tasksDay_listview.setAdapter(customadp);
                     tv_tasksDay_amount.setText("קיימים "+ tasksDay_array.size()+ " ימים מרוכזים");
-
-                    //ArrayAdapter<String> adp=new ArrayAdapter<String>(TasksDayListsActivity.this,R.layout.support_simple_spinner_dropdown_item,tasksDay_array);
-                    //tasksDay_listview.setAdapter(adp);
-                    //tv_tasksDay_amount.setText("You have "+ tasksDay_array.size()+ " tasks days");
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -407,7 +403,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
         catch (Exception e)
         {
-            //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         tasksDay=new TasksDay(tasksDayName,date);
@@ -581,8 +577,6 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
         if (chip_name.isChecked())
         {
-            //Toast.makeText(this, "Name Is Checked", Toast.LENGTH_SHORT).show();
-
             Query query=refTasksDays.child(currentUser.getUid()).orderByKey();
             query.addListenerForSingleValueEvent(tasksDay_array_listener);
 
@@ -591,8 +585,6 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
         else if (chip_date.isChecked())
         {
-            //Toast.makeText(this, "Date Is Checked", Toast.LENGTH_SHORT).show();
-
             Query query=refTasksDays.child(currentUser.getUid()).orderByChild("Tasks Day Data/tasksDayDate");
             query.addListenerForSingleValueEvent(tasksDay_array_listener);
 

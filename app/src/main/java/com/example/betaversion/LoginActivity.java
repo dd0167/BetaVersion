@@ -7,26 +7,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,12 +26,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -76,20 +62,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        ////////////////////
-    //        SharedPreferences sharedPref = getSharedPreferences("STAY_CONNECT",Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//        editor.putBoolean("stayConnect", false);
-//        editor.commit();
-//
-//        editor.clear();
-//
-//
-//
-    //        SharedPreferences sharedPref2 = getSharedPreferences("STAY_CONNECT",Context.MODE_PRIVATE);
-//        boolean isChecked = sharedPref2.getBoolean("stayConnect", false);
-        ////////////////////
-
         SharedPreferences settings = getSharedPreferences("STAY_CONNECT",MODE_PRIVATE);
         boolean isChecked = settings.getBoolean("stayConnect",false);
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -120,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "שגיאה", Toast.LENGTH_SHORT).show();
                 }
             });
-            //move_main();
         }
     }
 
@@ -143,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        //Toast.makeText(LoginActivity.this, "User logged in successfully!", Toast.LENGTH_SHORT).show();
 
                         AlarmHelper.create_all_alarms(getApplicationContext());
 

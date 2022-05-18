@@ -409,20 +409,9 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-//        gmap.setMyLocationEnabled(true);
-//        gmap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-//            @Override
-//            public boolean onMyLocationButtonClick() {
-//                try {
-//                    LatLng latLng = new LatLng(gmap.getMyLocation().getLatitude(), gmap.getMyLocation().getLongitude());
-//                    float zoomLevel = 17.0f; //This goes up to 21
-//                    gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-//                } catch (Exception e) {
-//                    Toast.makeText(ShowTaskMapActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-//                }
-//                return true;
-//          }
-//        });
+
+
+
         LatLng isr = new LatLng(31.38269, 35.071805);
         gmap.animateCamera(CameraUpdateFactory.newLatLng(isr));
 
@@ -456,7 +445,6 @@ public class ShowTaskMapActivity extends AppCompatActivity implements OnMapReady
 
     public static double distance(double lat1, double lat2, double lon1, double lon2)
     {
-
         // The math module contains a function
         // named toRadians which converts from
         // degrees to radians.

@@ -152,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return true;
             }
         });
-        // overridePendingTransition(0,0);
 
         chip_name=(Chip) findViewById(R.id.sort_by_name);
         chip_date=(Chip) findViewById(R.id.sort_by_date);
@@ -527,8 +526,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void sort_items(View view) {
         if (chip_name.isChecked())
         {
-            //Toast.makeText(this, "Name Is Checked", Toast.LENGTH_SHORT).show();
-
             Query query=refLists.child(currentUser.getUid()).orderByKey();
             query.addListenerForSingleValueEvent(lists_array_listener);
 
@@ -537,8 +534,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else if (chip_date.isChecked())
         {
-            //Toast.makeText(this, "Date Is Checked", Toast.LENGTH_SHORT).show();
-
             Query query=refLists.child(currentUser.getUid()).orderByChild("List Data/listCreationDate");
             query.addListenerForSingleValueEvent(lists_array_listener);
 

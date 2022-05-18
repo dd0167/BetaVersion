@@ -56,7 +56,6 @@ public class LocationHelper {
 
         result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
 
-
             @Override
             public void onComplete(com.google.android.gms.tasks.Task<LocationSettingsResponse> task) {
                 try {

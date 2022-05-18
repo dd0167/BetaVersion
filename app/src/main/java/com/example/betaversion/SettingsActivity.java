@@ -431,24 +431,20 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             List<Address> addressList=geocoder.getFromLocationName(address,6);
             Address user_address=addressList.get(0);
-            LatLng latLng = new LatLng(user_address.getLatitude(), user_address.getLongitude());
-            //Toast.makeText(TasksActivity.this, "Address: "+user_address.getAddressLine(0), Toast.LENGTH_SHORT).show();
-            //Toast.makeText(TasksActivity.this, "Lat: "+latLng.latitude+", "+"Lng: "+latLng.longitude, Toast.LENGTH_SHORT).show();
             return user_address.getAddressLine(0);
         }
         catch (Exception e) {
-            //Toast.makeText(TasksActivity.this, "Error Address!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return "";
     }
 
     public void change_image(View view) {
         String[] items={"בחר תמונה מהגלריה","בחר את תמונת ברירת המחדל"};
-        //Typeface typeface=Typeface.create("casual",Typeface.NORMAL);
+
         AlertDialog.Builder adb;
         adb=new AlertDialog.Builder(this);
         adb.setTitle("שנה תמונת פרופיל");
-        //adb.setMessage("Select Image");
         adb.setIcon(R.drawable.user_icon);
         adb.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -482,12 +478,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-//        if (requestCode==PICK_IMAGE && resultCode==RESULT_OK && data!=null)
-//        {
-//            imageUri=data.getData();
-//            user_image_settings.setImageURI(imageUri);
-//        }
 
         if (requestCode==PICK_IMAGE && resultCode==RESULT_OK && data!=null)
         {

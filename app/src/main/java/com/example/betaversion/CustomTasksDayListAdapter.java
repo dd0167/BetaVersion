@@ -20,8 +20,7 @@ public class CustomTasksDayListAdapter extends BaseAdapter{
     ArrayList<String> lists;
     LayoutInflater inflter;
     ArrayList<TasksDay> list_values;
-//    SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-M-yyyy", Locale.US);
-//    SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd MMM yyyy", Locale.US);
+
     SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-M-dd", new Locale("he"));
     SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE dd MMM yyyy", new Locale("he"));
 
@@ -75,13 +74,10 @@ public class CustomTasksDayListAdapter extends BaseAdapter{
             Date result_date=inputDateFormat.parse(date);
             String outputDateString = dateFormat.format(result_date);
             String[] items1 = outputDateString.split(" ");
-            String day = items1[2];
-            String dd = items1[1];
-            String mon = items1[0];
+            result[0] = items1[2];
+            result[1] = items1[1];
+            result[2] = items1[0];
 
-            result[0]=day;
-            result[1]=dd;
-            result[2]=mon;
         } catch (ParseException e) {
             e.printStackTrace();
             Toast.makeText(context.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();

@@ -69,9 +69,11 @@ public class BackgroundService extends Service {
 
    public static FusedLocationProviderClient fusedLocationProviderClient;
    public static CancellationTokenSource cancellationTokenSource;
-   public static String latitude, longitude;
+   public static String current_latitude, current_longitude;
 
    public static ArrayList<Task> tasks=new ArrayList<Task>();
+
+   int milliseconds=10000; // 1000 millisecond = 1 second
 
    @Override
    public void onCreate() {
@@ -116,23 +118,17 @@ public class BackgroundService extends Service {
 
       startForeground(1, notification);
 
-      //do heavy work on a background thread
       run();
-      //stopSelf();
 
       return START_NOT_STICKY;
    }
 
    public void run()
    {
-      int milliseconds=10000; // 1000 millisecond = 1 second
       runnable = new Runnable() {
          @RequiresApi(api = Build.VERSION_CODES.O)
          @Override
          public void run() {
-            // Do the task...
-
-            //Toast.makeText(getApplicationContext(), "the size of tasks is: "+ tasks.size(), Toast.LENGTH_SHORT).show();
 
             set_current_location();
 
@@ -141,20 +137,8 @@ public class BackgroundService extends Service {
                if (getDistance(task) <=1 && !isDateOfTaskHasPassed(task))
                {
                   show_notification(task);
-//                  try
-//                  {
-//
-//                     Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/notification_sound");
-//                     Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
-//                     r.play();
-//                  }
-//                  catch (Exception e)
-//                  {
-//                     e.printStackTrace();
-//                  }
                }
             }
-            // לבדוק כאן את מיקום המשתמש ובהתאם לקילומטר אחד להוציא התראות
 
             handler.postDelayed(this, milliseconds); // Optional, to repeat the task.
          }
@@ -180,9 +164,6 @@ public class BackgroundService extends Service {
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
       PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-//      Bitmap icon = BitmapFactory.decodeResource(getResources(),
-//              R.drawable.task_icon);
-
       Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
       // Vibrate for 500 milliseconds
       v.vibrate(500);
@@ -200,7 +181,6 @@ public class BackgroundService extends Service {
                             .setLargeIcon(resource)
                             .setColor(Color.parseColor(task.getTaskColor()))
                             .setContentIntent(pendingIntent)
-                            //.setDefaults(Notification.DEFAULT_VIBRATE)
                             .setVibrate(new long[]{1000,1000,1000})
                             .setSound(alarmSound)
                             .setAutoCancel(true);
@@ -214,14 +194,14 @@ public class BackgroundService extends Service {
               });
    }
 
-   public static void stop_hi()
+   public static void stop_handler()
    {
       handler.removeCallbacks(runnable);
    }
 
    @Override
    public void onDestroy() {
-      stop_hi();
+      stop_handler();
       super.onDestroy();
    }
 
@@ -263,8 +243,8 @@ public class BackgroundService extends Service {
       currentLocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
          @Override
          public void onSuccess(Location location) {
-            latitude=String.valueOf(location.getLatitude());
-            longitude=String.valueOf(location.getLongitude());
+            current_latitude=String.valueOf(location.getLatitude());
+            current_longitude=String.valueOf(location.getLongitude());
          }
       }).addOnFailureListener(new OnFailureListener() {
          @Override
@@ -333,7 +313,6 @@ public class BackgroundService extends Service {
 
    public static double distance(double lat1, double lat2, double lon1, double lon2)
    {
-
       // The math module contains a function
       // named toRadians which converts from
       // degrees to radians.
@@ -374,7 +353,7 @@ public class BackgroundService extends Service {
       {
          Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
       }
-      double d = distance(Double.parseDouble(latitude), task_location.latitude , Double.parseDouble(longitude), task_location.longitude);
+      double d = distance(Double.parseDouble(current_latitude), task_location.latitude , Double.parseDouble(current_longitude), task_location.longitude);
       String distance = String.valueOf(d).substring(0, 5);
       double final_distance=Double.parseDouble(distance);
 

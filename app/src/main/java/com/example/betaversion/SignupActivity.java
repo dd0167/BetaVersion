@@ -85,19 +85,6 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    public boolean is_Internet_Connected() {
-        boolean connected = false;
-        try {
-            ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo nInfo = cm.getActiveNetworkInfo();
-            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
-            return connected;
-        } catch (Exception e) {
-            Log.e("Connectivity Exception", e.getMessage());
-        }
-        return connected;
-    }
-
     public void sign_up(View view) {
         String email=et_email_signup.getText().toString();
         String password=et_password_signup.getText().toString();
@@ -126,7 +113,6 @@ public class SignupActivity extends AppCompatActivity {
                         FirebaseUser currentUser = mAuth.getCurrentUser();
                         User user=new User(currentUser.getUid(),"","","","",currentUser.getEmail(),"",imageUri.toString());
                         refUsers.child(currentUser.getUid()).child("User Data").setValue(user);
-                        //Toast.makeText(SignupActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
 
                         move_settings();
                         Toast.makeText(SignupActivity.this, "הכנס את הפרטים הנדרשים", Toast.LENGTH_SHORT).show();

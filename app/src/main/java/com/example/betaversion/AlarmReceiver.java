@@ -27,6 +27,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
+
         Task task=intent.getParcelableExtra("task");
         show_notification(context,task);
     }

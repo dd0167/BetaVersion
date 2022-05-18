@@ -47,7 +47,6 @@ public class AlarmHelper {
 
     public static void cancel_alarm(Task task,Context context)
     {
-        //cancel alarm
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, task.getTaskAlarmId(), intent,  PendingIntent.FLAG_IMMUTABLE);
