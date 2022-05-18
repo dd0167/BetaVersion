@@ -36,11 +36,11 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="20dp" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="250dp"
         tools:ignore="SpeakableTextPresentCheck">
 
         <LinearLayout
@@ -57,10 +57,6 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <EditText
                 android:id="@+id/et_task_name"
@@ -85,10 +81,6 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <EditText
                 android:id="@+id/et_task_address"
@@ -142,10 +134,6 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <EditText
                 android:id="@+id/et_task_notes"
@@ -236,7 +224,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="20dp" />
 
     <Button
         android:id="@+id/add_task"
