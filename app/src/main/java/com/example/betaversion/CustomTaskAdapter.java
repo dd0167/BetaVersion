@@ -108,7 +108,7 @@ public class CustomTaskAdapter extends BaseAdapter{
 
         if (!task_values.get(i).getTaskNotes().isEmpty())
         {
-            tv_task_notes.setText("הערות: "+task_values.get(i).getTaskNotes());
+            tv_task_notes.setText("תיאור: "+task_values.get(i).getTaskNotes());
         }
         else
         {

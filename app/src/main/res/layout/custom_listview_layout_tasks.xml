@@ -173,7 +173,7 @@
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="הערות"
+                            android:text="תיאור"
                             android:textColor="@color/black"
                             android:textSize="10sp" />
 
