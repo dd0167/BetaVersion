@@ -319,7 +319,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         bottomSheetDialog_list=new BottomSheetDialog(this,R.style.BottomSheetTheme);
 
         bottomSheetDialog_list.setContentView(R.layout.bottom_sheet_layout_list);
-        bottomSheetDialog_list.setCancelable(false);
         bottomSheetDialog_list.show();
 
         cancel_bottom_sheet_dialog_list=(ImageView) bottomSheetDialog_list.findViewById(R.id.cancel_bottom_sheet_dialog_list);

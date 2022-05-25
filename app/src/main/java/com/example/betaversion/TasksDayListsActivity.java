@@ -400,7 +400,6 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         bottomSheetDialog_tasksDay=new BottomSheetDialog(this,R.style.BottomSheetTheme);
 
         bottomSheetDialog_tasksDay.setContentView(R.layout.bottom_sheet_layout_tasks_day);
-        bottomSheetDialog_tasksDay.setCancelable(false);
         bottomSheetDialog_tasksDay.show();
 
         cancel_bottom_sheet_dialog_tasksDays=(ImageView) bottomSheetDialog_tasksDay.findViewById(R.id.cancel_bottom_sheet_dialog_tasksDays);
@@ -487,7 +486,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
     }
 
     /**
-     * בחיר תאריך יעד ליום המרוכז.
+     * בחירת תאריך יעד ליום המרוכז.
      *
      * @param view the view
      */
