@@ -468,7 +468,7 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
             et_tasksDay_name.setError("קיים יום מרוכז עם אותו השם");
             et_tasksDay_name.requestFocus();
         }
-        else if (date.equals("בחר תאריך יעד") )
+        if (date.equals("בחר תאריך יעד") )
         {
             Toast.makeText(TasksDayListsActivity.this, "בחר תאריך", Toast.LENGTH_SHORT).show();
         }
