@@ -486,6 +486,11 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
         bottomSheetDialog_task.setCancelable(false);
         bottomSheetDialog_task.show();
 
+        TextView tv_task_name=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_name);
+        TextView tv_task_dateandtime=(TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_dateandtime);
+        tv_task_name.setText(Html.fromHtml("<font color=\"black\">" + "שם המטלה" + "</font>" + "<font color=\"red\">" +"<small>"+ " *" +"</small>"+ "</font>"));
+        tv_task_dateandtime.setText(Html.fromHtml("<font color=\"black\">" + "זמן ביצוע המטלה" + "</font>" + "<font color=\"red\">" +"<small>"+ " *" +"</small>"+ "</font>"));
+
         TextView tv_task_date_and_time = (TextView) bottomSheetDialog_task.findViewById(R.id.tv_task_date_and_time);
         if (reference.equals(refLists)) {
             tv_task_date_and_time.setText(SELECT_DATE_AND_TIME);
