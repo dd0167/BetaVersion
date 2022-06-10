@@ -303,7 +303,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * עדכון נתוני המטלה.
+     * עדכון נתוני המשתמש.
      *
      * @param view the view
      */
