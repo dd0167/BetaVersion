@@ -8,13 +8,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 class FB_Ref {
-    public static FirebaseAuth mAuth=FirebaseAuth.getInstance();
-    public static FirebaseDatabase FBDB = FirebaseDatabase.getInstance();
-    public static FirebaseStorage FBCS = FirebaseStorage.getInstance();
+    public static FirebaseAuth mAuth=FirebaseAuth.getInstance(); // הפניה ל-Firebase Authentication
+    public static FirebaseDatabase FBDB = FirebaseDatabase.getInstance(); // הפניה ל-Firebase Realtime Database
+    public static FirebaseStorage FBCS = FirebaseStorage.getInstance(); // הפניה ל-Firebase Storage
 
-    public static StorageReference referenceStorage=FBCS.getReference();
+    public static StorageReference referenceStorage=FBCS.getReference(); // הפניה לשורש ב-Firebase Storage
 
-    public static DatabaseReference refUsers=FBDB.getReference("Users");
-    public static DatabaseReference refLists=FBDB.getReference("Lists");
-    public static DatabaseReference refTasksDays=FBDB.getReference("Tasks Days");
+    public static DatabaseReference refUsers=FBDB.getReference("Users"); // הפניה לשורש ב-Firebase Realtime Database
+    public static DatabaseReference refLists=FBDB.getReference("Lists"); // הפניה לשורש ב-Firebase Realtime Database
+    public static DatabaseReference refTasksDays=FBDB.getReference("Tasks Days"); // הפניה לשורש ב-Firebase Realtime Database
 }
