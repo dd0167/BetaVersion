@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * מעבר למסך הרשימות.
+     * מעבר למסך הכניסה.
      */
     public void move_login()
     {

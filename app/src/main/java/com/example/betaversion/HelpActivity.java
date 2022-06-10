@@ -219,7 +219,7 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     /**
-     * מעבר למסך ההרשמה.
+     * מעבר למסך הכניסה.
      */
     public void move_login() {
         Intent la = new Intent(this, LoginActivity.class);
