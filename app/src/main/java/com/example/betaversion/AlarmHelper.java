@@ -30,7 +30,7 @@ import java.util.Random;
 
 public class AlarmHelper {
 
-    public static FirebaseUser currentUser;
+    public static FirebaseUser currentUser; // המשתמש הנוכחי
 
     /**
      * שם הפעולה הדרושה (מחיקת/יצירת התראות).

@@ -49,7 +49,7 @@ public class LocationHelper {
     }
 
     /**
-     * מבקש מהמשתמש להפעיל את מיקום המכשיר.
+     * מבקשת מהמשתמש להפעיל את מיקום המכשיר.
      *
      * @param context the context
      */
