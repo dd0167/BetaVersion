@@ -293,7 +293,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * מעבר למסך הרשימות.
+     * מעבר למסך הכניסה.
      */
     public void move_login()
     {
