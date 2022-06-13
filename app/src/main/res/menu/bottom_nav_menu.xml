@@ -16,7 +16,8 @@
 
     <item
         android:id="@+id/empty"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:title="" />
 
     <item
         android:id="@+id/about"

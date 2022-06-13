@@ -20,6 +20,7 @@
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_baseline_list.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.25833333333333336" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/ic_launcher_background.xml" value="0.25833333333333336" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/more_icon.xml" value="0.244" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/password_icon.xml" value="0.2235" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/password_icon_focused.xml" value="0.244" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/drawable/shape.xml" value="0.25833333333333336" />
@@ -28,7 +29,7 @@
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/font/arizonia.xml" value="0.2682291666666667" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/action_bar_layout.xml" value="0.21331521739130435" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_credits.xml" value="0.23802083333333332" />
-        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_help.xml" value="0.23802083333333332" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_help.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_login.xml" value="0.23802083333333332" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_main.xml" value="0.23641304347826086" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/activity_menu.xml" value="0.264" />
@@ -50,7 +51,7 @@
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout.xml" value="0.6" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout_lists.xml" value="0.7384898710865562" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout_tasks.xml" value="0.536" />
-        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout_tasks_day_list.xml" value="0.8" />
+        <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/custom_listview_layout_tasks_day_list.xml" value="0.6848101265822785" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/fragment_gallery.xml" value="0.23802083333333332" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/nav_header_navigation_menu.xml" value="0.23802083333333332" />
         <entry key="..\:/AndroidStudioProjects/BetaVersion/app/src/main/res/layout/sign_up_data.xml" value="0.1933876811594203" />
