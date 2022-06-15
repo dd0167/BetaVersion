@@ -13,6 +13,7 @@ android {
         applicationId "com.example.betaversion"
         minSdk 19
         targetSdk 30
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
 

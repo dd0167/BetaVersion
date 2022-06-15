@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -37,7 +38,9 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public class PermissionsActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
 
-    private static final int REQUEST_CODE_PERMISSION = 0;
+    private static final int REQUEST_CODE_PERMISSION_STORAGE = 1;
+    private static final int REQUEST_CODE_PERMISSION_LOCATION = 2;
+    private static final int REQUEST_CODE_PERMISSION_BACKGROUND_LOCATION = 3;
 
     Switch storage_switch;
     Switch location_switch;
@@ -80,9 +83,20 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
             linearLayout_location.setClickable(false);
         }
 
-        if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-            backgroundLocation_switch.setChecked(true);
-            linearLayout_backgroundLocation.setClickable(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        {
+            if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                backgroundLocation_switch.setChecked(true);
+                linearLayout_backgroundLocation.setClickable(false);
+            }
+        }
+        else
+        {
+            if (EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                backgroundLocation_switch.setChecked(true);
+                linearLayout_backgroundLocation.setClickable(false);
+            }
         }
 
         if (!LocationHelper.isGPSOn(this))
@@ -98,10 +112,14 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
      * @param view the view
      */
     public void continue_to_app(View view) {
-        if (!LocationHelper.isGPSOn(this) || !checkAllPermissions(this))
+        if (!LocationHelper.isGPSOn(this) )
         {
             Toast.makeText(this, "הפעל את מיקום המכשיר", Toast.LENGTH_SHORT).show();
             LocationHelper.turnGPSOn(this);
+        }
+        else if (!checkAllPermissions(this))
+        {
+            Toast.makeText(this, "אפשר גישה לכל ההרשאות", Toast.LENGTH_SHORT).show();
         }
         else
         {
@@ -125,16 +143,28 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
             Toast.makeText(context, "אפשר גישה לאחסון המכשיר", Toast.LENGTH_SHORT).show();
             result=false;
         }
-        if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_FINE_LOCATION))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         {
-            Toast.makeText(context, "אפשר גישה למיקום המכשיר", Toast.LENGTH_SHORT).show();
-            result=false;
+            if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                Toast.makeText(context, "אפשר גישה למיקום המכשיר", Toast.LENGTH_SHORT).show();
+                result=false;
+            }
+            if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION))
+            {
+                Toast.makeText(context, "אפשר גישה למיקום המכשיר ברקע", Toast.LENGTH_SHORT).show();
+                result=false;
+            }
         }
-        if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION))
+        else
         {
-            Toast.makeText(context, "אפשר גישה למיקום המכשיר ברקע", Toast.LENGTH_SHORT).show();
-            result=false;
+            if (!EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                Toast.makeText(context, "אפשר גישה למיקום המכשיר", Toast.LENGTH_SHORT).show();
+                result=false;
+            }
         }
+
         return result;
     }
 
@@ -155,6 +185,52 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //granted
+                    storage_switch.setChecked(true);
+                    linearLayout_storage.setClickable(false);
+                } else {
+                    //not granted
+                    Toast.makeText(this, "אפשר גישה לאחסון המכשיר", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case REQUEST_CODE_PERMISSION_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //granted
+                    location_switch.setChecked(true);
+                    linearLayout_location.setClickable(false);
+
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+                    {
+                        backgroundLocation_switch.setChecked(true);
+                        linearLayout_backgroundLocation.setClickable(false);
+                    }
+                } else {
+                    //not granted
+                    Toast.makeText(this, "אפשר גישה למיקום המכשיר", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case REQUEST_CODE_PERMISSION_BACKGROUND_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //granted
+                    backgroundLocation_switch.setChecked(true);
+                    linearLayout_backgroundLocation.setClickable(false);
+                } else {
+                    //not granted
+                    Toast.makeText(this, "אפשר גישה למיקום המכשיר ברקע", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     /**
      * בקשת הרשאות מהמשתמש.
      *
@@ -166,7 +242,7 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
             EasyPermissions.requestPermissions(
                     this,
                     "אפשר גישה לאחסון המכשיר",
-                    REQUEST_CODE_PERMISSION,
+                    REQUEST_CODE_PERMISSION_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE
             );
         }
@@ -175,18 +251,21 @@ public class PermissionsActivity extends AppCompatActivity implements EasyPermis
             EasyPermissions.requestPermissions(
                     this,
                     "אפשר גישה למיקום המכשיר",
-                    REQUEST_CODE_PERMISSION,
+                    REQUEST_CODE_PERMISSION_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION
             );
         }
-        else if (view.getId()==R.id.linearLayout_backgroundLocation)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         {
-            EasyPermissions.requestPermissions(
-                    this,
-                    "אפשר גישה למיקום המכשיר ברקע",
-                    REQUEST_CODE_PERMISSION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            );
+            if (view.getId()==R.id.linearLayout_backgroundLocation)
+            {
+                EasyPermissions.requestPermissions(
+                        this,
+                        "אפשר גישה למיקום המכשיר ברקע",
+                        REQUEST_CODE_PERMISSION_BACKGROUND_LOCATION,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                );
+            }
         }
     }
 }
