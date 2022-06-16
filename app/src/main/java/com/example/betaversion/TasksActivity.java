@@ -799,9 +799,8 @@ public class TasksActivity extends AppCompatActivity implements PopupMenu.OnMenu
             return user_address.getAddressLine(0);
 
         } catch (Exception e) {
-            Toast.makeText(TasksActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return "";
         }
-        return "";
     }
 
     @Override
