@@ -348,6 +348,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             et_list_name.setError("כתוב את שם הרשימה!");
             et_list_name.requestFocus();
         }
+        else if (lists_array.contains(listName) && list_clicked!=null && !list_clicked.getListName().equals(listName))
+        {
+            et_list_name.setError("קיימת רשימה עם שם זה!");
+            et_list_name.requestFocus();
+        }
         else if (list_clicked!=null) {
             list.setListCreationDate(list_clicked.getListCreationDate());
 

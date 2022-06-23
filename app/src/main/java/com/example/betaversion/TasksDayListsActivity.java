@@ -424,9 +424,15 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
 
         try {
             date=tv_tasksDay_date.getText().toString();
-            Date result = dateFormat_before.parse(date);
-            date = dateFormat_after.format(result);
-            tv_tasksDay_date.setText(date);
+
+            Date startDate=dateFormat_after.parse(date);
+            String start=dateFormat_after.format(startDate);
+            if (!date.equals(start))
+            {
+                Date result = dateFormat_before.parse(date);
+                date = dateFormat_after.format(result);
+            }
+            else tv_tasksDay_date.setText(date);
         }
         catch (Exception e)
         {
@@ -439,6 +445,15 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         {
             et_tasksDay_name.setError("כתוב את מטרת היום המרוכז!");
             et_tasksDay_name.requestFocus();
+        }
+        else if (tasksDay_array.contains(tasksDayName) && tasksDay_clicked!=null && !tasksDay_clicked.getTasksDayName().equals(tasksDayName))
+        {
+            et_tasksDay_name.setError("קיים יום מרוכז עם אותו השם!");
+            et_tasksDay_name.requestFocus();
+        }
+        else if (date.equals("בחר תאריך יעד") && tasksDay_clicked!=null )
+        {
+            Toast.makeText(TasksDayListsActivity.this, "בחר תאריך", Toast.LENGTH_SHORT).show();
         }
         else if (tasksDay_clicked!=null) {
             DatabaseReference ref = refTasksDays.child(currentUser.getUid()).child(tasksDay_clicked.getTasksDayName()).child("Tasks");
@@ -465,10 +480,10 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
         else if (tasksDay_array.contains(tasksDayName))
         {
-            et_tasksDay_name.setError("קיים יום מרוכז עם אותו השם");
+            et_tasksDay_name.setError("קיים יום מרוכז עם אותו השם!");
             et_tasksDay_name.requestFocus();
         }
-        if (date.equals("בחר תאריך יעד") )
+        else if (date.equals("בחר תאריך יעד") )
         {
             Toast.makeText(TasksDayListsActivity.this, "בחר תאריך", Toast.LENGTH_SHORT).show();
         }
