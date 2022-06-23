@@ -436,7 +436,8 @@ public class TasksDayListsActivity extends AppCompatActivity implements AdapterV
         }
         catch (Exception e)
         {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            if (!date.equals("בחר תאריך יעד"))
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         tasksDay=new TasksDay(tasksDayName,date);
